@@ -9,25 +9,20 @@ export async function POST(request: NextRequest) {
 
     if (!parsed.success) {
       return NextResponse.json(
-        { error: "Invalid request body", details: parsed.error.flatten() },
-        { status: 400 },
+        { error: "Invalid input", details: parsed.error.flatten() },
+        { status: 400 }
       );
     }
 
-    const { email } = parsed.data;
-
-    await db.newsletterSubscriber.upsert({
-      where: { email },
-      create: { email },
+    const subscriber = await db.newsletterSubscriber.upsert({
+      where: { email: parsed.data.email.toLowerCase() },
       update: {},
+      create: { email: parsed.data.email.toLowerCase() },
     });
 
-    return NextResponse.json(
-      { success: true, message: "Subscribed successfully" },
-      { status: 201 },
-    );
+    return NextResponse.json({ success: true, id: subscriber.id }, { status: 201 });
   } catch (error) {
     console.error("POST /api/newsletter error:", error);
-    return NextResponse.json({ error: "Failed to subscribe" }, { status: 500 });
+    return NextResponse.json({ error: "Internal server error" }, { status: 500 });
   }
 }

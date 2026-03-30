@@ -1,35 +1,46 @@
 import { z } from "zod";
 
-export const productsQuerySchema = z.object({
-  q: z.string().trim().optional(),
-  category: z.string().trim().optional(),
-  minPrice: z.coerce.number().min(0).optional(),
-  maxPrice: z.coerce.number().min(0).optional(),
-  sort: z
-    .enum(["best", "newest", "price-asc", "price-desc", "top-rated"])
-    .optional()
-    .default("best"),
+export const productQuerySchema = z.object({
+  q: z.string().trim().min(1).max(100).optional(),
+  category: z.string().trim().min(1).max(60).optional(),
+  minPrice: z.coerce.number().int().min(0).optional(),
+  maxPrice: z.coerce.number().int().min(0).optional(),
+  minRating: z.coerce.number().min(0).max(5).optional(),
   inStock: z
-    .enum(["true", "false"])
+    .string()
     .optional()
-    .transform((value) => value === "true"),
-  page: z.coerce.number().int().min(1).optional().default(1),
+    .transform((v) => (v === undefined ? undefined : v === "true")),
+  sort: z
+    .enum(["featured", "price-asc", "price-desc", "rating-desc", "newest"])
+    .default("featured"),
+  take: z.coerce.number().int().min(1).max(100).default(24),
+  skip: z.coerce.number().int().min(0).default(0),
 });
 
 export const newsletterSchema = z.object({
-  email: z.string().trim().email(),
+  email: z.string().email().max(255),
 });
 
-export const checkoutSessionSchema = z.object({
-  items: z
-    .array(
-      z.object({
-        slug: z.string().min(1),
-        quantity: z.number().int().min(1).max(20),
-      }),
-    )
-    .min(1),
-  currency: z.string().length(3).optional().default("usd"),
-  successUrl: z.string().url(),
-  cancelUrl: z.string().url(),
+export const contactSchema = z.object({
+  name: z.string().min(2).max(120),
+  email: z.string().email().max(255),
+  topic: z.string().min(2).max(80),
+  orderNumber: z.string().max(50).optional(),
+  message: z.string().min(10).max(3000),
+});
+
+export const cartItemSchema = z.object({
+  productId: z.string().cuid(),
+  quantity: z.number().int().min(1).max(20),
+});
+
+export const createCheckoutSchema = z.object({
+  email: z.string().email().max(255),
+  items: z.array(cartItemSchema).min(1).max(50),
+  discountCode: z.string().max(40).optional(),
+});
+
+export const trackOrderSchema = z.object({
+  orderNumber: z.string().min(3).max(50),
+  email: z.string().email().max(255),
 });

@@ -11,21 +11,16 @@ interface StatsCounterProps {
 }
 
 export default function StatsCounter({
-  stats = [
-    { value: "50K+", label: "Orders Delivered" },
-    { value: "12K+", label: "Happy Customers" },
-    { value: "98%", label: "Positive Reviews" },
-    { value: "24/7", label: "Support Availability" },
-  ],
-  bgColor,
+  stats = [],
+  bgColor = 'bg-primary text-primary-foreground',
 }: Partial<StatsCounterProps>) {
   return (
-    <section className={"py-16 " + (bgColor || "bg-primary text-primary-foreground")}>
-      <div className="container mx-auto max-w-7xl px-4 animate-fade-in-up">
-        <div className={"grid gap-8 text-center grid-cols-2 md:grid-cols-" + Math.min(stats.length || 2, 4)}>
+    <section className={'py-16 ' + bgColor}>
+      <div className="container mx-auto max-w-7xl px-4">
+        <div className="animate-fade-in-up grid grid-cols-2 gap-8 text-center md:grid-cols-4">
           {stats.map(function (stat, i) {
             return (
-              <div key={i} className="card-hover rounded-xl p-4">
+              <div key={i}>
                 <p className="text-4xl font-bold md:text-5xl">{stat.value}</p>
                 <p className="mt-2 text-sm uppercase tracking-wider opacity-80">{stat.label}</p>
               </div>
