@@ -1,61 +1,41 @@
 export const dynamic = 'force-dynamic';
 
-import HeroSpotlight from "@/components/HeroSpotlight";
-import CTAVortex from "@/components/CTAVortex";
-import SectionHeader from "@/components/SectionHeader";
-import { Card } from "@/components/ui/card";
+import HeroSpotlight from "@/components/HeroSpotlight"
+import ContentSplit from "@/components/ContentSplit"
+import SEOHead from "@/components/SEOHead"
+import ScrollReveal from "@/components/ScrollReveal"
 
 export default function PrivacyPage() {
   return (
     <main className="bg-background text-foreground">
-      <section className="animate-fade-in-up min-h-[80vh]">
-        <HeroSpotlight
-          title="Privacy Policy"
-          subtitle="A straightforward policy for a simple marketing website."
-          primaryCta={{ label: "Contact", href: "/contact" }}
-          secondaryCta={{ label: "Home", href: "/" }}
-        />
-      </section>
+      <SEOHead
+        title="Privacy Policy — Spotlight Landing"
+        description="Learn how Spotlight Landing collects, uses, and retains information."
+      />
 
-      <section className="animate-fade-in-up py-20 md:py-24 bg-muted">
-        <div className="max-w-4xl mx-auto px-4 md:px-6">
-          <SectionHeader
-            headline="What we collect"
-            subheadline="We keep data collection minimal."
+      <section
+        className="animate-fade-in-up min-h-[80vh] bg-cover bg-center bg-no-repeat relative"
+        style={{
+          backgroundImage:
+            "url('https://res.cloudinary.com/dwc294mzm/image/upload/c_fill,w_1200,h_800,g_auto/v1771576898/site-images/corporate/12912160.jpg')",
+        }}
+      >
+        <div className="absolute inset-0 bg-black/40" />
+        <div className="relative z-10">
+          <HeroSpotlight
+            title="Privacy Policy"
+            subtitle="We collect only what we need to respond to inquiries and improve the site experience."
+            primaryCta={{ label: "Contact", href: "/contact" }}
+            secondaryCta={{ label: "Home", href: "/" }}
           />
-          <div className="mt-10 space-y-6">
-            <Card className="rounded-xl border border-border bg-card p-6">
-              <h3 className="text-xl font-semibold">Information you provide</h3>
-              <ul className="mt-4 list-disc pl-5 text-muted-foreground space-y-2">
-                <li>If you email us, we receive your email address and message content.</li>
-                <li>If you use the contact form, we receive submitted fields (name, email, topic, message).</li>
-              </ul>
-            </Card>
-            <Card className="rounded-xl border border-border bg-card p-6">
-              <h3 className="text-xl font-semibold">Analytics</h3>
-              <ul className="mt-4 list-disc pl-5 text-muted-foreground space-y-2">
-                <li>If enabled, we may collect aggregated usage data to improve the site.</li>
-              </ul>
-            </Card>
-            <Card className="rounded-xl border border-border bg-card p-6">
-              <h3 className="text-xl font-semibold">Data retention</h3>
-              <ul className="mt-4 list-disc pl-5 text-muted-foreground space-y-2">
-                <li>We retain support emails as long as needed to provide support and maintain records.</li>
-              </ul>
-            </Card>
-          </div>
         </div>
       </section>
 
-      <section className="animate-fade-in-up py-20 md:py-24">
-        <CTAVortex
-          title="Questions about privacy?"
-          subtitle="Email us and we’ll clarify anything in plain language."
-          primaryCta={{ label: "Email hello@spotlightlanding.com", href: "mailto:hello@spotlightlanding.com?subject=Privacy%20Question" }}
-          secondaryCta={{ label: "Contact page", href: "/contact" }}
-          points={["Minimal collection", "No data selling", "Clear retention"]}
-        />
-      </section>
+      <ScrollReveal>
+        <section className="animate-fade-in-up py-20 md:py-24 bg-muted">
+          <ContentSplit />
+        </section>
+      </ScrollReveal>
     </main>
-  );
+  )
 }

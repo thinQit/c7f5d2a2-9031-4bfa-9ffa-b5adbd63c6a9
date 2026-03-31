@@ -1,32 +1,32 @@
 export const dynamic = 'force-dynamic';
 
 import HeroSpotlight from "@/components/HeroSpotlight"
-import TeamGrid from "@/components/TeamGrid"
+import ContentSplit from "@/components/ContentSplit"
 import CTAVortex from "@/components/CTAVortex"
 import SEOHead from "@/components/SEOHead"
 import ScrollReveal from "@/components/ScrollReveal"
 
-export default function AboutPage() {
+export default function FeaturesPage() {
   return (
     <main className="bg-background text-foreground">
       <SEOHead
-        title="About — Spotlight Landing"
-        description="Meet the team behind Spotlight Landing and the mission to help teams ship faster."
+        title="Features — Spotlight Landing"
+        description="Explore reusable landing page sections, conversion-focused structure, and polished UI patterns."
       />
 
       <section
         className="animate-fade-in-up min-h-[80vh] bg-cover bg-center bg-no-repeat relative"
         style={{
           backgroundImage:
-            "url('https://res.cloudinary.com/dwc294mzm/image/upload/c_fill,w_1200,h_800,g_auto/v1771576864/site-images/corporate/1367269.jpg')",
+            "url('https://res.cloudinary.com/dwc294mzm/image/upload/c_fill,w_1200,h_800,g_auto/v1771576857/site-images/corporate/1181408.jpg')",
         }}
       >
         <div className="absolute inset-0 bg-black/40" />
         <div className="relative z-10">
           <HeroSpotlight
-            title="Built for founders who value speed and clarity."
-            subtitle="We’ve shipped enough launches to know what matters: a clear offer, credible proof, and a frictionless path to action."
-            primaryCta={{ label: "View pricing", href: "/pricing" }}
+            title="A landing page system you can reuse for every launch."
+            subtitle="Reusable sections, consistent spacing, and a clear content hierarchy—so you can focus on messaging and ship faster."
+            primaryCta={{ label: "See pricing", href: "/pricing" }}
             secondaryCta={{ label: "Contact", href: "/contact" }}
           />
         </div>
@@ -34,16 +34,16 @@ export default function AboutPage() {
 
       <ScrollReveal>
         <section className="animate-fade-in-up py-20 md:py-24 bg-muted">
-          <TeamGrid />
+          <ContentSplit />
         </section>
       </ScrollReveal>
 
       <ScrollReveal>
         <section className="animate-fade-in-up py-20 md:py-24 bg-primary text-primary-foreground">
           <CTAVortex
-            title="Want a landing page that looks custom—without the custom timeline?"
-            subtitle="Start with a proven structure and tailor it to your product."
-            ctaLabel="See pricing"
+            title="Turn your product into a clear offer."
+            subtitle="Use the structure, swap in your copy, and publish."
+            ctaLabel="View pricing"
             ctaHref="/pricing"
             secondaryCtaLabel="Contact"
             secondaryCtaHref="/contact"

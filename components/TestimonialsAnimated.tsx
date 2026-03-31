@@ -1,52 +1,65 @@
 'use client'
 
-import { useMemo } from 'react'
-import { motion, useReducedMotion } from 'framer-motion'
-import TestimonialCard from '@/components/TestimonialCard'
+import { useEffect, useState } from 'react'
+import { Card } from '@/components/ui/card'
+import { cn } from '@/lib/utils'
 
-interface TestimonialItem {
+interface Testimonial {
+  quote: string
   name: string
   role: string
-  quote: string
-  rating: number
+  stat: string
 }
 
 interface TestimonialsAnimatedProps {
-  testimonials: TestimonialItem[]
+  title?: string
+  items?: Testimonial[]
 }
 
 export default function TestimonialsAnimated({
-  testimonials = [
-    { name: 'Ariana Park', role: 'Head of Marketing, Vertex', quote: 'We doubled qualified demo bookings in 8 weeks.', rating: 5 },
-    { name: 'Leo Martin', role: 'Founder, Northstar AI', quote: 'Setup was fast and conversion lift was immediate.', rating: 5 },
-    { name: 'Priya Shah', role: 'Revenue Ops, Catalyst', quote: 'Best ROI from any landing page tooling we have used.', rating: 5 },
-    { name: 'Daniel Cruz', role: 'CMO, Aperture', quote: 'Clarity plus speed. Our team finally ships with confidence.', rating: 5 },
+  title = 'Teams ship faster with less operational drag',
+  items = [
+    { quote: 'We replaced six disconnected tools and cut weekly reporting from 8 hours to 45 minutes.', name: 'Maya Chen', role: 'COO, Northpeak', stat: '4.2x faster reporting' },
+    { quote: 'Our onboarding workflow is now fully standardized. New hires are productive in days, not weeks.', name: 'Jordan Lee', role: 'Head of People, BlueHarbor', stat: '58% faster onboarding' },
+    { quote: 'Pipeline visibility improved instantly. Leadership now makes decisions from real-time data.', name: 'Priya Nair', role: 'VP Operations, Kinetiq', stat: '31% higher forecast accuracy' },
   ],
 }: Partial<TestimonialsAnimatedProps>) {
-  const reduceMotion = useReducedMotion()
-  const row = useMemo(() => [...testimonials, ...testimonials], [testimonials])
+  const [active, setActive] = useState(0)
+
+  useEffect(() => {
+    const timer = setInterval(() => {
+      setActive((prev) => (prev + 1) % items.length)
+    }, 4000)
+    return () => clearInterval(timer)
+  }, [items.length])
 
   return (
-    <section id="testimonials" className="overflow-hidden bg-muted/30 py-20 md:py-24">
-      <div className="mx-auto max-w-7xl px-4 md:px-6">
-        <h2 className="text-center text-3xl font-bold tracking-tight text-[#111827] md:text-4xl">What customers say</h2>
-        <p className="mx-auto mt-3 max-w-2xl text-center text-muted-foreground">
-          Real teams. Real outcomes. Built for fast-moving operators.
-        </p>
+    <section id="testimonials" className="bg-muted/30 py-20 md:py-24">
+      <div className={cn('mx-auto max-w-7xl px-4 md:px-6')}>
+        <div className="mx-auto max-w-2xl text-center">
+          <p className="text-sm font-medium text-[#2563EB]">Testimonials</p>
+          <h2 className="mt-2 text-2xl font-semibold tracking-tight text-[#111827] md:text-3xl">{title}</h2>
+        </div>
 
-        <div className="group relative mt-10">
-          <motion.div
-            className="flex gap-6"
-            animate={reduceMotion ? {} : { x: ['0%', '-50%'] }}
-            transition={reduceMotion ? {} : { ease: 'linear', duration: 28, repeat: Infinity }}
-            whileHover={reduceMotion ? {} : { animationPlayState: 'paused' as unknown as never }}
-          >
-            {row.map((t, index) => (
-              <div key={t.name + index} className="w-[320px] shrink-0">
-                <TestimonialCard name={t.name} role={t.role} quote={t.quote} rating={t.rating} />
+        <div className="mt-10 grid gap-4 md:grid-cols-3">
+          {items.map((item, idx) => (
+            <Card
+              key={item.name}
+              className={cn(
+                'rounded-xl border border-border bg-card p-6 shadow-sm transition-all duration-500',
+                idx === active ? 'scale-[1.02] border-[#2563EB]/40 shadow-md' : 'opacity-70'
+              )}
+            >
+              <p className="text-sm text-[#111827]">“{item.quote}”</p>
+              <div className="mt-5">
+                <p className="font-semibold text-[#111827]">{item.name}</p>
+                <p className="text-sm text-muted-foreground">{item.role}</p>
               </div>
-            ))}
-          </motion.div>
+              <div className="mt-4 inline-flex rounded-md bg-[#2563EB]/10 px-3 py-1 text-xs font-semibold text-[#2563EB]">
+                {item.stat}
+              </div>
+            </Card>
+          ))}
         </div>
       </div>
     </section>
