@@ -4,6 +4,7 @@ generator client {
 
 datasource db {
   provider = "postgresql"
+  url      = env("DATABASE_URL")
 }
 
 enum ProductBadge {
@@ -38,31 +39,31 @@ model Category {
 }
 
 model Product {
-  id             String           @id @default(cuid())
-  sku            String           @unique
-  slug           String           @unique
-  name           String
-  description    String?
-  priceCents     Int
-  compareAtCents Int?
-  ratingAverage  Float            @default(0)
-  reviewCount    Int              @default(0)
-  inStock        Boolean          @default(true)
-  stockQty       Int              @default(0)
+  id              String           @id @default(cuid())
+  sku             String           @unique
+  slug            String           @unique
+  name            String
+  description     String?
+  priceCents      Int
+  compareAtCents  Int?
+  ratingAverage   Float            @default(0)
+  reviewCount     Int              @default(0)
+  inStock         Boolean          @default(true)
+  stockQty        Int              @default(0)
   shippingDaysMin Int?
   shippingDaysMax Int?
-  imageUrl       String?
-  categoryId     String?
-  category       Category?        @relation(fields: [categoryId], references: [id], onDelete: SetNull)
-  tags           ProductTag[]
-  badges         ProductBadgeMap[]
-  images         ProductImage[]
-  variants       ProductVariant[]
-  specs          ProductSpec[]
-  reviews        ProductReview[]
-  cartItems      CartItem[]
-  createdAt      DateTime         @default(now())
-  updatedAt      DateTime         @updatedAt
+  imageUrl        String?
+  categoryId      String?
+  category        Category?        @relation(fields: [categoryId], references: [id], onDelete: SetNull)
+  tags            ProductTag[]
+  badges          ProductBadgeMap[]
+  images          ProductImage[]
+  variants        ProductVariant[]
+  specs           ProductSpec[]
+  reviews         ProductReview[]
+  cartItems       CartItem[]
+  createdAt       DateTime         @default(now())
+  updatedAt       DateTime         @updatedAt
 
   @@index([slug])
   @@index([categoryId])
@@ -82,5 +83,88 @@ model ProductImage {
   @@index([productId, position])
 }
 
-model P
-... [truncated]
+model ProductTag {
+  id       String    @id @default(cuid())
+  name     String    @unique
+  slug     String    @unique
+  products Product[]
+}
+
+model ProductBadgeMap {
+  id        String       @id @default(cuid())
+  productId String
+  badge     ProductBadge
+  product   Product      @relation(fields: [productId], references: [id], onDelete: Cascade)
+  createdAt DateTime     @default(now())
+
+  @@unique([productId, badge])
+  @@index([productId])
+}
+
+model ProductVariant {
+  id         String   @id @default(cuid())
+  productId  String
+  product    Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
+  name       String?
+  sku        String?
+  priceCents Int?
+  stockQty   Int      @default(0)
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+
+  @@index([productId])
+}
+
+model ProductSpec {
+  id        String   @id @default(cuid())
+  productId String
+  product   Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
+  label     String
+  value     String
+
+  @@index([productId])
+}
+
+model ProductReview {
+  id           String   @id @default(cuid())
+  productId    String
+  product      Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
+  rating       Int
+  title        String?
+  body         String?
+  reviewerName String?
+  createdAt    DateTime @default(now())
+
+  @@index([productId])
+}
+
+model Cart {
+  id        String     @id @default(cuid())
+  items     CartItem[]
+  createdAt DateTime   @default(now())
+  updatedAt DateTime   @updatedAt
+}
+
+model CartItem {
+  id        String   @id @default(cuid())
+  cartId    String
+  productId String
+  quantity  Int      @default(1)
+  cart      Cart     @relation(fields: [cartId], references: [id], onDelete: Cascade)
+  product   Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@unique([cartId, productId])
+  @@index([cartId])
+  @@index([productId])
+}
+
+model ContactMessage {
+  id        String       @id @default(cuid())
+  name      String
+  email     String
+  topic     ContactTopic
+  message   String
+  createdAt DateTime     @default(now())
+}
