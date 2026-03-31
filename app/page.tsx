@@ -12,17 +12,23 @@ import GalleryMasonry from "@/components/GalleryMasonry";
 
 export default function HomePage() {
   const heroImage =
-    "https://res.cloudinary.com/dwc294mzm/image/upload/v1771577164/site-images/ecommerce/11952301.jpg";
+    "https://res.cloudinary.com/dwc294mzm/image/upload/v1771577110/site-images/ecommerce/17485351.jpg";
 
   return (
     <main className="bg-background">
       <section
         id="hero"
-        className="animate-fade-in-up min-h-[80vh] bg-cover bg-center bg-no-repeat relative flex items-center"
-        style={{
-          backgroundImage: `url('${heroImage}')`,
-        }}
+        className="animate-fade-in-up relative flex min-h-[80vh] items-center overflow-hidden"
       >
+        <Image
+          src={heroImage}
+          alt="Curated essentials hero background"
+          fill
+          sizes="100vw"
+          className="object-cover"
+          priority
+          unoptimized
+        />
         <div className="absolute inset-0 bg-black/40" />
         <div className="relative z-10 w-full">
           <div className="mx-auto grid max-w-7xl items-center gap-10 px-6 py-16 md:py-24 lg:grid-cols-[1.1fr_0.9fr]">
@@ -84,32 +90,32 @@ export default function HomePage() {
           subheadline="Real products, everyday use, zero fluff."
           images={[
             {
-              url: "https://res.cloudinary.com/dwc294mzm/image/upload/v1771577105/site-images/ecommerce/17485352.jpg",
+              url: "https://res.cloudinary.com/dwc294mzm/image/upload/v1771577110/site-images/ecommerce/17485350.jpg",
               alt: "Tech accessories arranged neatly",
               caption: "Tech Accessories",
             },
             {
-              url: "https://res.cloudinary.com/dwc294mzm/image/upload/v1771577132/site-images/ecommerce/16675631.jpg",
+              url: "https://res.cloudinary.com/dwc294mzm/image/upload/v1771577145/site-images/ecommerce/35765454.jpg",
               alt: "Home essentials setup",
               caption: "Home Essentials",
             },
             {
-              url: "https://res.cloudinary.com/dwc294mzm/image/upload/v1771577147/site-images/ecommerce/35541612.jpg",
+              url: "https://res.cloudinary.com/dwc294mzm/image/upload/v1771577111/site-images/ecommerce/3767397.jpg",
               alt: "Travel carry setup",
               caption: "Travel & Carry",
             },
             {
-              url: "https://res.cloudinary.com/dwc294mzm/image/upload/v1771577126/site-images/ecommerce/259200.jpg",
+              url: "https://res.cloudinary.com/dwc294mzm/image/upload/v1771577105/site-images/ecommerce/17485352.jpg",
               alt: "Wellness products flat lay",
               caption: "Wellness",
             },
             {
-              url: "https://res.cloudinary.com/dwc294mzm/image/upload/v1771577159/site-images/ecommerce/10330108.jpg",
+              url: "https://res.cloudinary.com/dwc294mzm/image/upload/v1771577109/site-images/ecommerce/10330112.jpg",
               alt: "Minimal desk setup essentials",
               caption: "Desk upgrades",
             },
             {
-              url: "https://res.cloudinary.com/dwc294mzm/image/upload/v1771577163/site-images/ecommerce/29502354.jpg",
+              url: "https://res.cloudinary.com/dwc294mzm/image/upload/v1771577107/site-images/ecommerce/10330106.jpg",
               alt: "Curated product collection",
               caption: "Curated collection",
             },
