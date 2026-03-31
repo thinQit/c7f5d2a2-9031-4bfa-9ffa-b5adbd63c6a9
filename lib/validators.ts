@@ -1,46 +1,32 @@
 import { z } from "zod";
 
-export const productsQuerySchema = z.object({
-  category: z.string().min(1).optional(),
-  collection: z.string().min(1).optional(),
-  minPrice: z.coerce.number().int().min(0).optional(),
-  maxPrice: z.coerce.number().int().min(0).optional(),
-  rating: z.coerce.number().min(0).max(5).optional(),
-  q: z.string().min(1).optional(),
-  inStock: z
-    .string()
-    .optional()
-    .transform((v) => (v === undefined ? undefined : v === "true")),
-  sort: z
-    .enum(["best", "newest", "price_asc", "price_desc", "rating"])
-    .optional()
-    .default("best"),
-  page: z.coerce.number().int().min(1).default(1),
-  pageSize: z.coerce.number().int().min(1).max(50).default(12),
+export const checkoutCreateSessionSchema = z.object({
+  cartId: z.string().min(1, "Cart ID is required"),
+  successUrl: z.string().url("Invalid success URL"),
+  cancelUrl: z.string().url("Invalid cancel URL"),
 });
 
-export const slugParamsSchema = z.object({
-  slug: z.string().min(1),
+export const checkoutSessionSchema = z.object({
+  items: z.array(z.any()).min(1, "At least one item is required"),
+  currency: z.string().min(1, "Currency is required"),
+  successUrl: z.string().url("Invalid success URL"),
+  cancelUrl: z.string().url("Invalid cancel URL"),
 });
 
-export const cartItemInputSchema = z.object({
-  productId: z.string().cuid(),
-  quantity: z.number().int().min(1).max(25),
+export const contactSubmissionSchema = z.object({
+  name: z.string().min(1, "Name is required"),
+  email: z.string().email("Invalid email"),
+  orderNumber: z.string().optional(),
+  topic: z.string().min(1, "Topic is required"),
+  message: z.string().min(1, "Message is required"),
 });
 
-export const cartInputSchema = z.object({
-  sessionId: z.string().min(8),
-  items: z.array(cartItemInputSchema).min(1),
+export const newsletterSubscribeSchema = z.object({
+  email: z.string().email("Invalid email"),
+  sourcePage: z.string().optional(),
 });
 
-export const checkoutInputSchema = z.object({
-  sessionId: z.string().min(8),
-  email: z.string().email(),
-  successUrl: z.string().url(),
-  cancelUrl: z.string().url(),
-});
-
-export const newsletterInputSchema = z.object({
-  email: z.string().email(),
-  source: z.string().min(1).optional().default("website"),
+export const trackOrderSchema = z.object({
+  orderNumber: z.string().min(1, "Order number is required"),
+  email: z.string().email("Invalid email"),
 });
