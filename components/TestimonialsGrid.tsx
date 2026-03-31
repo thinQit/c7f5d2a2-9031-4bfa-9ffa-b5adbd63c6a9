@@ -1,90 +1,45 @@
 "use client";
 
-import Image from 'next/image'
+import TestimonialCard from '@/components/TestimonialCard'
 import { Star } from 'lucide-react'
-import { Card } from '@/components/ui/card'
 
-const TESTIMONIALS = [
-  {
-    name: 'Maya R.',
-    location: 'Seattle, WA',
-    rating: 5,
-    quote:
-      'The weekender is the perfect size and the zippers feel premium. Arrived in two days and the packaging was spotless.',
-    product: 'Weekender Duffel (35L)',
-  },
-  {
-    name: 'Jordan K.',
-    location: 'Brooklyn, NY',
-    rating: 5,
-    quote:
-      'Finally a USB‑C cable that doesn’t fray after a month. Charges my laptop at full speed and feels indestructible.',
-    product: 'Braided USB‑C Cable (2m)',
-  },
-  {
-    name: 'Elena S.',
-    location: 'Austin, TX',
-    rating: 4,
-    quote:
-      'The bottle keeps ice overnight. Lid is truly leakproof—threw it in my bag with a laptop and no issues.',
-    product: 'Stainless Insulated Bottle (24oz)',
-  },
-  {
-    name: 'Chris D.',
-    location: 'Denver, CO',
-    rating: 5,
-    quote:
-      'Checkout was fast and I appreciated the clear return policy. The organizer pouch is now in every bag I own.',
-    product: 'Tech Organizer Pouch',
-  },
-]
+interface Testimonial {
+  quote: string
+  rating: number
+  name: string
+  location: string
+  product: string
+}
 
-export default function TestimonialsGrid() {
+interface TestimonialsGridProps {
+  testimonials?: Testimonial[]
+}
+
+export default function TestimonialsGrid({
+  testimonials = [
+    { quote: 'Shipping was fast and the quality exceeded expectations.', rating: 5, name: 'Maya R.', location: 'Austin, TX', product: 'Aero Headphones' },
+    { quote: 'Checkout was smooth, and support answered in minutes.', rating: 5, name: 'Jordan K.', location: 'Seattle, WA', product: 'Pulse Smartwatch Pro' },
+    { quote: 'Exactly what I needed for my home office setup.', rating: 4, name: 'Chris L.', location: 'Denver, CO', product: 'Arc USB-C Dock' },
+  ],
+}: Partial<TestimonialsGridProps>) {
+  const avg = testimonials.length ? testimonials.reduce((a, b) => a + b.rating, 0) / testimonials.length : 0
+
   return (
-    <section>
-      <div className="mb-10 text-center">
-        <h2 className="text-3xl md:text-4xl font-bold">Loved by customers who value quality</h2>
-        <p className="text-muted-foreground mt-2">
-          Verified reviews from recent orders—highlighting fit, finish, and delivery speed.
-        </p>
-      </div>
-      <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-4">
-        {TESTIMONIALS.map((t, i) => (
-          <Card
-            key={i}
-            className="border-border card-hover rounded-xl bg-card p-6 flex flex-col h-full shadow-sm"
-          >
-            <div className="flex items-center gap-2 mb-2">
-              {[...Array(t.rating)].map((_, idx) => (
-                <Star key={idx} size={16} className="text-yellow-400" fill="currentColor" />
-              ))}
-              {t.rating < 5 &&
-                [...Array(5 - t.rating)].map((_, idx) => (
-                  <Star key={idx} size={16} className="text-muted-foreground" />
-                ))}
-            </div>
-            <blockquote className="mb-3 mt-1 text-foreground">"{t.quote}"</blockquote>
-            <div className="mt-auto flex items-baseline justify-between">
-              <span className="text-sm font-semibold">{t.name}</span>
-              <span className="text-xs text-muted-foreground">{t.location}</span>
-            </div>
-            <div className="mt-2 text-xs text-muted-foreground italic">{t.product}</div>
-          </Card>
-        ))}
-      </div>
-      <div className="mt-8 flex flex-row justify-center gap-4">
-        <a
-          href="/reviews"
-          className="rounded-lg px-6 py-3 bg-primary text-primary-foreground font-medium transition hover:bg-primary/90"
-        >
-          Read more reviews
-        </a>
-        <a
-          href="/shop?sort=rating"
-          className="rounded-lg px-6 py-3 border border-border bg-background font-medium transition hover:bg-muted"
-        >
-          Shop top-rated
-        </a>
+    <section className="bg-muted/30 py-12 md:py-16">
+      <div className="mx-auto max-w-7xl px-4">
+        <div className="mb-5 flex items-center justify-between">
+          <h2 className="text-2xl font-bold text-[#1A1A2E]">Loved by Customers</h2>
+          <div className="flex items-center gap-1 text-sm">
+            <Star className="h-4 w-4 fill-yellow-400 text-yellow-400" />
+            <span className="font-semibold">{avg.toFixed(1)}</span>
+            <span className="text-muted-foreground">from {testimonials.length} reviews</span>
+          </div>
+        </div>
+        <div className="grid gap-4 md:grid-cols-3">
+          {testimonials.map((item, i) => (
+            <TestimonialCard key={item.name + i} {...item} />
+          ))}
+        </div>
       </div>
     </section>
   )

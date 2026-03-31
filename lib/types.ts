@@ -1,39 +1,42 @@
-export interface CtaLink {
+export interface NavItem {
   label: string;
   href: string;
 }
 
-export interface BaseSection {
-  id: string;
-  type: string;
-  headline: string;
-  subheadline?: string;
-  primaryCta?: CtaLink;
-  secondaryCta?: CtaLink;
-  content?: Record<string, unknown>;
+export interface ImageAsset {
+  src: string;
+  alt: string;
 }
 
-export interface SitePage {
-  path: string;
+export interface CTA {
+  label: string;
+  href: string;
+}
+
+export interface Product {
+  sku: string;
   name: string;
-  sections: BaseSection[];
-}
-
-export interface SiteConfig {
-  projectName: string;
-  displayName: string;
-  tagline: string;
-  pages: SitePage[];
-}
-
-export interface ProductSummary {
-  id?: string;
-  slug?: string;
-  name: string;
-  category?: string;
   price: number;
   compareAtPrice?: number;
+  badge?: string;
   rating?: number;
   reviewCount?: number;
-  imageAlt?: string;
+  image: ImageAsset;
+  highlights?: string[];
+  href: string;
+}
+
+export interface Category {
+  name: string;
+  href: string;
+  description?: string;
+  image: ImageAsset;
+}
+
+export interface Testimonial {
+  name: string;
+  location?: string;
+  rating: number;
+  quote: string;
+  productMentioned?: string;
 }

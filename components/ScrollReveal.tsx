@@ -1,7 +1,30 @@
-"use client";
+'use client'
 
-export default function ScrollReveal(props: Record<string, unknown>) {
+import { useEffect, useRef, useState } from 'react'
+import { cn } from '@/lib/utils'
+
+interface ScrollRevealProps {
+  children?: React.ReactNode
+  className?: string
+}
+
+export default function ScrollReveal({ children = null, className = '' }: Partial<ScrollRevealProps>) {
+  const ref = useRef<HTMLDivElement | null>(null)
+  const [visible, setVisible] = useState(false)
+
+  useEffect(() => {
+    const el = ref.current
+    if (!el) return
+    const observer = new IntersectionObserver(([entry]) => {
+      if (entry.isIntersecting) setVisible(true)
+    }, { threshold: 0.15 })
+    observer.observe(el)
+    return () => observer.disconnect()
+  }, [])
+
   return (
-    <section className="py-16 px-4"><div className="max-w-7xl mx-auto"><h2 className="text-3xl font-bold text-center mb-8">Scroll Reveal</h2><p className="text-center text-muted-foreground">Content loading...</p></div></section>
-  );
+    <div ref={ref} className={cn('transition-all duration-700', visible ? 'translate-y-0 opacity-100' : 'translate-y-4 opacity-0', className)}>
+      {children}
+    </div>
+  )
 }

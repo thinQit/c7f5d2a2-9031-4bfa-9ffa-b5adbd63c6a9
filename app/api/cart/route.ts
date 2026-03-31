@@ -1,19 +1,15 @@
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 import { db } from "@/lib/db";
-import { cartUpsertSchema } from "@/lib/validators";
+import { cartInputSchema } from "@/lib/validators";
 
-function calcShipping(subtotalCents: number) {
-  return subtotalCents >= 5000 ? 0 : 600;
-}
+const FREE_SHIPPING_THRESHOLD_CENTS = 5000;
+const FLAT_SHIPPING_CENTS = 500;
+const TAX_RATE = 0.085;
 
-function calcTax(subtotalCents: number) {
-  return Math.round(subtotalCents * 0.0825);
-}
-
-export async function POST(req: Request) {
+export async function POST(req: NextRequest) {
   try {
-    const json = await req.json();
-    const parsed = cartUpsertSchema.safeParse(json);
+    const body = await req.json();
+    const parsed = cartInputSchema.safeParse(body);
 
     if (!parsed.success) {
       return NextResponse.json(
@@ -22,12 +18,12 @@ export async function POST(req: Request) {
       );
     }
 
-    const { cartId, email, items } = parsed.data;
-    const productIds = items.map((i) => i.productId);
+    const { sessionId, items } = parsed.data;
 
+    const productIds = items.map((i) => i.productId);
     const products = await db.product.findMany({
       where: { id: { in: productIds } },
-      select: { id: true, priceCents: true, inStock: true },
+      select: { id: true, priceCents: true, inStock: true, stockQty: true, name: true },
     });
 
     if (products.length !== productIds.length) {
@@ -35,70 +31,63 @@ export async function POST(req: Request) {
     }
 
     const productMap = new Map(products.map((p) => [p.id, p]));
-    const lineItems = items.map((item) => {
-      const p = productMap.get(item.productId)!;
-      if (!p.inStock) {
-        throw new Error(`Product out of stock: ${item.productId}`);
+    for (const item of items) {
+      const product = productMap.get(item.productId);
+      if (!product) continue;
+      if (!product.inStock || product.stockQty < item.quantity) {
+        return NextResponse.json(
+          { error: `Insufficient stock for ${product.name}` },
+          { status: 400 }
+        );
       }
-      const unitCents = p.priceCents;
-      const lineCents = unitCents * item.quantity;
-      return {
-        productId: item.productId,
-        quantity: item.quantity,
-        unitCents,
-        lineCents,
-      };
-    });
+    }
 
-    const subtotalCents = lineItems.reduce((sum, li) => sum + li.lineCents, 0);
-    const shippingCents = calcShipping(subtotalCents);
-    const taxCents = calcTax(subtotalCents);
+    const subtotalCents = items.reduce((sum, item) => {
+      const product = productMap.get(item.productId);
+      return sum + (product?.priceCents ?? 0) * item.quantity;
+    }, 0);
+
+    const shippingCents =
+      subtotalCents >= FREE_SHIPPING_THRESHOLD_CENTS ? 0 : FLAT_SHIPPING_CENTS;
+    const taxCents = Math.round(subtotalCents * TAX_RATE);
     const totalCents = subtotalCents + shippingCents + taxCents;
 
-    const cart = await db.$transaction(async (tx) => {
-      const upsertedCart = cartId
-        ? await tx.cart.update({
-            where: { id: cartId },
-            data: { email, subtotalCents, shippingCents, taxCents, totalCents },
-          })
-        : await tx.cart.create({
-            data: { email, subtotalCents, shippingCents, taxCents, totalCents },
-          });
-
-      await tx.cartItem.deleteMany({ where: { cartId: upsertedCart.id } });
-
-      if (lineItems.length > 0) {
-        await tx.cartItem.createMany({
-          data: lineItems.map((li) => ({
-            cartId: upsertedCart.id,
-            productId: li.productId,
-            quantity: li.quantity,
-            unitCents: li.unitCents,
-            lineCents: li.lineCents,
-          })),
-        });
-      }
-
-      return tx.cart.findUnique({
-        where: { id: upsertedCart.id },
-        include: {
-          items: {
-            include: {
-              product: {
-                select: { id: true, name: true, slug: true, imageUrl: true },
-              },
-            },
-          },
-        },
-      });
+    const cart = await db.cart.upsert({
+      where: { sessionId },
+      update: {
+        subtotalCents,
+        shippingCents,
+        taxCents,
+        totalCents,
+      },
+      create: {
+        sessionId,
+        subtotalCents,
+        shippingCents,
+        taxCents,
+        totalCents,
+      },
     });
 
-    return NextResponse.json({ data: cart });
+    await db.cartItem.deleteMany({ where: { cartId: cart.id } });
+
+    await db.cartItem.createMany({
+      data: items.map((item) => ({
+        cartId: cart.id,
+        productId: item.productId,
+        quantity: item.quantity,
+        unitPriceCents: productMap.get(item.productId)?.priceCents ?? 0,
+      })),
+    });
+
+    const updatedCart = await db.cart.findUnique({
+      where: { id: cart.id },
+      include: { items: true },
+    });
+
+    return NextResponse.json(updatedCart);
   } catch (error) {
     console.error("POST /api/cart error:", error);
-    if (error instanceof Error && error.message.includes("out of stock")) {
-      return NextResponse.json({ error: error.message }, { status: 409 });
-    }
     return NextResponse.json({ error: "Failed to update cart" }, { status: 500 });
   }
 }

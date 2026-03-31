@@ -1,12 +1,12 @@
 import { NextRequest, NextResponse } from "next/server";
 import { Prisma } from "@prisma/client";
 import { db } from "@/lib/db";
-import { productListQuerySchema } from "@/lib/validators";
+import { productsQuerySchema } from "@/lib/validators";
 
 export async function GET(req: NextRequest) {
   try {
     const params = Object.fromEntries(req.nextUrl.searchParams.entries());
-    const parsed = productListQuerySchema.safeParse(params);
+    const parsed = productsQuerySchema.safeParse(params);
 
     if (!parsed.success) {
       return NextResponse.json(
@@ -15,23 +15,14 @@ export async function GET(req: NextRequest) {
       );
     }
 
-    const { category, minPrice, maxPrice, rating, inStock, q, sort, tag, limit, cursor } =
+    const { category, collection, minPrice, maxPrice, rating, q, inStock, sort, page, pageSize } =
       parsed.data;
 
     const where: Prisma.ProductWhereInput = {
-      ...(category
-        ? { category: { slug: category } }
-        : {}),
-      ...(typeof minPrice === "number" || typeof maxPrice === "number"
-        ? {
-            priceCents: {
-              ...(typeof minPrice === "number" ? { gte: minPrice * 100 } : {}),
-              ...(typeof maxPrice === "number" ? { lte: maxPrice * 100 } : {}),
-            },
-          }
-        : {}),
-      ...(typeof rating === "number" ? { ratingAverage: { gte: rating } } : {}),
+      ...(category ? { category } : {}),
+      ...(collection ? { collection } : {}),
       ...(typeof inStock === "boolean" ? { inStock } : {}),
+      ...(rating ? { rating: { gte: rating } } : {}),
       ...(q
         ? {
             OR: [
@@ -41,42 +32,41 @@ export async function GET(req: NextRequest) {
             ],
           }
         : {}),
-      ...(tag ? { tags: { some: { tag: { equals: tag, mode: "insensitive" } } } } : {}),
+      ...(minPrice !== undefined || maxPrice !== undefined
+        ? {
+            priceCents: {
+              ...(minPrice !== undefined ? { gte: minPrice * 100 } : {}),
+              ...(maxPrice !== undefined ? { lte: maxPrice * 100 } : {}),
+            },
+          }
+        : {}),
     };
 
-    const orderBy: Prisma.ProductOrderByWithRelationInput[] =
-      sort === "rating"
-        ? [{ ratingAverage: "desc" as const }, { reviewCount: "desc" as const }]
-        : sort === "price_asc"
-        ? [{ priceCents: "asc" as const }]
-        : sort === "price_desc"
-        ? [{ priceCents: "desc" as const }]
-        : sort === "new"
-        ? [{ createdAt: "desc" as const }]
-        : [{ reviewCount: "desc" as const }, { ratingAverage: "desc" as const }];
+    const orderByMap = {
+      best: [{ reviewCount: "desc" as const }, { rating: "desc" as const }],
+      newest: [{ createdAt: "desc" as const }],
+      price_asc: [{ priceCents: "asc" as const }],
+      price_desc: [{ priceCents: "desc" as const }],
+      rating: [{ rating: "desc" as const }, { reviewCount: "desc" as const }],
+    };
 
-    const products = await db.product.findMany({
-      where,
-      orderBy,
-      take: limit + 1,
-      ...(cursor ? { skip: 1, cursor: { id: cursor } } : {}),
-      include: {
-        category: true,
-        badges: true,
-        tags: true,
-      },
-    });
-
-    const hasMore = products.length > limit;
-    const sliced = hasMore ? products.slice(0, limit) : products;
-    const nextCursor = hasMore ? sliced[sliced.length - 1]?.id : null;
+    const [items, total] = await Promise.all([
+      db.product.findMany({
+        where,
+        orderBy: orderByMap[sort],
+        skip: (page - 1) * pageSize,
+        take: pageSize,
+      }),
+      db.product.count({ where }),
+    ]);
 
     return NextResponse.json({
-      data: sliced,
+      items,
       pagination: {
-        hasMore,
-        nextCursor,
-        limit,
+        page,
+        pageSize,
+        total,
+        totalPages: Math.ceil(total / pageSize),
       },
     });
   } catch (error) {

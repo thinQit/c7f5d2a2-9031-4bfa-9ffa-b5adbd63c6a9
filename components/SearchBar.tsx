@@ -1,61 +1,39 @@
 'use client'
 
-import { useEffect, useMemo, useState } from 'react'
+import { useMemo, useState } from 'react'
+import Link from 'next/link'
 import { Search } from 'lucide-react'
-import { cn } from '@/lib/utils'
+import { Input } from '@/components/ui/input'
+import { Button } from '@/components/ui/button'
 
 interface SearchBarProps {
-  placeholder?: string
-  products?: string[]
-  onSearch?: (value: string) => void
+  suggestions?: string[]
 }
 
 export default function SearchBar({
-  placeholder = 'Search products...',
-  products = ['Wireless Headphones', 'Smart Watch', 'Travel Backpack', 'Desk Lamp'],
-  onSearch = () => {},
+  suggestions = ['wireless earbuds', 'standing desk', 'portable speaker', 'usb-c hub'],
 }: Partial<SearchBarProps>) {
   const [query, setQuery] = useState('')
-  const [debounced, setDebounced] = useState('')
-
-  useEffect(() => {
-    const id = setTimeout(() => setDebounced(query), 300)
-    return () => clearTimeout(id)
-  }, [query])
-
-  useEffect(() => {
-    onSearch(debounced)
-  }, [debounced, onSearch])
-
-  const results = useMemo(
-    () => products.filter((p) => p.toLowerCase().includes(debounced.toLowerCase())).slice(0, 5),
-    [products, debounced]
-  )
+  const filtered = useMemo(() => suggestions.filter((s) => s.includes(query.toLowerCase())).slice(0, 4), [query, suggestions])
 
   return (
     <div className="relative w-full">
-      <div className="flex items-center gap-2 rounded-lg border bg-background px-3 py-2">
-        <Search className="h-4 w-4 text-muted-foreground" />
-        <input
-          value={query}
-          onChange={(e) => setQuery(e.target.value)}
-          className="w-full bg-transparent text-sm outline-none"
-          placeholder={placeholder}
-        />
-        <span className="hidden rounded border px-1.5 py-0.5 text-xs text-muted-foreground sm:inline-block">⌘K</span>
+      <div className="flex gap-2">
+        <div className="relative flex-1">
+          <Search className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
+          <Input value={query} onChange={(e) => setQuery(e.target.value)} className="pl-9" placeholder="Search products..." />
+        </div>
+        <Button asChild>
+          <Link href={'/shop?q=' + encodeURIComponent(query)}>Search</Link>
+        </Button>
       </div>
-
-      {debounced && (
-        <div className={cn('absolute z-20 mt-2 w-full rounded-lg border bg-background p-2 shadow-lg')}>
-          {results.length ? (
-            results.map((item) => (
-              <button key={item} className="block w-full rounded-md px-2 py-2 text-left text-sm hover:bg-muted">
-                {item}
-              </button>
-            ))
-          ) : (
-            <p className="px-2 py-2 text-sm text-muted-foreground">No results found.</p>
-          )}
+      {query && filtered.length > 0 && (
+        <div className="absolute z-20 mt-1 w-full rounded-md border bg-background p-2 shadow">
+          {filtered.map((item) => (
+            <Link key={item} href={'/shop?q=' + encodeURIComponent(item)} className="block rounded px-2 py-1 text-sm hover:bg-muted">
+              {item}
+            </Link>
+          ))}
         </div>
       )}
     </div>

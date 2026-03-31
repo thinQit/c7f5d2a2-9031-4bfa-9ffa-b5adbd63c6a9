@@ -1,28 +1,32 @@
 import { NextRequest, NextResponse } from "next/server";
 import { db } from "@/lib/db";
+import { slugParamsSchema } from "@/lib/validators";
 
-type Params = {
+type RouteContext = {
   params: {
     slug: string;
   };
 };
 
-export async function GET(_req: NextRequest, { params }: Params) {
+export async function GET(_req: NextRequest, context: RouteContext) {
   try {
-    const slug = params.slug;
+    const parsed = slugParamsSchema.safeParse(context.params);
+
+    if (!parsed.success) {
+      return NextResponse.json(
+        { error: "Invalid product slug", details: parsed.error.flatten() },
+        { status: 400 }
+      );
+    }
+
+    const { slug } = parsed.data;
 
     const product = await db.product.findUnique({
       where: { slug },
       include: {
-        category: true,
-        images: { orderBy: { position: "asc" as const } },
-        variants: true,
-        specs: true,
-        badges: true,
-        tags: true,
         reviews: {
           orderBy: { createdAt: "desc" as const },
-          take: 10,
+          take: 20,
         },
       },
     });
@@ -31,14 +35,15 @@ export async function GET(_req: NextRequest, { params }: Params) {
       return NextResponse.json({ error: "Product not found" }, { status: 404 });
     }
 
-    const reviewsSummary = {
-      average: product.ratingAverage,
-      count: product.reviewCount,
-    };
-
-    return NextResponse.json({ data: { ...product, reviewsSummary } });
+    return NextResponse.json({
+      ...product,
+      reviewsSummary: {
+        averageRating: product.rating,
+        totalReviews: product.reviewCount,
+      },
+    });
   } catch (error) {
     console.error("GET /api/products/[slug] error:", error);
-    return NextResponse.json({ error: "Failed to fetch product" }, { status: 500 });
+    return NextResponse.json({ error: "Failed to fetch product details" }, { status: 500 });
   }
 }

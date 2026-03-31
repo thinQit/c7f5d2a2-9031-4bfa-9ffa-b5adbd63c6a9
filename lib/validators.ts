@@ -1,35 +1,46 @@
 import { z } from "zod";
 
-const cartItemSchema = z.object({
-  productId: z.string().min(1),
-  quantity: z.number().int().min(1),
+export const productsQuerySchema = z.object({
+  category: z.string().min(1).optional(),
+  collection: z.string().min(1).optional(),
+  minPrice: z.coerce.number().int().min(0).optional(),
+  maxPrice: z.coerce.number().int().min(0).optional(),
+  rating: z.coerce.number().min(0).max(5).optional(),
+  q: z.string().min(1).optional(),
+  inStock: z
+    .string()
+    .optional()
+    .transform((v) => (v === undefined ? undefined : v === "true")),
+  sort: z
+    .enum(["best", "newest", "price_asc", "price_desc", "rating"])
+    .optional()
+    .default("best"),
+  page: z.coerce.number().int().min(1).default(1),
+  pageSize: z.coerce.number().int().min(1).max(50).default(12),
 });
 
-export const createCheckoutSchema = z.object({
+export const slugParamsSchema = z.object({
+  slug: z.string().min(1),
+});
+
+export const cartItemInputSchema = z.object({
+  productId: z.string().cuid(),
+  quantity: z.number().int().min(1).max(25),
+});
+
+export const cartInputSchema = z.object({
+  sessionId: z.string().min(8),
+  items: z.array(cartItemInputSchema).min(1),
+});
+
+export const checkoutInputSchema = z.object({
+  sessionId: z.string().min(8),
   email: z.string().email(),
-  items: z.array(cartItemSchema).min(1),
-  discountCode: z.string().optional(),
-});
-
-export const checkoutSessionSchema = z.object({
-  items: z.array(
-    z.object({
-      productId: z.string().min(1),
-      quantity: z.number().int().min(1),
-      name: z.string().optional(),
-      priceCents: z.number().int().nonnegative().optional(),
-    })
-  ).min(1),
-  currency: z.string().min(1),
   successUrl: z.string().url(),
   cancelUrl: z.string().url(),
 });
 
-export const newsletterSchema = z.object({
+export const newsletterInputSchema = z.object({
   email: z.string().email(),
-});
-
-export const trackOrderSchema = z.object({
-  orderNumber: z.string().min(1),
-  email: z.string().email(),
+  source: z.string().min(1).optional().default("website"),
 });
