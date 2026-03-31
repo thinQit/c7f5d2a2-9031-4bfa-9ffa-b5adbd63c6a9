@@ -4,7 +4,6 @@ generator client {
 
 datasource db {
   provider = "postgresql"
-  url      = env("DATABASE_URL")
 }
 
 model Product {
@@ -28,8 +27,9 @@ model Product {
   createdAt      DateTime @default(now())
   updatedAt      DateTime @updatedAt
 
-  reviews Review[]
+  reviews   Review[]
   cartItems CartItem[]
+  orderItems OrderItem[]
 }
 
 model Review {
@@ -77,11 +77,11 @@ model Cart {
   sessionId      String   @unique
   currency       String   @default("USD")
   subtotalCents  Int      @default(0)
-  shippingCents  Int      @default(0)
+  discountCents  Int      @default(0)
   taxCents       Int      @default(0)
   totalCents     Int      @default(0)
-  updatedAt      DateTime @updatedAt
   createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
 
   items CartItem[]
 }
@@ -90,14 +90,53 @@ model CartItem {
   id         String   @id @default(cuid())
   cartId     String
   productId  String
-  quantity   Int
-  unitPriceCents Int
+  quantity   Int      @default(1)
+  priceCents Int
   createdAt  DateTime @default(now())
   updatedAt  DateTime @updatedAt
 
   cart    Cart    @relation(fields: [cartId], references: [id], onDelete: Cascade)
-  product Product @relation(fields: [productId], references: [id], onDelete: Restrict)
+  product Product @relation(fields: [productId], references: [id], onDelete: Cascade)
 
   @@unique([cartId, productId])
-  @@index([cartId])
+  @@index([productId])
+}
+
+model Order {
+  id                       String   @id @default(cuid())
+  sessionId                String?
+  email                    String?
+  customerName             String?
+  status                   String   @default("pending")
+  currency                 String   @default("USD")
+  subtotalCents            Int      @default(0)
+  discountCents            Int      @default(0)
+  taxCents                 Int      @default(0)
+  totalCents               Int      @default(0)
+  stripePaymentIntentId    String?
+  stripeCheckoutSessionId  String?
+  shippingAddress          Json?
+  billingAddress           Json?
+  createdAt                DateTime @default(now())
+  updatedAt                DateTime @updatedAt
+
+  items OrderItem[]
+
+  @@index([status, createdAt])
+}
+
+model OrderItem {
+  id         String   @id @default(cuid())
+  orderId    String
+  productId  String
+  quantity   Int      @default(1)
+  priceCents Int
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+
+  order   Order   @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  product Product @relation(fields: [productId], references: [id])
+
+  @@index([orderId])
+  @@index([productId])
 }
