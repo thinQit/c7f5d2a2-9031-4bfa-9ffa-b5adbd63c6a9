@@ -34,8 +34,8 @@ export default function HomePage() {
           <div className="mx-auto grid max-w-7xl items-center gap-10 px-6 py-16 md:py-24 lg:grid-cols-[1.1fr_0.9fr]">
             <div>
               <HeroSpotlight
-                title="Upgrade your everyday with curated essentials—delivered in 2–4 days."
-                subtitle="Shop best-selling tech accessories, home upgrades, and travel-ready gear. Transparent pricing, easy returns, and secure checkout."
+                title="Smarter essentials, ready to ship—upgrade your daily setup in days."
+                subtitle="Shop curated gear for work, home, and travel with transparent pricing, fast delivery, and a checkout built for speed."
                 primaryCta={{ label: "Shop Best Sellers", href: "/shop?sort=best" }}
                 secondaryCta={{ label: "Browse Categories", href: "#categories" }}
               />
