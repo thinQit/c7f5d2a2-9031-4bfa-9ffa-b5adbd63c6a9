@@ -4,7 +4,6 @@ generator client {
 
 datasource db {
   provider = "postgresql"
-  url      = env("DATABASE_URL")
 }
 
 enum ProductBadge {
@@ -83,112 +82,5 @@ model ProductImage {
   @@index([productId, position])
 }
 
-model ProductVariant {
-  id        String   @id @default(cuid())
-  productId String
-  product   Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
-  name      String
-  value     String
-  sku       String?
-  priceCents Int?
-  inStock   Boolean  @default(true)
-  createdAt DateTime @default(now())
-
-  @@index([productId])
-}
-
-model ProductSpec {
-  id        String   @id @default(cuid())
-  productId String
-  product   Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
-  key       String
-  value     String
-  createdAt DateTime @default(now())
-
-  @@index([productId])
-}
-
-model ProductReview {
-  id          String   @id @default(cuid())
-  productId   String
-  product     Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
-  authorName  String
-  rating      Int
-  title       String?
-  comment     String
-  isVerified  Boolean  @default(false)
-  createdAt   DateTime @default(now())
-
-  @@index([productId, createdAt])
-}
-
-model ProductTag {
-  id        String   @id @default(cuid())
-  productId String
-  product   Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
-  tag       String
-  createdAt DateTime @default(now())
-
-  @@unique([productId, tag])
-  @@index([tag])
-}
-
-model ProductBadgeMap {
-  id        String      @id @default(cuid())
-  productId String
-  product   Product     @relation(fields: [productId], references: [id], onDelete: Cascade)
-  badge     ProductBadge
-  createdAt DateTime    @default(now())
-
-  @@unique([productId, badge])
-  @@index([badge])
-}
-
-model Cart {
-  id             String     @id @default(cuid())
-  currency       String     @default("USD")
-  email          String?
-  subtotalCents  Int        @default(0)
-  shippingCents  Int        @default(0)
-  taxCents       Int        @default(0)
-  totalCents     Int        @default(0)
-  items          CartItem[]
-  createdAt      DateTime   @default(now())
-  updatedAt      DateTime   @updatedAt
-}
-
-model CartItem {
-  id         String   @id @default(cuid())
-  cartId     String
-  cart       Cart     @relation(fields: [cartId], references: [id], onDelete: Cascade)
-  productId  String
-  product    Product  @relation(fields: [productId], references: [id], onDelete: Restrict)
-  quantity   Int
-  unitCents  Int
-  lineCents  Int
-  createdAt  DateTime @default(now())
-  updatedAt  DateTime @updatedAt
-
-  @@unique([cartId, productId])
-  @@index([cartId])
-}
-
-model NewsletterSubscriber {
-  id         String   @id @default(cuid())
-  email      String   @unique
-  sourcePage String
-  createdAt  DateTime @default(now())
-}
-
-model ContactSubmission {
-  id          String       @id @default(cuid())
-  name        String
-  email       String
-  orderNumber String?
-  topic       ContactTopic
-  message     String
-  createdAt   DateTime     @default(now())
-
-  @@index([createdAt])
-  @@index([email])
-}
+model P
+... [truncated]
