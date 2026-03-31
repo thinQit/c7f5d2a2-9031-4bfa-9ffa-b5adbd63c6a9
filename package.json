@@ -35,7 +35,8 @@
     "sonner": "1.7.4",
     "mini-svg-data-uri": "1.4.4",
     "zod": "3.24.1",
-    "@prisma/client": "*"
+    "@prisma/client": "*",
+    "stripe": "14.25.0"
   },
   "devDependencies": {
     "typescript": "5.7.3",
