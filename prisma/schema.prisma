@@ -7,110 +7,188 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+enum ProductBadge {
+  BEST_SELLER
+  BPA_FREE
+  FAST_CHARGE
+  TRAVEL_READY
+  NOISE_CANCELING
+  EDITORS_PICK
+  NEW
+  GIFTABLE
+  BUNDLE
+}
+
+enum ContactTopic {
+  ORDER_STATUS
+  RETURNS
+  PRODUCT_QUESTION
+  BULK_ORDER
+  OTHER
+}
+
 model Category {
   id          String    @id @default(cuid())
-  name        String
+  name        String    @unique
   slug        String    @unique
   description String?
+  imageUrl    String?
+  products    Product[]
   createdAt   DateTime  @default(now())
   updatedAt   DateTime  @updatedAt
-  products    Product[]
-
-  @@index([slug])
 }
 
 model Product {
-  id             String      @id @default(cuid())
-  slug           String      @unique
+  id             String           @id @default(cuid())
+  sku            String           @unique
+  slug           String           @unique
   name           String
   description    String?
   priceCents     Int
   compareAtCents Int?
-  ratingAvg      Float       @default(0)
-  reviewCount    Int         @default(0)
-  inStock        Boolean     @default(true)
-  inventoryQty   Int         @default(0)
-  featured       Boolean     @default(false)
-  isNewArrival   Boolean     @default(false)
+  ratingAverage  Float            @default(0)
+  reviewCount    Int              @default(0)
+  inStock        Boolean          @default(true)
+  stockQty       Int              @default(0)
+  shippingDaysMin Int?
+  shippingDaysMax Int?
   imageUrl       String?
-  createdAt      DateTime    @default(now())
-  updatedAt      DateTime    @updatedAt
-
-  categoryId String?
-  category   Category? @relation(fields: [categoryId], references: [id], onDelete: SetNull)
-
-  orderItems OrderItem[]
+  categoryId     String?
+  category       Category?        @relation(fields: [categoryId], references: [id], onDelete: SetNull)
+  tags           ProductTag[]
+  badges         ProductBadgeMap[]
+  images         ProductImage[]
+  variants       ProductVariant[]
+  specs          ProductSpec[]
+  reviews        ProductReview[]
+  cartItems      CartItem[]
+  createdAt      DateTime         @default(now())
+  updatedAt      DateTime         @updatedAt
 
   @@index([slug])
   @@index([categoryId])
-  @@index([featured])
-  @@index([isNewArrival])
   @@index([priceCents])
+  @@index([ratingAverage])
+}
+
+model ProductImage {
+  id        String   @id @default(cuid())
+  productId String
+  product   Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
+  url       String
+  alt       String?
+  position  Int      @default(0)
+  createdAt DateTime @default(now())
+
+  @@index([productId, position])
+}
+
+model ProductVariant {
+  id        String   @id @default(cuid())
+  productId String
+  product   Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
+  name      String
+  value     String
+  sku       String?
+  priceCents Int?
+  inStock   Boolean  @default(true)
+  createdAt DateTime @default(now())
+
+  @@index([productId])
+}
+
+model ProductSpec {
+  id        String   @id @default(cuid())
+  productId String
+  product   Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
+  key       String
+  value     String
+  createdAt DateTime @default(now())
+
+  @@index([productId])
+}
+
+model ProductReview {
+  id          String   @id @default(cuid())
+  productId   String
+  product     Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
+  authorName  String
+  rating      Int
+  title       String?
+  comment     String
+  isVerified  Boolean  @default(false)
+  createdAt   DateTime @default(now())
+
+  @@index([productId, createdAt])
+}
+
+model ProductTag {
+  id        String   @id @default(cuid())
+  productId String
+  product   Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
+  tag       String
+  createdAt DateTime @default(now())
+
+  @@unique([productId, tag])
+  @@index([tag])
+}
+
+model ProductBadgeMap {
+  id        String      @id @default(cuid())
+  productId String
+  product   Product     @relation(fields: [productId], references: [id], onDelete: Cascade)
+  badge     ProductBadge
+  createdAt DateTime    @default(now())
+
+  @@unique([productId, badge])
+  @@index([badge])
+}
+
+model Cart {
+  id             String     @id @default(cuid())
+  currency       String     @default("USD")
+  email          String?
+  subtotalCents  Int        @default(0)
+  shippingCents  Int        @default(0)
+  taxCents       Int        @default(0)
+  totalCents     Int        @default(0)
+  items          CartItem[]
+  createdAt      DateTime   @default(now())
+  updatedAt      DateTime   @updatedAt
+}
+
+model CartItem {
+  id         String   @id @default(cuid())
+  cartId     String
+  cart       Cart     @relation(fields: [cartId], references: [id], onDelete: Cascade)
+  productId  String
+  product    Product  @relation(fields: [productId], references: [id], onDelete: Restrict)
+  quantity   Int
+  unitCents  Int
+  lineCents  Int
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+
+  @@unique([cartId, productId])
+  @@index([cartId])
 }
 
 model NewsletterSubscriber {
-  id          String   @id @default(cuid())
-  email       String   @unique
-  isConfirmed Boolean  @default(false)
-  createdAt   DateTime @default(now())
-
-  @@index([email])
+  id         String   @id @default(cuid())
+  email      String   @unique
+  sourcePage String
+  createdAt  DateTime @default(now())
 }
 
-model ContactMessage {
-  id          String   @id @default(cuid())
+model ContactSubmission {
+  id          String       @id @default(cuid())
   name        String
   email       String
-  topic       String
   orderNumber String?
+  topic       ContactTopic
   message     String
-  createdAt   DateTime @default(now())
+  createdAt   DateTime     @default(now())
 
-  @@index([email])
-  @@index([topic])
   @@index([createdAt])
-}
-
-model CustomerOrder {
-  id                 String      @id @default(cuid())
-  orderNumber        String      @unique
-  email              String
-  status             String      @default("pending")
-  subtotalCents      Int
-  discountCents      Int         @default(0)
-  shippingCents      Int         @default(0)
-  taxCents           Int         @default(0)
-  totalCents         Int
-  stripeSessionId    String?     @unique
-  shippingName       String?
-  shippingAddress1   String?
-  shippingAddress2   String?
-  shippingCity       String?
-  shippingState      String?
-  shippingPostalCode String?
-  shippingCountry    String?
-  createdAt          DateTime    @default(now())
-  updatedAt          DateTime    @updatedAt
-
-  items OrderItem[]
-
-  @@index([orderNumber])
   @@index([email])
-  @@index([status])
-  @@index([createdAt])
-}
-
-model OrderItem {
-  id             String        @id @default(cuid())
-  orderId        String
-  productId      String
-  quantity       Int
-  unitPriceCents Int
-  createdAt      DateTime      @default(now())
-
-  order   CustomerOrder @relation(fields: [orderId], references: [id], onDelete: Cascade)
-  product Product       @relation(fields: [productId], references: [id], onDelete: Restrict)
-
-  @@index([orderId])
-  @@index([productId])
 }

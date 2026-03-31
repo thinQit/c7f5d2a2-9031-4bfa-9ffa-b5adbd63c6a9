@@ -1,48 +1,53 @@
-import "./globals.css";
-import { DM_Sans, Inter } from "next/font/google";
-import NavbarSticky from "@/components/NavbarSticky";
-import FooterMultiColumn from "@/components/FooterMultiColumn";
+import "./globals.css"
+import { DM_Sans, Inter } from "next/font/google"
+import Navbar from "@/components/Navbar"
+import Footer from "@/components/Footer"
 
 const dmSans = DM_Sans({
   subsets: ["latin"],
-  variable: "--font-heading",
-});
+  variable: "--font-dm-sans",
+  weight: ["400", "500", "700"],
+})
 
 const inter = Inter({
   subsets: ["latin"],
-  variable: "--font-body",
-});
+  variable: "--font-inter",
+  weight: ["300", "400", "600"],
+})
 
 export default function RootLayout({
   children,
-}: Readonly<{ children: React.ReactNode }>) {
+}: {
+  children: React.ReactNode
+}) {
   return (
     <html lang="en">
-      <body className={`${dmSans.variable} ${inter.variable} bg-background text-foreground antialiased`}>
-        <NavbarSticky
-          logo="LumenCart"
+      <body className={`${dmSans.variable} ${inter.variable} font-sans bg-background text-foreground`}>
+        <Navbar
+          logo="Spotlight Storefront"
           navItems={[
             { label: "Home", href: "/" },
-            { label: "Collections", href: "/collections" },
-            { label: "Products", href: "/products" },
-            { label: "Compare", href: "/compare" },
+            { label: "Shop", href: "/shop" },
+            { label: "Categories", href: "/categories" },
+            { label: "About", href: "/about" },
             { label: "Contact", href: "/contact" },
+            { label: "Wireframe", href: "/wireframe" },
           ]}
-          ctaLabel="Shop best sellers"
-          ctaHref="/collections/best-sellers"
+          ctaLabel="Shop Best Sellers"
+          ctaHref="/shop?sort=best"
         />
         {children}
-        <FooterMultiColumn
-          brand="LumenCart"
-          description="Curated essentials across Tech, Home, and Travel—shipped fast with straightforward returns."
+        <Footer
+          brand="Spotlight Storefront"
+          description="Curated essentials. Fast shipping. Easy returns."
           columns={[
             {
               title: "Shop",
               links: [
-                { label: "All products", href: "/products" },
-                { label: "Collections", href: "/collections" },
-                { label: "Best sellers", href: "/collections/best-sellers" },
-                { label: "New arrivals", href: "/collections/new-arrivals" },
+                { label: "All products", href: "/shop" },
+                { label: "Best sellers", href: "/shop?sort=best" },
+                { label: "New arrivals", href: "/shop?tag=new" },
+                { label: "Giftable picks", href: "/shop?tag=giftable" },
               ],
             },
             {
@@ -50,8 +55,8 @@ export default function RootLayout({
               links: [
                 { label: "Shipping & returns", href: "/shipping-returns" },
                 { label: "FAQ", href: "/faq" },
-                { label: "Track order", href: "/track" },
-                { label: "Contact", href: "/contact" },
+                { label: "Track order", href: "/track-order" },
+                { label: "Contact support", href: "/contact" },
               ],
             },
             {
@@ -64,9 +69,9 @@ export default function RootLayout({
               ],
             },
           ]}
-          copyright="© 2026 LumenCart. All rights reserved."
+          copyright="© 2026 Spotlight Storefront. All rights reserved."
         />
       </body>
     </html>
-  );
+  )
 }

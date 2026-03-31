@@ -1,27 +1,32 @@
 export const dynamic = 'force-dynamic';
 
-import CheckoutSteps from "@/components/CheckoutSteps"
-import CheckoutForm from "@/components/CheckoutForm"
-import ScrollReveal from "@/components/ScrollReveal"
+import PageHero from "@/components/PageHero"
+import CheckoutLayout from "@/components/CheckoutLayout"
+import RevealOnScroll from "@/components/RevealOnScroll"
 
 export default function CheckoutPage() {
   return (
-    <main>
-      <section className="py-20 md:py-28 bg-background animate-fade-in-up">
-        <div className="max-w-7xl mx-auto px-4 space-y-8">
-          <ScrollReveal>
-            <h1 className="text-4xl md:text-6xl font-bold">Secure checkout</h1>
-            <p className="text-muted-foreground text-base md:text-lg">
-              Fast payment with card or wallet options. Your information stays protected.
-            </p>
-          </ScrollReveal>
-          <CheckoutSteps />
-        </div>
+    <main className="bg-background text-foreground">
+      <section className="animate-fade-in-up">
+        <PageHero
+          headline="Secure checkout"
+          subheadline="Fast, encrypted payment with clear delivery expectations."
+          primaryCta={{ label: "Pay now", href: "#payment" }}
+          secondaryCta={{ label: "Back to cart", href: "/cart" }}
+          imageSrc="https://res.cloudinary.com/dwc294mzm/image/upload/c_fill,w_1200,h_800,g_auto/v1771577104/site-images/ecommerce/29502358.jpg"
+        />
       </section>
 
       <section className="py-20 md:py-28 bg-muted animate-fade-in-up">
         <div className="max-w-7xl mx-auto px-4">
-          <CheckoutForm />
+          <RevealOnScroll>
+            <CheckoutLayout
+              headline="Complete your order"
+              subheadline="Shipping address, delivery method, and payment in one clean flow."
+              primaryCta={{ label: "Place order", href: "/order/confirmation" }}
+              secondaryCta={{ label: "Need help?", href: "/contact" }}
+            />
+          </RevealOnScroll>
         </div>
       </section>
     </main>

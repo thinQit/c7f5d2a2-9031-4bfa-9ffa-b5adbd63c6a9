@@ -1,35 +1,27 @@
 import { NextRequest, NextResponse } from "next/server";
 import { Prisma } from "@prisma/client";
 import { db } from "@/lib/db";
-import { productQuerySchema } from "@/lib/validators";
+import { productListQuerySchema } from "@/lib/validators";
 
-export async function GET(request: NextRequest) {
+export async function GET(req: NextRequest) {
   try {
-    const raw = Object.fromEntries(request.nextUrl.searchParams.entries());
-    const parsed = productQuerySchema.safeParse(raw);
+    const params = Object.fromEntries(req.nextUrl.searchParams.entries());
+    const parsed = productListQuerySchema.safeParse(params);
 
     if (!parsed.success) {
       return NextResponse.json(
-        { error: "Invalid query params", details: parsed.error.flatten() },
+        { error: "Invalid query parameters", details: parsed.error.flatten() },
         { status: 400 }
       );
     }
 
-    const { q, category, minPrice, maxPrice, minRating, inStock, sort, take, skip } = parsed.data;
+    const { category, minPrice, maxPrice, rating, inStock, q, sort, tag, limit, cursor } =
+      parsed.data;
 
     const where: Prisma.ProductWhereInput = {
-      ...(q
-        ? {
-            OR: [
-              { name: { contains: q, mode: "insensitive" } },
-              { description: { contains: q, mode: "insensitive" } },
-              { slug: { contains: q, mode: "insensitive" } },
-            ],
-          }
+      ...(category
+        ? { category: { slug: category } }
         : {}),
-      ...(category ? { category: { slug: category } } : {}),
-      ...(typeof inStock === "boolean" ? { inStock } : {}),
-      ...(typeof minRating === "number" ? { ratingAvg: { gte: minRating } } : {}),
       ...(typeof minPrice === "number" || typeof maxPrice === "number"
         ? {
             priceCents: {
@@ -38,37 +30,57 @@ export async function GET(request: NextRequest) {
             },
           }
         : {}),
+      ...(typeof rating === "number" ? { ratingAverage: { gte: rating } } : {}),
+      ...(typeof inStock === "boolean" ? { inStock } : {}),
+      ...(q
+        ? {
+            OR: [
+              { name: { contains: q, mode: "insensitive" } },
+              { description: { contains: q, mode: "insensitive" } },
+              { sku: { contains: q, mode: "insensitive" } },
+            ],
+          }
+        : {}),
+      ...(tag ? { tags: { some: { tag: { equals: tag, mode: "insensitive" } } } } : {}),
     };
 
-    const orderByMap: Record<
-      "featured" | "price-asc" | "price-desc" | "rating-desc" | "newest",
-      Prisma.ProductOrderByWithRelationInput[]
-    > = {
-      featured: [{ featured: "desc" as const }, { createdAt: "desc" as const }],
-      "price-asc": [{ priceCents: "asc" as const }],
-      "price-desc": [{ priceCents: "desc" as const }],
-      "rating-desc": [{ ratingAvg: "desc" as const }, { reviewCount: "desc" as const }],
-      newest: [{ createdAt: "desc" as const }],
-    };
+    const orderBy: Prisma.ProductOrderByWithRelationInput[] =
+      sort === "rating"
+        ? [{ ratingAverage: "desc" as const }, { reviewCount: "desc" as const }]
+        : sort === "price_asc"
+        ? [{ priceCents: "asc" as const }]
+        : sort === "price_desc"
+        ? [{ priceCents: "desc" as const }]
+        : sort === "new"
+        ? [{ createdAt: "desc" as const }]
+        : [{ reviewCount: "desc" as const }, { ratingAverage: "desc" as const }];
 
-    const [items, total] = await Promise.all([
-      db.product.findMany({
-        where,
-        orderBy: orderByMap[sort],
-        take,
-        skip,
-        include: {
-          category: {
-            select: { slug: true, name: true },
-          },
-        },
-      }),
-      db.product.count({ where }),
-    ]);
+    const products = await db.product.findMany({
+      where,
+      orderBy,
+      take: limit + 1,
+      ...(cursor ? { skip: 1, cursor: { id: cursor } } : {}),
+      include: {
+        category: true,
+        badges: true,
+        tags: true,
+      },
+    });
 
-    return NextResponse.json({ items, total, take, skip });
+    const hasMore = products.length > limit;
+    const sliced = hasMore ? products.slice(0, limit) : products;
+    const nextCursor = hasMore ? sliced[sliced.length - 1]?.id : null;
+
+    return NextResponse.json({
+      data: sliced,
+      pagination: {
+        hasMore,
+        nextCursor,
+        limit,
+      },
+    });
   } catch (error) {
     console.error("GET /api/products error:", error);
-    return NextResponse.json({ error: "Internal server error" }, { status: 500 });
+    return NextResponse.json({ error: "Failed to fetch products" }, { status: 500 });
   }
 }

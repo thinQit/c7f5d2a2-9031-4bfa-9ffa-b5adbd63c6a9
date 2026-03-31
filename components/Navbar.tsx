@@ -1,57 +1,59 @@
 'use client'
 
-import Link from 'next/link'
-import { Menu, ShoppingCart, User, Search } from 'lucide-react'
+import { Search, User, Menu } from 'lucide-react'
 import { Button } from '@/components/ui/button'
-import { Input } from '@/components/ui/input'
 import { cn } from '@/lib/utils'
+import CartButton from '@/components/CartButton'
 
 interface NavbarProps {
   logoText?: string
   categories?: string[]
   cartCount?: number
   onMenuClick?: () => void
-  className?: string
 }
 
 export default function Navbar({
-  logoText = 'NovaStore',
-  categories = ['New Arrivals', 'Women', 'Men', 'Accessories', 'Sale'],
-  cartCount = 3,
+  logoText = 'Storefront',
+  categories = ['New Arrivals', 'Best Sellers', 'Electronics', 'Home', 'Fashion'],
+  cartCount = 2,
   onMenuClick = () => {},
-  className = '',
 }: Partial<NavbarProps>) {
   return (
-    <header className={cn('sticky top-0 z-50 border-b bg-white/95 backdrop-blur', className)}>
-      <div className="mx-auto flex h-16 max-w-7xl items-center gap-4 px-4 md:px-6">
+    <header className="sticky top-0 z-50 border-b border-border bg-background/90 backdrop-blur">
+      <div className="mx-auto flex h-16 max-w-7xl items-center gap-3 px-4 md:px-6">
         <Button variant="ghost" size="icon" className="md:hidden" onClick={onMenuClick}>
           <Menu className="h-5 w-5" />
         </Button>
-        <Link href="/" className="text-xl font-bold text-[#1A1A2E]">
+
+        <a href="/" className="text-lg font-bold text-[#1A1A2E]">
           {logoText}
-        </Link>
+        </a>
+
         <nav className="hidden items-center gap-5 md:flex">
-          {categories.map((item) => (
-            <Link key={item} href="#" className="text-sm text-muted-foreground hover:text-[#1A1A2E]">
-              {item}
-            </Link>
+          {categories.map((cat) => (
+            <a key={cat} href="#" className="text-sm text-muted-foreground hover:text-foreground">
+              {cat}
+            </a>
           ))}
         </nav>
-        <div className="ml-auto hidden w-full max-w-sm items-center md:flex">
-          <div className="relative w-full">
-            <Search className="absolute left-3 top-2.5 h-4 w-4 text-muted-foreground" />
-            <Input className="pl-9" placeholder="Search products..." />
+
+        <div className="ml-auto hidden items-center gap-2 md:flex">
+          <div className={cn('flex items-center gap-2 rounded-lg border px-3 py-2')}>
+            <Search className="h-4 w-4 text-muted-foreground" />
+            <input
+              className="w-40 bg-transparent text-sm outline-none lg:w-56"
+              placeholder="Search products"
+            />
           </div>
+          <Button variant="ghost" size="icon">
+            <User className="h-5 w-5" />
+          </Button>
+          <CartButton count={cartCount} />
         </div>
-        <Button variant="ghost" size="icon">
-          <User className="h-5 w-5" />
-        </Button>
-        <Button variant="ghost" size="icon" className="relative">
-          <ShoppingCart className="h-5 w-5" />
-          <span className="absolute -right-1 -top-1 rounded-full bg-[#E63946] px-1.5 text-[10px] text-white">
-            {cartCount}
-          </span>
-        </Button>
+
+        <div className="ml-auto md:hidden">
+          <CartButton count={cartCount} />
+        </div>
       </div>
     </header>
   )

@@ -1,32 +1,43 @@
-import { NextRequest, NextResponse } from "next/server";
+import { NextResponse } from "next/server";
+import { ContactTopic } from "@prisma/client";
 import { db } from "@/lib/db";
-import { contactSchema } from "@/lib/validators";
+import { contactSubmissionSchema } from "@/lib/validators";
 
-export async function POST(request: NextRequest) {
+const topicMap: Record<string, ContactTopic> = {
+  "Order status": "ORDER_STATUS",
+  Returns: "RETURNS",
+  "Product question": "PRODUCT_QUESTION",
+  "Bulk order": "BULK_ORDER",
+  Other: "OTHER",
+};
+
+export async function POST(req: Request) {
   try {
-    const body = await request.json();
-    const parsed = contactSchema.safeParse(body);
+    const json = await req.json();
+    const parsed = contactSubmissionSchema.safeParse(json);
 
     if (!parsed.success) {
       return NextResponse.json(
-        { error: "Invalid input", details: parsed.error.flatten() },
+        { error: "Invalid contact payload", details: parsed.error.flatten() },
         { status: 400 }
       );
     }
 
-    const message = await db.contactMessage.create({
+    const { name, email, orderNumber, topic, message } = parsed.data;
+
+    const submission = await db.contactSubmission.create({
       data: {
-        name: parsed.data.name,
-        email: parsed.data.email.toLowerCase(),
-        topic: parsed.data.topic,
-        orderNumber: parsed.data.orderNumber,
-        message: parsed.data.message,
+        name,
+        email,
+        orderNumber: orderNumber || null,
+        topic: topicMap[topic],
+        message,
       },
     });
 
-    return NextResponse.json({ success: true, id: message.id }, { status: 201 });
+    return NextResponse.json({ data: submission }, { status: 201 });
   } catch (error) {
     console.error("POST /api/contact error:", error);
-    return NextResponse.json({ error: "Internal server error" }, { status: 500 });
+    return NextResponse.json({ error: "Failed to submit contact form" }, { status: 500 });
   }
 }
