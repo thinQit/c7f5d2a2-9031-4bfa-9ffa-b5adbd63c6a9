@@ -1,49 +1,50 @@
 import { z } from "zod";
 
-const urlSchema = z.string().url();
-const emailSchema = z.string().email();
+const numberFromString = z.preprocess((value) => {
+  if (value === undefined || value === null || value === "") return undefined;
+  const num = typeof value === "string" ? Number(value) : value;
+  return Number.isNaN(num) ? value : num;
+}, z.number());
 
-export const checkoutCreateSessionSchema = z.object({
-  cartId: z.string().min(1),
-  successUrl: urlSchema,
-  cancelUrl: urlSchema,
-});
+const positiveIntFromString = z.preprocess((value) => {
+  if (value === undefined || value === null || value === "") return undefined;
+  const num = typeof value === "string" ? Number(value) : value;
+  return Number.isNaN(num) ? value : num;
+}, z.number().int().positive());
 
-export const checkoutInputSchema = z.object({
-  sessionId: z.string().min(1),
-  email: emailSchema,
-  successUrl: urlSchema,
-  cancelUrl: urlSchema,
-});
+const booleanFromString = z.preprocess((value) => {
+  if (value === "true") return true;
+  if (value === "false") return false;
+  return value;
+}, z.boolean());
 
-const checkoutItemSchema = z.object({
+export const cartBodySchema = z.object({
+  action: z.enum(["add", "update", "remove", "clear"]),
   productId: z.string().optional(),
-  name: z.string().optional(),
-  quantity: z.number().int().positive().optional(),
-  unitPriceCents: z.number().int().nonnegative().optional(),
+  quantity: positiveIntFromString.optional(),
 });
 
-export const checkoutSessionSchema = z.object({
-  items: z.array(checkoutItemSchema).min(1),
-  currency: z.string().min(1),
-  successUrl: urlSchema,
-  cancelUrl: urlSchema,
+export const checkoutIntentSchema = z.object({
+  currency: z.string().min(3),
 });
 
-export const contactSubmissionSchema = z.object({
-  name: z.string().min(1),
-  email: emailSchema,
-  orderNumber: z.string().optional(),
-  topic: z.enum(["Order status", "Returns", "Product question", "Bulk order", "Other"]),
-  message: z.string().min(1),
-});
-
-export const newsletterSubscribeSchema = z.object({
-  email: emailSchema,
+export const newsletterSchema = z.object({
+  email: z.string().email(),
   sourcePage: z.string().optional(),
 });
 
-export const trackOrderSchema = z.object({
-  orderNumber: z.string().min(1),
-  email: emailSchema,
+export const productSlugParamsSchema = z.object({
+  slug: z.string().min(1),
+});
+
+export const productsQuerySchema = z.object({
+  search: z.string().optional(),
+  category: z.string().optional(),
+  minPrice: numberFromString.optional(),
+  maxPrice: numberFromString.optional(),
+  minRating: numberFromString.optional(),
+  inStock: booleanFromString.optional(),
+  sort: z.enum(["best", "new", "price_asc", "price_desc", "top_rated"]).optional(),
+  page: positiveIntFromString.default(1),
+  limit: positiveIntFromString.default(12),
 });
