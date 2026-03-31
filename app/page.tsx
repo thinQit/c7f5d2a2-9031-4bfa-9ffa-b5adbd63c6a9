@@ -12,7 +12,7 @@ import GalleryMasonry from "@/components/GalleryMasonry";
 
 export default function HomePage() {
   const heroImage =
-    "https://res.cloudinary.com/dwc294mzm/image/upload/v1771577110/site-images/ecommerce/17485351.jpg";
+    "https://res.cloudinary.com/dwc294mzm/image/upload/v1771577104/site-images/ecommerce/29502364.jpg";
 
   return (
     <main className="bg-background">
@@ -32,12 +32,30 @@ export default function HomePage() {
         <div className="absolute inset-0 bg-black/40" />
         <div className="relative z-10 w-full">
           <div className="mx-auto grid max-w-7xl items-center gap-10 px-6 py-16 md:py-24 lg:grid-cols-[1.1fr_0.9fr]">
-            <HeroSpotlight
-              title="Upgrade your everyday with curated essentials—delivered in 2–4 days."
-              subtitle="Shop best-selling tech accessories, home upgrades, and travel-ready gear. Transparent pricing, easy returns, and secure checkout."
-              primaryCta={{ label: "Shop Best Sellers", href: "/shop?sort=best" }}
-              secondaryCta={{ label: "Browse Categories", href: "#categories" }}
-            />
+            <div>
+              <HeroSpotlight
+                title="Upgrade your everyday with curated essentials—delivered in 2–4 days."
+                subtitle="Shop best-selling tech accessories, home upgrades, and travel-ready gear. Transparent pricing, easy returns, and secure checkout."
+                primaryCta={{ label: "Shop Best Sellers", href: "/shop?sort=best" }}
+                secondaryCta={{ label: "Browse Categories", href: "#categories" }}
+              />
+              <div className="mt-8 flex items-center gap-4 rounded-2xl border border-white/20 bg-white/10 p-4 backdrop-blur">
+                <div className="h-16 w-16 overflow-hidden rounded-xl border border-white/30">
+                  <Image
+                    src={heroImage}
+                    alt="Hero product highlight"
+                    width={128}
+                    height={128}
+                    className="h-full w-full object-cover"
+                    unoptimized
+                  />
+                </div>
+                <div>
+                  <p className="text-sm font-semibold text-primary-foreground">Featured kit of the week</p>
+                  <p className="text-xs text-primary-foreground/70">Top-rated essentials curated for fast checkout.</p>
+                </div>
+              </div>
+            </div>
             <div className="relative mx-auto w-full max-w-md lg:max-w-none">
               <div className="absolute -inset-6 rounded-[32px] bg-white/10 blur-2xl" />
               <div className="relative overflow-hidden rounded-[28px] border border-white/20 shadow-2xl">
@@ -90,7 +108,7 @@ export default function HomePage() {
           subheadline="Real products, everyday use, zero fluff."
           images={[
             {
-              url: "https://res.cloudinary.com/dwc294mzm/image/upload/v1771577110/site-images/ecommerce/17485350.jpg",
+              url: "https://res.cloudinary.com/dwc294mzm/image/upload/v1771577104/site-images/ecommerce/29502358.jpg",
               alt: "Tech accessories arranged neatly",
               caption: "Tech Accessories",
             },
@@ -100,22 +118,22 @@ export default function HomePage() {
               caption: "Home Essentials",
             },
             {
-              url: "https://res.cloudinary.com/dwc294mzm/image/upload/v1771577111/site-images/ecommerce/3767397.jpg",
+              url: "https://res.cloudinary.com/dwc294mzm/image/upload/v1771577167/site-images/ecommerce/29502369.jpg",
               alt: "Travel carry setup",
               caption: "Travel & Carry",
             },
             {
-              url: "https://res.cloudinary.com/dwc294mzm/image/upload/v1771577105/site-images/ecommerce/17485352.jpg",
+              url: "https://res.cloudinary.com/dwc294mzm/image/upload/v1771577106/site-images/ecommerce/15195243.jpg",
               alt: "Wellness products flat lay",
               caption: "Wellness",
             },
             {
-              url: "https://res.cloudinary.com/dwc294mzm/image/upload/v1771577109/site-images/ecommerce/10330112.jpg",
+              url: "https://res.cloudinary.com/dwc294mzm/image/upload/v1771577110/site-images/ecommerce/17485351.jpg",
               alt: "Minimal desk setup essentials",
               caption: "Desk upgrades",
             },
             {
-              url: "https://res.cloudinary.com/dwc294mzm/image/upload/v1771577107/site-images/ecommerce/10330106.jpg",
+              url: "https://res.cloudinary.com/dwc294mzm/image/upload/v1771577162/site-images/ecommerce/35560482.jpg",
               alt: "Curated product collection",
               caption: "Curated collection",
             },
