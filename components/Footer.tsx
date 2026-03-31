@@ -1,46 +1,66 @@
 "use client";
 
 import Link from 'next/link'
-import { Facebook, Instagram, Twitter } from 'lucide-react'
 
 interface FooterProps {
-  brand?: string
+  brandName: string
+  supportEmail: string
 }
 
 export default function Footer({
-  brand = 'Storefront',
+  brandName = 'GrowthPilot',
+  supportEmail = 'support@growthpilot.com',
 }: Partial<FooterProps>) {
+  const columns = [
+    {
+      title: 'Product',
+      links: ['Features', 'Integrations', 'Pricing', 'Roadmap'],
+    },
+    {
+      title: 'Company',
+      links: ['About', 'Customers', 'Careers', 'Blog'],
+    },
+    {
+      title: 'Legal',
+      links: ['Privacy', 'Terms', 'Security', 'DPA'],
+    },
+  ]
+
   return (
-    <footer className="border-t bg-[#F8F9FA]">
-      <div className="mx-auto grid max-w-7xl gap-8 px-4 py-12 md:grid-cols-4 md:px-6">
-        <div>
-          <h3 className="font-semibold text-[#1A1A2E]">{brand}</h3>
-          <p className="mt-2 text-sm text-muted-foreground">hello@storefront.co<br />+1 (555) 014-8899</p>
-        </div>
-        <div>
-          <h4 className="mb-2 text-sm font-semibold">Shop</h4>
-          <div className="space-y-1 text-sm text-muted-foreground">
-            <Link href="#" className="block hover:text-[#E63946]">New Arrivals</Link>
-            <Link href="#" className="block hover:text-[#E63946]">Best Sellers</Link>
-            <Link href="#" className="block hover:text-[#E63946]">Sale</Link>
+    <footer className="border-t border-border bg-muted/30">
+      <div className="mx-auto max-w-7xl px-4 py-14 md:px-6">
+        <div className="grid gap-10 md:grid-cols-4">
+          <div>
+            <p className="text-lg font-bold text-[#111827]">{brandName}</p>
+            <p className="mt-3 max-w-xs text-sm text-muted-foreground">
+              Conversion-focused platform for teams that want to launch faster, capture more leads, and scale with confidence.
+            </p>
+            <p className="mt-4 text-sm text-[#111827]">
+              Support:{' '}
+              <a className="text-[#2563EB] hover:underline" href={'mailto:' + supportEmail}>
+                {supportEmail}
+              </a>
+            </p>
           </div>
+
+          {columns.map((col) => (
+            <div key={col.title}>
+              <h4 className="text-sm font-semibold text-[#111827]">{col.title}</h4>
+              <ul className="mt-4 space-y-2">
+                {col.links.map((item) => (
+                  <li key={item}>
+                    <Link href="#" className="text-sm text-muted-foreground transition-colors hover:text-[#111827]">
+                      {item}
+                    </Link>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          ))}
         </div>
-        <div>
-          <h4 className="mb-2 text-sm font-semibold">Support</h4>
-          <div className="space-y-1 text-sm text-muted-foreground">
-            <Link href="#" className="block hover:text-[#E63946]">Shipping</Link>
-            <Link href="#" className="block hover:text-[#E63946]">Returns</Link>
-            <Link href="#" className="block hover:text-[#E63946]">Contact</Link>
-          </div>
-        </div>
-        <div>
-          <h4 className="mb-2 text-sm font-semibold">Follow</h4>
-          <div className="flex gap-2">
-            <Link href="#" className="rounded-md border p-2"><Instagram className="h-4 w-4" /></Link>
-            <Link href="#" className="rounded-md border p-2"><Facebook className="h-4 w-4" /></Link>
-            <Link href="#" className="rounded-md border p-2"><Twitter className="h-4 w-4" /></Link>
-          </div>
-          <p className="mt-4 text-xs text-muted-foreground">Payments: Visa, Mastercard, Amex, PayPal</p>
+
+        <div className="mt-10 border-t border-border pt-6 text-xs text-muted-foreground">
+          © {new Date().getFullYear()} {brandName}. All rights reserved.
         </div>
       </div>
     </footer>

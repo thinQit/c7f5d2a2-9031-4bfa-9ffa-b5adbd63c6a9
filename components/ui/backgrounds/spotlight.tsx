@@ -1,2 +1,7 @@
 "use client";
-export function Spotlight(props: any) { return <div {...props}>{props.children}</div>; }
+import * as React from "react";
+
+export function Spotlight({ children, className, ...props }: any) {
+  return React.createElement("div", { className: className, ...props }, children);
+}
+

@@ -1,55 +1,72 @@
 'use client'
 
 import Link from 'next/link'
-import { Search, User, ShoppingCart, Menu } from 'lucide-react'
-import { Button } from '@/components/ui/button'
+import { Menu } from 'lucide-react'
+import { useState } from 'react'
 import { cn } from '@/lib/utils'
-import SearchBar from '@/components/SearchBar'
-import CartButton from '@/components/CartButton'
+import { Button } from '@/components/ui/button'
 
 interface NavbarProps {
-  logoText?: string
-  categories?: string[]
-  cartCount?: number
-  onMenuClick?: () => void
-  className?: string
+  brandName: string
+  ctaLabel: string
+  ctaHref: string
+  links: { label: string; href: string }[]
 }
 
 export default function Navbar({
-  logoText = 'Storefront',
-  categories = ['New Arrivals', 'Women', 'Men', 'Accessories', 'Sale'],
-  cartCount = 2,
-  onMenuClick = () => {},
-  className = '',
+  brandName = 'GrowthPilot',
+  ctaLabel = 'Start Free Trial',
+  ctaHref = '#pricing',
+  links = [
+    { label: 'Features', href: '#features' },
+    { label: 'Testimonials', href: '#testimonials' },
+    { label: 'Pricing', href: '#pricing' },
+    { label: 'FAQ', href: '#faq' },
+  ],
 }: Partial<NavbarProps>) {
-  return (
-    <header className={cn('sticky top-0 z-50 border-b bg-white/95 backdrop-blur supports-[backdrop-filter]:bg-white/75', className)}>
-      <div className="mx-auto flex h-16 max-w-7xl items-center gap-4 px-4 md:px-6">
-        <Button variant="ghost" size="icon" className="md:hidden" onClick={onMenuClick}>
-          <Menu className="h-5 w-5" />
-        </Button>
+  const [open, setOpen] = useState(false)
 
-        <Link href="/" className="font-semibold text-[#1A1A2E] text-lg">
-          {logoText}
+  return (
+    <header className="sticky top-0 z-50 border-b border-border/60 bg-white/90 backdrop-blur-md">
+      <nav className="mx-auto flex max-w-7xl items-center justify-between px-4 py-3 md:px-6">
+        <Link href="#" className="text-lg font-bold tracking-tight text-[#111827]">
+          {brandName}
         </Link>
 
-        <nav className="hidden items-center gap-5 md:flex">
-          {categories.map((category) => (
-            <Link key={category} href={'/collections/' + category.toLowerCase().replace(/\s+/g, '-')} className="text-sm text-[#1A1A2E] hover:text-[#E63946] transition-colors">
-              {category}
+        <div className="hidden items-center gap-8 md:flex">
+          {links.map((link) => (
+            <Link key={link.label} href={link.href} className="text-sm font-medium text-muted-foreground transition-colors hover:text-[#111827]">
+              {link.label}
             </Link>
           ))}
-        </nav>
-
-        <div className="ml-auto hidden w-full max-w-md md:block">
-          <SearchBar />
         </div>
 
-        <Button variant="ghost" size="icon" className="hidden md:inline-flex">
-          <User className="h-5 w-5" />
-        </Button>
+        <div className="hidden md:block">
+          <Button className="rounded-lg bg-[#2563EB] px-6 py-2 text-white hover:bg-[#1d4ed8] focus-visible:ring-2 focus-visible:ring-[#2563EB] focus-visible:ring-offset-2">
+            <Link href={ctaHref}>{ctaLabel}</Link>
+          </Button>
+        </div>
 
-        <CartButton count={cartCount} />
+        <button
+          onClick={() => setOpen((v) => !v)}
+          className="inline-flex items-center justify-center rounded-lg p-2 text-[#111827] md:hidden"
+          aria-label="Toggle menu"
+        >
+          <Menu className="h-5 w-5" />
+        </button>
+      </nav>
+
+      <div className={cn('border-t border-border bg-white px-4 py-3 md:hidden', open ? 'block' : 'hidden')}>
+        <div className="flex flex-col gap-3">
+          {links.map((link) => (
+            <Link key={link.label} href={link.href} onClick={() => setOpen(false)} className="text-sm font-medium text-[#111827]">
+              {link.label}
+            </Link>
+          ))}
+          <Button className="mt-2 rounded-lg bg-[#2563EB] text-white hover:bg-[#1d4ed8]">
+            <Link href={ctaHref}>{ctaLabel}</Link>
+          </Button>
+        </div>
       </div>
     </header>
   )

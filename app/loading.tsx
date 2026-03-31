@@ -1,7 +1,7 @@
 export default function Loading() {
   return (
-    <div className="min-h-screen flex items-center justify-center bg-background text-foreground">
-      <p className="text-lg md:text-xl animate-pulse">Loading LumenCart…</p>
-    </div>
+    <main className="min-h-screen bg-background text-foreground flex items-center justify-center">
+      <div className="animate-pulse text-lg font-medium">Loading Spotlight Landing...</div>
+    </main>
   );
 }
