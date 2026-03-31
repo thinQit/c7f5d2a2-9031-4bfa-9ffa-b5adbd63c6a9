@@ -2,52 +2,38 @@
 
 import CategoryCard from '@/components/CategoryCard'
 
-interface CategoryItem {
-  name: string
-  description: string
-  href: string
-  imageSrc: string
-}
-
 interface CategoryNavProps {
-  title?: string
-  categories?: CategoryItem[]
+  categories?: { title: string; description: string; href: string; imageSrc: string }[]
 }
 
 export default function CategoryNav({
-  title = 'Shop by Category',
   categories = [
     {
-      name: 'Smart Home',
-      description: 'Connected essentials for modern living',
-      href: '/shop?category=smart-home',
-      imageSrc: 'https://res.cloudinary.com/dwc294mzm/image/upload/c_fill,w_1200,h_800,g_auto/v1771577160/site-images/ecommerce/3756345.jpg',
+      title: 'New Arrivals',
+      description: 'Fresh picks just landed this week.',
+      href: '/collections/new-arrivals',
+      imageSrc: 'https://res.cloudinary.com/dwc294mzm/image/upload/c_fill,w_1200,h_800,g_auto/v1771577126/site-images/ecommerce/16675636.jpg',
     },
     {
-      name: 'Work Setup',
-      description: 'Productivity upgrades and desk gear',
-      href: '/shop?category=work',
-      imageSrc: 'https://res.cloudinary.com/dwc294mzm/image/upload/c_fill,w_1200,h_800,g_auto/v1771577129/site-images/ecommerce/16675635.jpg',
+      title: 'Work & Office',
+      description: 'Functional products for productive days.',
+      href: '/collections/work-office',
+      imageSrc: 'https://res.cloudinary.com/dwc294mzm/image/upload/c_fill,w_1200,h_800,g_auto/v1771577164/site-images/ecommerce/11952301.jpg',
     },
     {
-      name: 'Daily Carry',
-      description: 'Portable items built for everyday use',
-      href: '/shop?category=daily-carry',
-      imageSrc: 'https://res.cloudinary.com/dwc294mzm/image/upload/c_fill,w_1200,h_800,g_auto/v1771577108/site-images/ecommerce/29502367.jpg',
+      title: 'Weekend Style',
+      description: 'Relaxed essentials for off-duty looks.',
+      href: '/collections/weekend-style',
+      imageSrc: 'https://res.cloudinary.com/dwc294mzm/image/upload/c_fill,w_1200,h_800,g_auto/v1771577110/site-images/ecommerce/17485350.jpg',
     },
   ],
 }: Partial<CategoryNavProps>) {
   return (
-    <section className="py-10 md:py-14">
-      <div className="mx-auto max-w-7xl px-4">
-        <h2 className="mb-4 text-2xl font-bold text-[#1A1A2E]">{title}</h2>
-        <div className="flex gap-4 overflow-x-auto pb-2">
-          {categories.map((category) => (
-            <div key={category.href} className="min-w-[260px] flex-1 md:min-w-0">
-              <CategoryCard {...category} />
-            </div>
-          ))}
-        </div>
+    <section className="py-12 md:py-16">
+      <div className="mx-auto grid max-w-7xl gap-4 px-4 md:grid-cols-3 md:px-6">
+        {categories.map((category) => (
+          <CategoryCard key={category.title} {...category} />
+        ))}
       </div>
     </section>
   )

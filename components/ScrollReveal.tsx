@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect, useRef, useState } from 'react'
+import { motion } from 'framer-motion'
 import { cn } from '@/lib/utils'
 
 interface ScrollRevealProps {
@@ -8,23 +8,19 @@ interface ScrollRevealProps {
   className?: string
 }
 
-export default function ScrollReveal({ children = null, className = '' }: Partial<ScrollRevealProps>) {
-  const ref = useRef<HTMLDivElement | null>(null)
-  const [visible, setVisible] = useState(false)
-
-  useEffect(() => {
-    const el = ref.current
-    if (!el) return
-    const observer = new IntersectionObserver(([entry]) => {
-      if (entry.isIntersecting) setVisible(true)
-    }, { threshold: 0.15 })
-    observer.observe(el)
-    return () => observer.disconnect()
-  }, [])
-
+export default function ScrollReveal({
+  children = null,
+  className = '',
+}: Partial<ScrollRevealProps>) {
   return (
-    <div ref={ref} className={cn('transition-all duration-700', visible ? 'translate-y-0 opacity-100' : 'translate-y-4 opacity-0', className)}>
+    <motion.div
+      className={cn(className)}
+      initial={{ opacity: 0, y: 18 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true, margin: '-80px' }}
+      transition={{ duration: 0.5, ease: 'easeOut' }}
+    >
       {children}
-    </div>
+    </motion.div>
   )
 }

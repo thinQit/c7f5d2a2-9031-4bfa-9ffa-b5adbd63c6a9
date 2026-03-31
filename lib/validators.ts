@@ -1,32 +1,36 @@
 import { z } from "zod";
 
-export const checkoutCreateSessionSchema = z.object({
-  cartId: z.string().min(1, "Cart ID is required"),
-  successUrl: z.string().url("Invalid success URL"),
-  cancelUrl: z.string().url("Invalid cancel URL"),
+export const productsQuerySchema = z.object({
+  search: z.string().trim().min(1).max(120).optional(),
+  category: z.string().trim().min(1).max(80).optional(),
+  minPrice: z.coerce.number().int().min(0).optional(),
+  maxPrice: z.coerce.number().int().min(0).optional(),
+  minRating: z.coerce.number().min(0).max(5).optional(),
+  inStock: z
+    .string()
+    .optional()
+    .transform((v) => (v === undefined ? undefined : v === "true")),
+  sort: z.enum(["best", "new", "price_asc", "price_desc", "top_rated"]).optional(),
+  page: z.coerce.number().int().min(1).default(1),
+  limit: z.coerce.number().int().min(1).max(100).default(24),
 });
 
-export const checkoutSessionSchema = z.object({
-  items: z.array(z.any()).min(1, "At least one item is required"),
-  currency: z.string().min(1, "Currency is required"),
-  successUrl: z.string().url("Invalid success URL"),
-  cancelUrl: z.string().url("Invalid cancel URL"),
+export const cartBodySchema = z.object({
+  action: z.enum(["add", "update", "remove", "clear"]),
+  productId: z.string().cuid().optional(),
+  quantity: z.number().int().min(1).max(99).optional(),
 });
 
-export const contactSubmissionSchema = z.object({
-  name: z.string().min(1, "Name is required"),
-  email: z.string().email("Invalid email"),
-  orderNumber: z.string().optional(),
-  topic: z.string().min(1, "Topic is required"),
-  message: z.string().min(1, "Message is required"),
+export const newsletterSchema = z.object({
+  email: z.string().email().max(254),
+  sourcePage: z.string().trim().min(1).max(120),
 });
 
-export const newsletterSubscribeSchema = z.object({
-  email: z.string().email("Invalid email"),
-  sourcePage: z.string().optional(),
+export const checkoutIntentSchema = z.object({
+  cartId: z.string().cuid().optional(),
+  currency: z.string().length(3).default("usd"),
 });
 
-export const trackOrderSchema = z.object({
-  orderNumber: z.string().min(1, "Order number is required"),
-  email: z.string().email("Invalid email"),
+export const productSlugParamsSchema = z.object({
+  slug: z.string().trim().min(1).max(160),
 });

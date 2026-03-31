@@ -10,11 +10,17 @@ interface CartButtonProps {
   className?: string
 }
 
-export default function CartButton({ count = 2, onClick = () => {}, className = '' }: Partial<CartButtonProps>) {
+export default function CartButton({
+  count = 0,
+  onClick = () => {},
+  className = '',
+}: Partial<CartButtonProps>) {
   return (
-    <Button variant="outline" size="icon" className={cn('relative', className)} onClick={onClick} aria-label="Open cart">
+    <Button variant="ghost" size="icon" onClick={onClick} className={cn('relative', className)}>
       <ShoppingCart className="h-5 w-5" />
-      {count > 0 && <span className="absolute -right-1 -top-1 rounded-full bg-[#E63946] px-1.5 text-[10px] font-bold text-white">{count}</span>}
+      <span className="absolute -right-1 -top-1 min-w-[18px] rounded-full bg-[#E63946] px-1 text-center text-[10px] font-semibold text-white">
+        {count}
+      </span>
     </Button>
   )
 }

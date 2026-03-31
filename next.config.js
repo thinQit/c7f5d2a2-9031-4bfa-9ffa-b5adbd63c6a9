@@ -4,10 +4,10 @@ const nextConfig = {
     remotePatterns: [
       {
         protocol: "https",
-        hostname: "res.cloudinary.com",
-      },
-    ],
-  },
+        hostname: "res.cloudinary.com"
+      }
+    ]
+  }
 };
 
 nextConfig.typescript = Object.assign(nextConfig.typescript || {}, { ignoreBuildErrors: true });

@@ -10,19 +10,11 @@ interface StatsCounterProps {
   bgColor?: string;
 }
 
-export default function StatsCounter({
-  stats = [
-    { value: '250K+', label: 'Orders Delivered' },
-    { value: '98%', label: 'Customer Satisfaction' },
-    { value: '12K+', label: '5-Star Reviews' },
-    { value: '48h', label: 'Average Dispatch Time' },
-  ],
-  bgColor,
-}: Partial<StatsCounterProps>) {
+export default function StatsCounter({ stats = [], bgColor = '' }: Partial<StatsCounterProps>) {
   return (
     <section className={'py-16 ' + (bgColor || 'bg-primary text-primary-foreground')}>
-      <div className="container mx-auto max-w-7xl px-4 animate-fade-in-up">
-        <div className={'grid gap-8 text-center ' + ('grid-cols-2 md:grid-cols-' + Math.min(stats.length || 1, 4))}>
+      <div className="container mx-auto max-w-7xl px-4">
+        <div className="animate-fade-in-up grid gap-8 text-center grid-cols-2 md:grid-cols-4">
           {stats.map(function (stat, i) {
             return (
               <div key={i}>

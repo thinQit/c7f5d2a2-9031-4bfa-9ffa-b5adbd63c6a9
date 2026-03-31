@@ -1,70 +1,53 @@
 export const dynamic = 'force-dynamic';
 
+import HeroSpotlight from "@/components/HeroSpotlight";
+import FeaturesGrid from "@/components/FeaturesGrid";
 import CTAVortex from "@/components/CTAVortex";
-import ScrollReveal from "@/components/ScrollReveal";
-import { Card } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
 
 export default function ContactPage() {
   return (
-    <main>
-      <section className="relative min-h-[80vh] flex items-center animate-fade-in-up">
-        <div
-          className="absolute inset-0 bg-cover bg-center"
-          style={{
-            backgroundImage:
-              "url('https://res.cloudinary.com/dwc294mzm/image/upload/c_fill,w_1200,h_800,g_auto/v1771577128/site-images/ecommerce/16675634.jpg')",
-          }}
-        />
+    <main className="bg-background">
+      <section
+        className="animate-fade-in-up min-h-[80vh] bg-cover bg-center bg-no-repeat relative flex items-center"
+        style={{
+          backgroundImage:
+            "url('https://res.cloudinary.com/dwc294mzm/image/upload/c_fill,w_1200,h_800,g_auto/v1771577128/site-images/ecommerce/32831065.jpg')",
+        }}
+      >
         <div className="absolute inset-0 bg-black/40" />
-        <div className="relative z-10 mx-auto max-w-7xl px-6 text-primary-foreground">
-          <h1 className="text-5xl md:text-7xl font-bold">Questions before you buy?</h1>
-          <p className="mt-5 max-w-2xl text-base md:text-lg text-primary-foreground/90">
-            We respond within 1 business day. Include your order number if you already checked out.
-          </p>
+        <div className="relative z-10 w-full">
+          <HeroSpotlight
+            title="Contact support"
+            subtitle="Questions about an order, a return, or product details? We’ll reply fast."
+            primaryCta={{ label: "Email support", href: "mailto:support@lumencart.com" }}
+            secondaryCta={{ label: "Track an order", href: "/track-order" }}
+          />
         </div>
       </section>
 
-      <ScrollReveal>
-        <section className="py-20 md:py-28 bg-background animate-fade-in-up">
-          <div className="mx-auto max-w-3xl px-6">
-            <Card className="rounded-xl border border-border bg-card p-6 md:p-8 shadow-sm card-hover">
-              <h2 className="text-3xl md:text-4xl font-bold">Send a message</h2>
-              <p className="mt-3 text-muted-foreground">
-                Product questions, order help, or bulk gifting—send details and we’ll take it from there.
-              </p>
-              <form className="mt-6 grid gap-4">
-                <input className="rounded-lg border border-border bg-background px-4 py-3" placeholder="Full name" />
-                <input className="rounded-lg border border-border bg-background px-4 py-3" placeholder="Email" />
-                <input
-                  className="rounded-lg border border-border bg-background px-4 py-3"
-                  placeholder="Order number (optional)"
-                />
-                <textarea
-                  className="rounded-lg border border-border bg-background px-4 py-3 min-h-[140px]"
-                  placeholder="Tell us what you’re looking for..."
-                />
-                <Button className="rounded-lg px-6 py-3 font-medium transition-all duration-200 hover:scale-105">
-                  Send Message
-                </Button>
-              </form>
-            </Card>
-          </div>
-        </section>
-      </ScrollReveal>
+      <div className="animate-fade-in-up py-20 md:py-28 bg-muted">
+        <FeaturesGrid
+          badge="Support"
+          headline="Send a message"
+          subheadline="Include your order number for the fastest help."
+          features={[
+            { icon: "Clock", title: "Support hours", description: "Mon–Fri, 9:00am–6:00pm CT." },
+            { icon: "MessageCircle", title: "Fast response", description: "Typical response time is under 2 hours." },
+            { icon: "Phone", title: "Phone", description: "(512) 555-0184" },
+          ]}
+        />
+      </div>
 
-      <ScrollReveal>
-        <section className="py-20 md:py-28 bg-muted animate-fade-in-up">
-          <CTAVortex
-            title="Prefer self-serve?"
-            subtitle="Most questions are answered in our shipping, returns, and FAQ pages."
-            ctaLabel="Shipping & Returns"
-            ctaHref="/shipping-returns"
-            secondaryCtaLabel="FAQ"
-            secondaryCtaHref="/faq"
-          />
-        </section>
-      </ScrollReveal>
+      <div className="animate-fade-in-up py-20 md:py-28 bg-background">
+        <CTAVortex
+          title="Need a quick answer?"
+          subtitle="Most common questions are covered in our FAQ and shipping policy."
+          ctaLabel="Read FAQ"
+          ctaHref="/faq"
+          secondaryCtaLabel="Shipping & returns"
+          secondaryCtaHref="/shipping-returns"
+        />
+      </div>
     </main>
   );
 }

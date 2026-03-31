@@ -2,68 +2,92 @@
 
 import { useState } from 'react'
 import { Button } from '@/components/ui/button'
+import { Input } from '@/components/ui/input'
 
-export default function NewsletterForm() {
+interface NewsletterFormProps {
+  title?: string
+  incentive?: string
+}
+
+export default function NewsletterForm({
+  title = 'Get 10% Off Your First Order',
+  incentive = 'Join our list for early access drops, member-only offers, and product tips.',
+}: Partial<NewsletterFormProps>) {
   const [email, setEmail] = useState('')
-  const [submitted, setSubmitted] = useState(false)
-  const [error, setError] = useState('')
+  const [status, setStatus] = useState<'idle' | 'loading' | 'success' | 'error'>('idle')
+  const [msg, setMsg] = useState<string>('')
 
-  async function handleSubmit(e: React.FormEvent) {
+  async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault()
-    setError('')
-    if (!email) {
-      setError('Please enter your email')
-      return
-    }
+    setStatus('loading')
+    setMsg('')
     try {
-      const res = await fetch('/api/newsletter/subscribe', {
+      const res = await fetch('/api/newsletter', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email, sourcePage: 'home-newsletter' }),
+        body: JSON.stringify({ email, sourcePage: '/' }),
       })
-      if (!res.ok) throw new Error('Failed to subscribe')
-      setSubmitted(true)
-    } catch {
-      setError('Subscription failed. Try again!')
+      if (!res.ok) {
+        const err = await res.json()
+        setStatus('error')
+        setMsg(
+          err?.error || 'Submission failed. Please double-check your email and try again.'
+        )
+        return
+      }
+      setStatus('success')
+      setMsg('You’re on the list! Check your inbox for a welcome email.')
+      setEmail('')
+    } catch (error) {
+      setStatus('error')
+      setMsg('Could not submit form. Please try again—or email support.')
     }
   }
 
   return (
-    <section>
-      <div className="flex flex-col md:flex-row gap-8 items-center justify-between">
-        <div className="flex-1">
-          <h2 className="text-3xl md:text-4xl font-bold mb-1">Get first access to drops and deals</h2>
-          <p className="text-muted-foreground mb-2">
-            Join 18,000+ subscribers. New arrivals, limited runs, and members-only bundles—sent weekly.
-          </p>
-          <span className="inline-block rounded px-3 py-1 bg-green-100 text-green-800 text-sm font-medium mb-3">
-            Welcome perk: 10% off your first order over $50
-          </span>
-        </div>
-        <form className="mt-4 flex flex-col md:flex-row gap-2" onSubmit={handleSubmit}>
-          <input
-            className="min-w-[260px] rounded-lg border border-border bg-background px-4 py-3 text-base"
-            placeholder="you@example.com"
-            value={email}
+    <section className="py-16">
+      <div className="mx-auto max-w-2xl rounded-2xl border bg-white p-6 text-center md:p-8">
+        <h2 className="text-2xl font-bold text-foreground">{title}</h2>
+        <p className="mt-2 text-sm text-muted-foreground">{incentive}</p>
+        <form
+          onSubmit={handleSubmit}
+          className="mt-5 flex flex-col gap-3 md:flex-row"
+          noValidate
+        >
+          <Input
+            name="email"
             type="email"
-            onChange={e => setEmail(e.target.value)}
             required
-            disabled={submitted}
-            aria-label="Email address"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            placeholder="Enter your email"
+            autoComplete="email"
+            disabled={status === 'loading' || status === 'success'}
           />
           <Button
             type="submit"
-            className="rounded-lg px-4 py-3 font-medium text-base"
-            disabled={submitted}
+            className="bg-primary hover:bg-primary/90"
+            disabled={status === 'loading' || status === 'success'}
           >
-            {submitted ? 'Subscribed!' : 'Subscribe'}
+            {status === 'loading' ? 'Saving…' : status === 'success' ? '✓ Subscribed' : 'Subscribe'}
           </Button>
         </form>
+        {msg && (
+          <p
+            className={`mt-3 text-xs ${
+              status === 'error' ? 'text-destructive' : 'text-muted-foreground'
+            }`}
+            role={status === 'error' ? 'alert' : 'status'}
+          >
+            {msg}
+          </p>
+        )}
+        {!msg && (
+          <p className="mt-3 text-xs text-muted-foreground">
+            We respect your privacy. Unsubscribe anytime.
+          </p>
+        )}
       </div>
-      {error && <p className="text-red-600 text-sm mt-3">{error}</p>}
-      <p className="mt-6 text-xs text-muted-foreground">
-        By subscribing, you agree to receive emails from Spotlight Storefront. Unsubscribe anytime.
-      </p>
     </section>
   )
 }

@@ -5,57 +5,68 @@ import { productsQuerySchema } from "@/lib/validators";
 
 export async function GET(req: NextRequest) {
   try {
-    const params = Object.fromEntries(req.nextUrl.searchParams.entries());
-    const parsed = productsQuerySchema.safeParse(params);
+    const parsed = productsQuerySchema.safeParse(
+      Object.fromEntries(req.nextUrl.searchParams.entries()),
+    );
 
     if (!parsed.success) {
       return NextResponse.json(
         { error: "Invalid query parameters", details: parsed.error.flatten() },
-        { status: 400 }
+        { status: 400 },
       );
     }
 
-    const { category, collection, minPrice, maxPrice, rating, q, inStock, sort, page, pageSize } =
-      parsed.data;
+    const { search, category, minPrice, maxPrice, minRating, inStock, sort, page, limit } = parsed.data;
+    const skip = (page - 1) * limit;
 
     const where: Prisma.ProductWhereInput = {
-      ...(category ? { category } : {}),
-      ...(collection ? { collection } : {}),
-      ...(typeof inStock === "boolean" ? { inStock } : {}),
-      ...(rating ? { rating: { gte: rating } } : {}),
-      ...(q
-        ? {
-            OR: [
-              { name: { contains: q, mode: "insensitive" } },
-              { description: { contains: q, mode: "insensitive" } },
-              { sku: { contains: q, mode: "insensitive" } },
-            ],
-          }
-        : {}),
-      ...(minPrice !== undefined || maxPrice !== undefined
-        ? {
-            priceCents: {
-              ...(minPrice !== undefined ? { gte: minPrice * 100 } : {}),
-              ...(maxPrice !== undefined ? { lte: maxPrice * 100 } : {}),
-            },
-          }
-        : {}),
+      AND: [
+        search
+          ? {
+              OR: [
+                { name: { contains: search, mode: "insensitive" } },
+                { sku: { contains: search, mode: "insensitive" } },
+                { category: { contains: search, mode: "insensitive" } },
+              ],
+            }
+          : {},
+        category ? { category: { equals: category, mode: "insensitive" } } : {},
+        minPrice !== undefined || maxPrice !== undefined
+          ? {
+              priceCents: {
+                gte: minPrice !== undefined ? minPrice * 100 : undefined,
+                lte: maxPrice !== undefined ? maxPrice * 100 : undefined,
+              },
+            }
+          : {},
+        minRating !== undefined ? { ratingAvg: { gte: minRating } } : {},
+        inStock !== undefined ? { inStock } : {},
+      ],
     };
 
-    const orderByMap = {
-      best: [{ reviewCount: "desc" as const }, { rating: "desc" as const }],
-      newest: [{ createdAt: "desc" as const }],
-      price_asc: [{ priceCents: "asc" as const }],
-      price_desc: [{ priceCents: "desc" as const }],
-      rating: [{ rating: "desc" as const }, { reviewCount: "desc" as const }],
-    };
+    const orderBy: Prisma.ProductOrderByWithRelationInput[] =
+      sort === "best"
+        ? [{ isBestSeller: "desc" as const }, { reviewCount: "desc" as const }]
+        : sort === "new"
+        ? [{ createdAt: "desc" as const }]
+        : sort === "price_asc"
+        ? [{ priceCents: "asc" as const }]
+        : sort === "price_desc"
+        ? [{ priceCents: "desc" as const }]
+        : sort === "top_rated"
+        ? [{ ratingAvg: "desc" as const }, { reviewCount: "desc" as const }]
+        : [{ isBestSeller: "desc" as const }, { createdAt: "desc" as const }];
 
     const [items, total] = await Promise.all([
       db.product.findMany({
         where,
-        orderBy: orderByMap[sort],
-        skip: (page - 1) * pageSize,
-        take: pageSize,
+        orderBy,
+        skip,
+        take: limit,
+        include: {
+          images: { orderBy: { position: "asc" as const }, take: 1 },
+          highlights: { orderBy: { position: "asc" as const }, take: 3 },
+        },
       }),
       db.product.count({ where }),
     ]);
@@ -63,10 +74,10 @@ export async function GET(req: NextRequest) {
     return NextResponse.json({
       items,
       pagination: {
-        page,
-        pageSize,
         total,
-        totalPages: Math.ceil(total / pageSize),
+        page,
+        limit,
+        totalPages: Math.ceil(total / limit),
       },
     });
   } catch (error) {

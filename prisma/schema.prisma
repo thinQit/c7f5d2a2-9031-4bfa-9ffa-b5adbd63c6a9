@@ -4,86 +4,116 @@ generator client {
 
 datasource db {
   provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum ProductSort {
+  best
+  newest
+  price_asc
+  price_desc
+  top_rated
+}
+
+enum CartActionType {
+  add
+  update
+  remove
+  clear
 }
 
 model Product {
-  id             String   @id @default(cuid())
-  slug           String   @unique
-  sku            String   @unique
+  id             String      @id @default(cuid())
+  slug           String      @unique
+  sku            String      @unique
   name           String
   description    String
   category       String
-  collection     String?
   priceCents     Int
   compareAtCents Int?
-  rating         Float    @default(0)
-  reviewCount    Int      @default(0)
-  badge          String?
-  inStock        Boolean  @default(true)
-  stockQty       Int      @default(0)
-  images         Json
-  highlights     String[]
-  specs          Json
-  createdAt      DateTime @default(now())
-  updatedAt      DateTime @updatedAt
+  ratingAvg      Float       @default(0)
+  reviewCount    Int         @default(0)
+  inStock        Boolean     @default(true)
+  stockQty       Int         @default(0)
+  isBestSeller   Boolean     @default(false)
+  isNewArrival   Boolean     @default(false)
+  createdAt      DateTime    @default(now())
+  updatedAt      DateTime    @updatedAt
 
-  reviews   Review[]
-  cartItems CartItem[]
-  orderItems OrderItem[]
+  images         ProductImage[]
+  variants       ProductVariant[]
+  highlights     ProductHighlight[]
+  specs          ProductSpec[]
+  reviewSummary  ReviewSummary?
+  cartItems      CartItem[]
 }
 
-model Review {
-  id          String   @id @default(cuid())
-  productId   String
-  authorName  String
-  location    String?
-  rating      Int
-  title       String?
-  content     String
-  verified    Boolean  @default(true)
-  createdAt   DateTime @default(now())
+model ProductImage {
+  id        String   @id @default(cuid())
+  productId String
+  url       String
+  alt       String
+  position  Int      @default(0)
 
-  product Product @relation(fields: [productId], references: [id], onDelete: Cascade)
+  product   Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
 
-  @@index([productId, createdAt])
+  @@index([productId, position])
 }
 
-model Testimonial {
-  id               String   @id @default(cuid())
-  name             String
-  location         String?
-  rating           Int
-  quote            String
-  productMentioned String?
-  sortOrder        Int      @default(0)
-  isPublished      Boolean  @default(true)
-  createdAt        DateTime @default(now())
-  updatedAt        DateTime @updatedAt
+model ProductVariant {
+  id        String   @id @default(cuid())
+  productId String
+  name      String
+  value     String
+  stockQty  Int      @default(0)
 
-  @@index([isPublished, sortOrder])
+  product   Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
+
+  @@index([productId])
 }
 
-model NewsletterSubscriber {
-  id            String   @id @default(cuid())
-  email         String   @unique
-  status        String   @default("pending")
-  source        String   @default("website")
-  subscribedAt  DateTime @default(now())
-  confirmedAt   DateTime?
+model ProductHighlight {
+  id        String   @id @default(cuid())
+  productId String
+  text      String
+  position  Int      @default(0)
+
+  product   Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
+
+  @@index([productId, position])
+}
+
+model ProductSpec {
+  id        String   @id @default(cuid())
+  productId String
+  key       String
+  value     String
+  position  Int      @default(0)
+
+  product   Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
+
+  @@index([productId, position])
+}
+
+model ReviewSummary {
+  id         String  @id @default(cuid())
+  productId  String  @unique
+  fiveStar   Int     @default(0)
+  fourStar   Int     @default(0)
+  threeStar  Int     @default(0)
+  twoStar    Int     @default(0)
+  oneStar    Int     @default(0)
+
+  product    Product @relation(fields: [productId], references: [id], onDelete: Cascade)
 }
 
 model Cart {
-  id             String   @id @default(cuid())
-  sessionId      String   @unique
-  currency       String   @default("USD")
-  subtotalCents  Int      @default(0)
-  discountCents  Int      @default(0)
-  taxCents       Int      @default(0)
-  totalCents     Int      @default(0)
-  createdAt      DateTime @default(now())
-  updatedAt      DateTime @updatedAt
+  id         String     @id @default(cuid())
+  sessionId  String     @unique
+  createdAt  DateTime   @default(now())
+  updatedAt  DateTime   @updatedAt
 
-  items CartItem[]
+  items      CartItem[]
 }
 
 model CartItem {
@@ -91,52 +121,35 @@ model CartItem {
   cartId     String
   productId  String
   quantity   Int      @default(1)
-  priceCents Int
   createdAt  DateTime @default(now())
   updatedAt  DateTime @updatedAt
 
-  cart    Cart    @relation(fields: [cartId], references: [id], onDelete: Cascade)
-  product Product @relation(fields: [productId], references: [id], onDelete: Cascade)
+  cart       Cart     @relation(fields: [cartId], references: [id], onDelete: Cascade)
+  product    Product  @relation(fields: [productId], references: [id], onDelete: Restrict)
 
   @@unique([cartId, productId])
-  @@index([productId])
+  @@index([cartId])
 }
 
-model Order {
-  id                       String   @id @default(cuid())
-  sessionId                String?
-  email                    String?
-  customerName             String?
-  status                   String   @default("pending")
-  currency                 String   @default("USD")
-  subtotalCents            Int      @default(0)
-  discountCents            Int      @default(0)
-  taxCents                 Int      @default(0)
-  totalCents               Int      @default(0)
-  stripePaymentIntentId    String?
-  stripeCheckoutSessionId  String?
-  shippingAddress          Json?
-  billingAddress           Json?
-  createdAt                DateTime @default(now())
-  updatedAt                DateTime @updatedAt
-
-  items OrderItem[]
-
-  @@index([status, createdAt])
-}
-
-model OrderItem {
+model NewsletterSignup {
   id         String   @id @default(cuid())
-  orderId    String
-  productId  String
-  quantity   Int      @default(1)
-  priceCents Int
+  email      String   @unique
+  sourcePage String
   createdAt  DateTime @default(now())
-  updatedAt  DateTime @updatedAt
 
-  order   Order   @relation(fields: [orderId], references: [id], onDelete: Cascade)
-  product Product @relation(fields: [productId], references: [id])
+  @@index([createdAt])
+}
 
-  @@index([orderId])
-  @@index([productId])
+model Testimonial {
+  id         String   @id @default(cuid())
+  name       String
+  location   String
+  rating     Int
+  quote      String
+  product    String
+  date       DateTime
+  verified   Boolean  @default(true)
+  createdAt  DateTime @default(now())
+
+  @@index([date])
 }

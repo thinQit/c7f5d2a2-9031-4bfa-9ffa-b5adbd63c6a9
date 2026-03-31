@@ -1,6 +1,7 @@
 'use client'
 
-import { X, Search } from 'lucide-react'
+import Link from 'next/link'
+import { X } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { cn } from '@/lib/utils'
 
@@ -8,55 +9,61 @@ interface MobileNavDrawerProps {
   open?: boolean
   onClose?: () => void
   categories?: string[]
+  collections?: string[]
   quickLinks?: string[]
 }
 
 export default function MobileNavDrawer({
   open = false,
   onClose = () => {},
-  categories = ['New Arrivals', 'Best Sellers', 'Electronics', 'Home', 'Fashion'],
-  quickLinks = ['Track Order', 'Returns', 'Help Center'],
+  categories = ['New Arrivals', 'Women', 'Men', 'Accessories', 'Sale'],
+  collections = ['Spring Edit', 'Best Sellers', 'Under $50'],
+  quickLinks = ['Track Order', 'Shipping', 'Contact Support'],
 }: Partial<MobileNavDrawerProps>) {
   return (
     <div className={cn('fixed inset-0 z-50 md:hidden', open ? 'pointer-events-auto' : 'pointer-events-none')}>
-      <div
-        className={cn('absolute inset-0 bg-black/40 transition-opacity', open ? 'opacity-100' : 'opacity-0')}
-        onClick={onClose}
-      />
-      <aside
-        className={cn(
-          'absolute left-0 top-0 h-full w-[88%] max-w-sm bg-background p-4 shadow-xl transition-transform',
-          open ? 'translate-x-0' : '-translate-x-full'
-        )}
-      >
-        <div className="mb-4 flex items-center justify-between">
-          <p className="font-semibold">Menu</p>
+      <div className={cn('absolute inset-0 bg-black/40 transition-opacity', open ? 'opacity-100' : 'opacity-0')} onClick={onClose} />
+      <aside className={cn('absolute left-0 top-0 h-full w-[86%] max-w-sm bg-white p-5 transition-transform', open ? 'translate-x-0' : '-translate-x-full')}>
+        <div className="mb-6 flex items-center justify-between">
+          <p className="font-semibold text-[#1A1A2E]">Menu</p>
           <Button variant="ghost" size="icon" onClick={onClose}>
             <X className="h-5 w-5" />
           </Button>
         </div>
 
-        <div className="mb-6 flex items-center gap-2 rounded-lg border px-3 py-2">
-          <Search className="h-4 w-4 text-muted-foreground" />
-          <input className="w-full bg-transparent text-sm outline-none" placeholder="Search..." />
-        </div>
+        <div className="space-y-6">
+          <section>
+            <h3 className="mb-3 text-xs font-semibold uppercase tracking-wide text-muted-foreground">Categories</h3>
+            <div className="space-y-2">
+              {categories.map((item) => (
+                <Link key={item} href="#" className="block text-sm text-[#1A1A2E] hover:text-[#E63946]">
+                  {item}
+                </Link>
+              ))}
+            </div>
+          </section>
 
-        <p className="mb-2 text-xs uppercase text-muted-foreground">Categories</p>
-        <div className="mb-6 space-y-1">
-          {categories.map((item) => (
-            <a key={item} href="#" className="block rounded-md px-2 py-2 text-sm hover:bg-muted">
-              {item}
-            </a>
-          ))}
-        </div>
+          <section>
+            <h3 className="mb-3 text-xs font-semibold uppercase tracking-wide text-muted-foreground">Collections</h3>
+            <div className="space-y-2">
+              {collections.map((item) => (
+                <Link key={item} href="#" className="block text-sm text-[#1A1A2E] hover:text-[#E63946]">
+                  {item}
+                </Link>
+              ))}
+            </div>
+          </section>
 
-        <p className="mb-2 text-xs uppercase text-muted-foreground">Quick Links</p>
-        <div className="space-y-1">
-          {quickLinks.map((item) => (
-            <a key={item} href="#" className="block rounded-md px-2 py-2 text-sm hover:bg-muted">
-              {item}
-            </a>
-          ))}
+          <section>
+            <h3 className="mb-3 text-xs font-semibold uppercase tracking-wide text-muted-foreground">Quick Links</h3>
+            <div className="space-y-2">
+              {quickLinks.map((item) => (
+                <Link key={item} href="#" className="block text-sm text-[#1A1A2E] hover:text-[#E63946]">
+                  {item}
+                </Link>
+              ))}
+            </div>
+          </section>
         </div>
       </aside>
     </div>

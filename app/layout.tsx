@@ -1,53 +1,66 @@
-import "./globals.css";
 import type { Metadata } from "next";
 import { DM_Sans, Inter } from "next/font/google";
-import Navbar from "@/components/Navbar";
+import "./globals.css";
+import NavbarSticky from "@/components/NavbarSticky";
 import FooterMultiColumn from "@/components/FooterMultiColumn";
 
 const dmSans = DM_Sans({
   subsets: ["latin"],
-  variable: "--font-heading",
   weight: ["400", "500", "700"],
+  variable: "--font-dm-sans",
 });
 
 const inter = Inter({
   subsets: ["latin"],
-  variable: "--font-body",
   weight: ["300", "400", "600"],
+  variable: "--font-inter",
 });
 
 export const metadata: Metadata = {
-  title: "AuroraCart — Modern Essentials, Fast Shipping",
+  title: "LumenCart | Curated essentials with fast shipping",
   description:
-    "Shop design-forward everyday essentials with fast shipping, secure checkout, and 30-day returns. Browse categories, best sellers, and bundle deals.",
+    "Shop curated tech accessories, home essentials, and travel gear. Free shipping over $60, 30-day returns, and secure Stripe checkout.",
 };
 
 export default function RootLayout({
   children,
-}: {
-  children: React.ReactNode;
-}) {
+}: Readonly<{ children: React.ReactNode }>) {
   return (
     <html lang="en">
       <body className={`${dmSans.variable} ${inter.variable} font-sans bg-background text-foreground`}>
-        <Navbar />
+        <NavbarSticky
+          logo="LumenCart"
+          navItems={[
+            { label: "Home", href: "/" },
+            { label: "Shop", href: "/shop" },
+            { label: "Categories", href: "/#categories" },
+            { label: "Best Sellers", href: "/shop?sort=best" },
+            { label: "About", href: "/about" },
+            { label: "Contact", href: "/contact" },
+            { label: "Wireframe", href: "/wireframe" },
+          ]}
+          ctaLabel="Shop Now"
+          ctaHref="/shop"
+        />
         {children}
         <FooterMultiColumn
-          brand="AuroraCart"
-          description="Design-forward essentials with fast shipping and easy returns."
+          brand="LumenCart"
+          description="Curated essentials with fast shipping, transparent pricing, and a checkout experience built for speed."
           columns={[
             {
               title: "Shop",
               links: [
-                { label: "All Products", href: "/shop" },
-                { label: "Bundles", href: "/shop?collection=bundles" },
-                { label: "Gift Cards", href: "/gift-cards" },
+                { label: "All products", href: "/shop" },
+                { label: "Best sellers", href: "/shop?sort=best" },
+                { label: "New arrivals", href: "/shop?sort=new" },
+                { label: "Gift guide", href: "/collections/gifts" },
               ],
             },
             {
-              title: "Support",
+              title: "Help",
               links: [
-                { label: "Shipping & Returns", href: "/shipping-returns" },
+                { label: "Shipping & returns", href: "/shipping-returns" },
+                { label: "Order tracking", href: "/track-order" },
                 { label: "FAQ", href: "/faq" },
                 { label: "Contact", href: "/contact" },
               ],
@@ -57,12 +70,12 @@ export default function RootLayout({
               links: [
                 { label: "About", href: "/about" },
                 { label: "Reviews", href: "/reviews" },
-                { label: "Privacy Policy", href: "/privacy" },
+                { label: "Privacy policy", href: "/privacy" },
                 { label: "Terms", href: "/terms" },
               ],
             },
           ]}
-          copyright="© 2026 AuroraCart. All rights reserved."
+          copyright="© 2026 LumenCart. All rights reserved."
         />
       </body>
     </html>

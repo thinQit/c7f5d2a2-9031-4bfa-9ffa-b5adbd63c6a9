@@ -1,88 +1,88 @@
+import { cookies } from "next/headers";
 import { NextRequest, NextResponse } from "next/server";
 import { db } from "@/lib/db";
-import { cartInputSchema } from "@/lib/validators";
+import { cartBodySchema } from "@/lib/validators";
 
-const FREE_SHIPPING_THRESHOLD_CENTS = 5000;
-const FLAT_SHIPPING_CENTS = 500;
-const TAX_RATE = 0.085;
+const CART_COOKIE_NAME = "lumencart_session_id";
+
+function getSessionId() {
+  return crypto.randomUUID();
+}
 
 export async function POST(req: NextRequest) {
   try {
     const body = await req.json();
-    const parsed = cartInputSchema.safeParse(body);
+    const parsed = cartBodySchema.safeParse(body);
 
     if (!parsed.success) {
       return NextResponse.json(
         { error: "Invalid cart payload", details: parsed.error.flatten() },
-        { status: 400 }
+        { status: 400 },
       );
     }
 
-    const { sessionId, items } = parsed.data;
+    const cookieStore = await cookies();
+    let sessionId = cookieStore.get(CART_COOKIE_NAME)?.value;
 
-    const productIds = items.map((i) => i.productId);
-    const products = await db.product.findMany({
-      where: { id: { in: productIds } },
-      select: { id: true, priceCents: true, inStock: true, stockQty: true, name: true },
-    });
-
-    if (products.length !== productIds.length) {
-      return NextResponse.json({ error: "One or more products not found" }, { status: 404 });
+    if (!sessionId) {
+      sessionId = getSessionId();
+      cookieStore.set(CART_COOKIE_NAME, sessionId, {
+        httpOnly: true,
+        sameSite: "lax",
+        secure: process.env.NODE_ENV === "production",
+        path: "/",
+        maxAge: 60 * 60 * 24 * 30,
+      });
     }
-
-    const productMap = new Map(products.map((p) => [p.id, p]));
-    for (const item of items) {
-      const product = productMap.get(item.productId);
-      if (!product) continue;
-      if (!product.inStock || product.stockQty < item.quantity) {
-        return NextResponse.json(
-          { error: `Insufficient stock for ${product.name}` },
-          { status: 400 }
-        );
-      }
-    }
-
-    const subtotalCents = items.reduce((sum, item) => {
-      const product = productMap.get(item.productId);
-      return sum + (product?.priceCents ?? 0) * item.quantity;
-    }, 0);
-
-    const shippingCents =
-      subtotalCents >= FREE_SHIPPING_THRESHOLD_CENTS ? 0 : FLAT_SHIPPING_CENTS;
-    const taxCents = Math.round(subtotalCents * TAX_RATE);
-    const totalCents = subtotalCents + shippingCents + taxCents;
 
     const cart = await db.cart.upsert({
       where: { sessionId },
-      update: {
-        subtotalCents,
-        shippingCents,
-        taxCents,
-        totalCents,
-      },
-      create: {
-        sessionId,
-        subtotalCents,
-        shippingCents,
-        taxCents,
-        totalCents,
-      },
+      update: {},
+      create: { sessionId },
     });
 
-    await db.cartItem.deleteMany({ where: { cartId: cart.id } });
+    const { action, productId, quantity } = parsed.data;
 
-    await db.cartItem.createMany({
-      data: items.map((item) => ({
-        cartId: cart.id,
-        productId: item.productId,
-        quantity: item.quantity,
-        unitPriceCents: productMap.get(item.productId)?.priceCents ?? 0,
-      })),
-    });
+    if (action === "clear") {
+      await db.cartItem.deleteMany({ where: { cartId: cart.id } });
+    } else {
+      if (!productId) {
+        return NextResponse.json({ error: "productId is required" }, { status: 400 });
+      }
+
+      if (action === "add") {
+        const qtyToAdd = quantity ?? 1;
+        await db.cartItem.upsert({
+          where: { cartId_productId: { cartId: cart.id, productId } },
+          update: { quantity: { increment: qtyToAdd } },
+          create: { cartId: cart.id, productId, quantity: qtyToAdd },
+        });
+      }
+
+      if (action === "update") {
+        if (!quantity) {
+          return NextResponse.json({ error: "quantity is required for update" }, { status: 400 });
+        }
+        await db.cartItem.updateMany({
+          where: { cartId: cart.id, productId },
+          data: { quantity },
+        });
+      }
+
+      if (action === "remove") {
+        await db.cartItem.deleteMany({ where: { cartId: cart.id, productId } });
+      }
+    }
 
     const updatedCart = await db.cart.findUnique({
       where: { id: cart.id },
-      include: { items: true },
+      include: {
+        items: {
+          orderBy: { createdAt: "asc" as const },
+          include: { product: { include: { images: { take: 1, orderBy: { position: "asc" as const } } } },
+          },
+        },
+      },
     });
 
     return NextResponse.json(updatedCart);

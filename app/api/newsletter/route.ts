@@ -1,44 +1,31 @@
 import { NextRequest, NextResponse } from "next/server";
 import { db } from "@/lib/db";
-import { newsletterInputSchema } from "@/lib/validators";
+import { newsletterSchema } from "@/lib/validators";
 
 export async function POST(req: NextRequest) {
   try {
     const body = await req.json();
-    const parsed = newsletterInputSchema.safeParse(body);
+    const parsed = newsletterSchema.safeParse(body);
 
     if (!parsed.success) {
       return NextResponse.json(
         { error: "Invalid newsletter payload", details: parsed.error.flatten() },
-        { status: 400 }
+        { status: 400 },
       );
     }
 
-    const { email, source } = parsed.data;
-
-    const subscriber = await db.newsletterSubscriber.upsert({
-      where: { email },
-      update: {
-        source,
-        status: "pending",
-      },
+    const signup = await db.newsletterSignup.upsert({
+      where: { email: parsed.data.email.toLowerCase() },
+      update: { sourcePage: parsed.data.sourcePage },
       create: {
-        email,
-        source,
-        status: "pending",
+        email: parsed.data.email.toLowerCase(),
+        sourcePage: parsed.data.sourcePage,
       },
     });
 
-    return NextResponse.json(
-      {
-        success: true,
-        subscriberId: subscriber.id,
-        message: "Subscription received. Please confirm via email.",
-      },
-      { status: 201 }
-    );
+    return NextResponse.json({ success: true, signupId: signup.id });
   } catch (error) {
     console.error("POST /api/newsletter error:", error);
-    return NextResponse.json({ error: "Failed to subscribe to newsletter" }, { status: 500 });
+    return NextResponse.json({ error: "Failed to save newsletter signup" }, { status: 500 });
   }
 }

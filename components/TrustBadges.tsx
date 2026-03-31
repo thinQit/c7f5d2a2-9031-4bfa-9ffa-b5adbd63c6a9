@@ -1,33 +1,32 @@
 "use client";
 
-import TrustBadgeItem from '@/components/TrustBadgeItem'
-
-interface BadgeData {
-  icon: string
-  title: string
-  description: string
-}
+import { ShieldCheck, Truck, Headphones } from 'lucide-react'
 
 interface TrustBadgesProps {
-  items?: BadgeData[]
+  shippingThreshold?: string
+  supportHours?: string
 }
 
 export default function TrustBadges({
-  items = [
-    { icon: 'Truck', title: 'Free Shipping', description: 'Orders over $75 ship free in 2-4 days.' },
-    { icon: 'RotateCcw', title: '30-Day Returns', description: 'Simple returns with prepaid labels.' },
-    { icon: 'ShieldCheck', title: 'Secure Checkout', description: '256-bit encrypted payment processing.' },
-    { icon: 'BadgeCheck', title: '1-Year Warranty', description: 'Coverage included on all featured items.' },
-  ],
+  shippingThreshold = 'Free shipping on orders over $75',
+  supportHours = 'Live support: Mon-Fri, 9am-8pm',
 }: Partial<TrustBadgesProps>) {
+  const items = [
+    { icon: Truck, title: 'Fast Delivery', copy: shippingThreshold },
+    { icon: ShieldCheck, title: 'Secure Checkout', copy: 'Encrypted payments and buyer protection' },
+    { icon: Headphones, title: 'Helpful Support', copy: supportHours },
+  ]
+
   return (
-    <section className="py-12 md:py-16">
-      <div className="mx-auto max-w-7xl px-4">
-        <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
-          {items.map((item, i) => (
-            <TrustBadgeItem key={item.title + i} {...item} />
-          ))}
-        </div>
+    <section className="py-14">
+      <div className="mx-auto grid max-w-7xl gap-4 px-4 md:grid-cols-3 md:px-6">
+        {items.map((item) => (
+          <div key={item.title} className="rounded-xl border bg-white p-5">
+            <item.icon className="mb-3 h-5 w-5 text-[#E63946]" />
+            <h3 className="font-semibold text-[#1A1A2E]">{item.title}</h3>
+            <p className="mt-1 text-sm text-muted-foreground">{item.copy}</p>
+          </div>
+        ))}
       </div>
     </section>
   )

@@ -2,37 +2,58 @@
 
 import ProductCard from '@/components/ProductCard'
 
-interface Product {
-  id: string
-  title: string
-  imageSrc: string
-  price: number
-  compareAt?: number
-  rating?: number
-  badge?: string
-}
-
 interface FeaturedProductsProps {
   title?: string
-  products?: Product[]
+  products?: {
+    name: string
+    price: number
+    compareAt: number
+    rating: number
+    reviews: number
+    badge: string
+    imageSrc: string
+  }[]
 }
 
 export default function FeaturedProducts({
   title = 'Featured Products',
   products = [
-    { id: '1', title: 'Aero Noise-Canceling Headphones', imageSrc: 'https://res.cloudinary.com/dwc294mzm/image/upload/c_fill,w_1200,h_800,g_auto/v1771577158/site-images/ecommerce/10330120.jpg', price: 149, compareAt: 199, rating: 4.8, badge: 'Best Seller' },
-    { id: '2', title: 'Pulse Smartwatch Pro', imageSrc: 'https://res.cloudinary.com/dwc294mzm/image/upload/c_fill,w_1200,h_800,g_auto/v1771577158/site-images/ecommerce/29502357.jpg', price: 229, compareAt: 279, rating: 4.7, badge: 'Limited' },
-    { id: '3', title: 'Arc USB-C Dock', imageSrc: 'https://res.cloudinary.com/dwc294mzm/image/upload/c_fill,w_1200,h_800,g_auto/v1771577128/site-images/ecommerce/32831065.jpg', price: 89, compareAt: 119, rating: 4.6, badge: 'Hot Deal' },
-    { id: '4', title: 'Comfy Home Speaker', imageSrc: 'https://res.cloudinary.com/dwc294mzm/image/upload/c_fill,w_1200,h_800,g_auto/v1771577143/site-images/ecommerce/18512823.jpg', price: 119, compareAt: 149, rating: 4.9, badge: 'Top Rated' },
+    {
+      name: 'Minimal Leather Wallet',
+      price: 49,
+      compareAt: 69,
+      rating: 4.7,
+      reviews: 89,
+      badge: 'Limited',
+      imageSrc: 'https://res.cloudinary.com/dwc294mzm/image/upload/c_fill,w_1200,h_800,g_auto/v1771577107/site-images/ecommerce/29502359.jpg',
+    },
+    {
+      name: 'Commuter Messenger Bag',
+      price: 79,
+      compareAt: 99,
+      rating: 4.8,
+      reviews: 176,
+      badge: 'Top Rated',
+      imageSrc: 'https://res.cloudinary.com/dwc294mzm/image/upload/c_fill,w_1200,h_800,g_auto/v1771577145/site-images/ecommerce/34577.jpg',
+    },
+    {
+      name: 'Classic White Sneakers',
+      price: 99,
+      compareAt: 139,
+      rating: 4.9,
+      reviews: 240,
+      badge: 'Best Seller',
+      imageSrc: 'https://res.cloudinary.com/dwc294mzm/image/upload/c_fill,w_1200,h_800,g_auto/v1771577159/site-images/ecommerce/10330108.jpg',
+    },
   ],
 }: Partial<FeaturedProductsProps>) {
   return (
-    <section className="bg-muted/30 py-12 md:py-16">
-      <div className="mx-auto max-w-7xl px-4">
-        <h2 className="mb-5 text-2xl font-bold text-[#1A1A2E]">{title}</h2>
-        <div className="grid grid-cols-2 gap-4 md:grid-cols-3 lg:grid-cols-4">
+    <section className="bg-muted/30 py-16 md:py-20">
+      <div className="mx-auto max-w-7xl px-4 md:px-6">
+        <h2 className="mb-6 text-2xl font-bold text-[#1A1A2E] md:text-3xl">{title}</h2>
+        <div className="grid gap-4 md:grid-cols-3 md:gap-6">
           {products.map((product) => (
-            <ProductCard key={product.id} {...product} />
+            <ProductCard key={product.name} {...product} />
           ))}
         </div>
       </div>

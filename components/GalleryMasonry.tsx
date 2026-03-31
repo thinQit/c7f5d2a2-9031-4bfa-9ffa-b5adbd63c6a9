@@ -16,47 +16,16 @@ interface GalleryMasonryProps {
 }
 
 export default function GalleryMasonry({
-  headline = 'Shop the look',
-  subheadline = 'Explore best-selling products styled in real spaces.',
-  images = [
-    {
-      url: 'https://res.cloudinary.com/dwc294mzm/image/upload/c_fill,w_1200,h_800,g_auto/v1771577111/site-images/ecommerce/3767397.jpg',
-      alt: 'Modern product display with shopping essentials',
-      caption: 'New Season Collection',
-    },
-    {
-      url: 'https://res.cloudinary.com/dwc294mzm/image/upload/c_fill,w_1200,h_800,g_auto/v1771577160/site-images/ecommerce/3756345.jpg',
-      alt: 'Customer browsing curated products',
-      caption: 'Customer Favorites',
-    },
-    {
-      url: 'https://res.cloudinary.com/dwc294mzm/image/upload/c_fill,w_1200,h_800,g_auto/v1771577129/site-images/ecommerce/16675635.jpg',
-      alt: 'Lifestyle ecommerce product scene',
-      caption: 'Limited Time Offers',
-    },
-    {
-      url: 'https://res.cloudinary.com/dwc294mzm/image/upload/c_fill,w_1200,h_800,g_auto/v1771577108/site-images/ecommerce/29502367.jpg',
-      alt: 'Fashion and accessories showcase',
-      caption: 'Top Rated Picks',
-    },
-    {
-      url: 'https://res.cloudinary.com/dwc294mzm/image/upload/c_fill,w_1200,h_800,g_auto/v1771577107/site-images/ecommerce/10330106.jpg',
-      alt: 'Clean ecommerce shelf styling',
-      caption: 'Minimal Essentials',
-    },
-    {
-      url: 'https://res.cloudinary.com/dwc294mzm/image/upload/c_fill,w_1200,h_800,g_auto/v1771577158/site-images/ecommerce/10330120.jpg',
-      alt: 'Premium ecommerce flatlay',
-      caption: 'Editor’s Choice',
-    },
-  ],
+  headline = 'Shop by collection',
+  subheadline = '',
+  images = [],
 }: Partial<GalleryMasonryProps>) {
   const [selectedImage, setSelectedImage] = useState<GalleryImage | null>(null);
 
   return (
-    <section className="py-20 md:py-28 bg-background">
-      <div className="container mx-auto max-w-7xl px-4 animate-fade-in-up">
-        <div className="mx-auto max-w-2xl text-center">
+    <section className="py-20 md:py-28">
+      <div className="container mx-auto max-w-7xl px-4">
+        <div className="animate-fade-in-up mx-auto max-w-2xl text-center">
           <h2 className="text-3xl font-bold tracking-tight text-foreground md:text-4xl">{headline}</h2>
           {subheadline && <p className="mt-4 text-lg text-muted-foreground">{subheadline}</p>}
         </div>
@@ -73,8 +42,8 @@ export default function GalleryMasonry({
                 <Image
                   src={img.url}
                   alt={img.alt}
-                  width={800}
-                  height={800}
+                  width={600}
+                  height={600}
                   unoptimized
                   className="h-full w-full object-cover transition-transform duration-500 hover:scale-105"
                 />
@@ -98,8 +67,8 @@ export default function GalleryMasonry({
             <Image
               src={selectedImage.url}
               alt={selectedImage.alt}
-              width={1400}
-              height={1000}
+              width={1200}
+              height={800}
               unoptimized
               className="max-h-[85vh] max-w-[90vw] rounded-lg object-contain"
             />

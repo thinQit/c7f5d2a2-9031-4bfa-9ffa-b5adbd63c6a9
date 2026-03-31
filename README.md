@@ -1,6 +1,13 @@
-# AuroraCart
+# LumenCart Storefront
 
-Modern storefront scaffold built with Next.js App Router, TypeScript, Tailwind CSS, and shadcn/ui.
+Modern essentials, shipped fast—shop smarter in minutes.
 
-## Quick Start
+## Stack
+
+- Next.js 14 (App Router, TypeScript)
+- Tailwind CSS
+- shadcn/ui-ready configuration
+- PostgreSQL-ready environment variables
+
+## Getting Started
 

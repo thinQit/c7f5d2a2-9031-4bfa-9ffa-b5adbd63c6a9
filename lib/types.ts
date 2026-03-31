@@ -3,14 +3,15 @@ export interface NavItem {
   href: string;
 }
 
-export interface ImageAsset {
-  src: string;
-  alt: string;
-}
-
-export interface CTA {
+export interface Cta {
   label: string;
   href: string;
+}
+
+export interface MediaImage {
+  src: string;
+  alt: string;
+  priority?: boolean;
 }
 
 export interface Product {
@@ -18,19 +19,19 @@ export interface Product {
   name: string;
   price: number;
   compareAtPrice?: number;
-  badge?: string;
   rating?: number;
   reviewCount?: number;
-  image: ImageAsset;
-  highlights?: string[];
+  badges?: string[];
+  image: MediaImage;
   href: string;
+  highlights?: string[];
 }
 
 export interface Category {
   name: string;
   href: string;
   description?: string;
-  image: ImageAsset;
+  image: MediaImage;
 }
 
 export interface Testimonial {
@@ -38,5 +39,6 @@ export interface Testimonial {
   location?: string;
   rating: number;
   quote: string;
-  productMentioned?: string;
+  product?: string;
+  date?: string;
 }
