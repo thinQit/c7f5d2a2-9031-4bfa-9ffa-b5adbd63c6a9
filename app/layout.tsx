@@ -23,7 +23,7 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <body className={`${pressStart2P.variable} font-sans bg-background text-foreground`}>
+      <body className={`${pressStart2P.className} ${pressStart2P.variable} font-sans bg-background text-foreground`}>
         <Navbar
           logo="Spotlight Landing"
           navItems={[
