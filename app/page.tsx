@@ -1,3 +1,4 @@
+// Italo Pizza homepage
 import HeroSpotlight from "@/components/HeroSpotlight";
 import CategoryNav from "@/components/CategoryNav";
 import FeaturedProductsGrid from "@/components/FeaturedProductsGrid";
