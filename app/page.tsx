@@ -12,7 +12,7 @@ export default function HomePage() {
     <main className="pt-16">
       <div className="animate-fade-in-up">
         <HeroSpotlight
-          headline="Authentic Italian Flavors, Fresh From Our Oven"
+          headline="Welcome to Italo Pizza"
           subheadline="Hand-stretched dough, San Marzano-style tomato sauce, and mozzarella that melts the way it should. Order pickup or delivery in minutes."
           primaryCta={{ label: "View Menu", href: "/menu" }}
           secondaryCta={{ label: "Order Now", href: "/order" }}
