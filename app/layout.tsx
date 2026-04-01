@@ -17,7 +17,7 @@ const inter = Inter({
 });
 
 export const metadata: Metadata = {
-  title: "Italo Pizza | Modern Italian Pizza, Pasta & Delivery",
+  title: "Italo Pizza",
   description:
     "Order authentic Italian pizza and pasta from Italo Pizza. Fresh ingredients, fast delivery, easy online ordering. Visit us at 214 Via Roma Ave, Brooklyn.",
 };
