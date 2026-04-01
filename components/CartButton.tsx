@@ -18,7 +18,7 @@ export default function CartButton({
   return (
     <Button variant="ghost" size="icon" onClick={onClick} className={cn('relative', className)}>
       <ShoppingCart className="h-5 w-5" />
-      <span className="absolute -right-1 -top-1 min-w-[18px] rounded-full bg-[#E63946] px-1 text-center text-[10px] font-semibold text-white">
+      <span className="absolute -right-1 -top-1 min-w-[18px] rounded-full bg-primary px-1 text-center text-[10px] font-semibold text-primary-foreground">
         {count}
       </span>
     </Button>

@@ -41,9 +41,9 @@ export default function CategoryNav({
           const Icon = iconMap[item.icon as keyof typeof iconMap] || Pizza
           return (
             <Link key={item.title} href={item.href}>
-              <Card className="rounded-xl border bg-white p-4 text-center transition-all hover:-translate-y-0.5 hover:shadow-lg">
-                <Icon className="mx-auto mb-2 h-5 w-5 text-[#4f46e5]" />
-                <p className="text-sm font-semibold text-[#1A1A2E]">{item.title}</p>
+              <Card className="rounded-xl border bg-card p-4 text-center transition-all hover:-translate-y-0.5 hover:shadow-lg">
+                <Icon className="mx-auto mb-2 h-5 w-5 text-primary" />
+                <p className="text-sm font-semibold text-foreground">{item.title}</p>
               </Card>
             </Link>
           )

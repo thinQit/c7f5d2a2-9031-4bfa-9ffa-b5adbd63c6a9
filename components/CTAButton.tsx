@@ -18,7 +18,9 @@ export default function CTAButton({
     <Button
       className={cn(
         'rounded-lg px-6 py-3 font-medium',
-        variantType === 'primary' ? 'bg-[#E63946] text-white hover:bg-[#d62f3c]' : 'bg-white text-[#1A1A2E] border hover:bg-muted',
+        variantType === 'primary'
+          ? 'bg-primary text-primary-foreground hover:bg-primary/90'
+          : 'bg-card text-foreground border border-border hover:bg-muted',
         className
       )}
     >

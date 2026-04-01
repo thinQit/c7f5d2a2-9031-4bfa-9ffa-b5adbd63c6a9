@@ -22,10 +22,10 @@ export default function CategoryCard({
 }: Partial<CategoryCardProps>) {
   return (
     <Link href={href}>
-      <Card className={cn('overflow-hidden rounded-xl border transition-transform hover:-translate-y-1', className)}>
+      <Card className={cn('overflow-hidden rounded-xl border bg-card transition-transform hover:-translate-y-1', className)}>
         <Image src={imageSrc} alt={title} width={800} height={520} className="h-48 w-full object-cover" unoptimized />
         <div className="p-4">
-          <h3 className="font-semibold text-[#1A1A2E]">{title}</h3>
+          <h3 className="font-semibold text-foreground">{title}</h3>
           <p className="mt-1 text-sm text-muted-foreground">{description}</p>
         </div>
       </Card>
