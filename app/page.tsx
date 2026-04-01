@@ -1,5 +1,3 @@
-export const dynamic = 'force-dynamic';
-
 import HeroSpotlight from "@/components/HeroSpotlight";
 import CategoryNav from "@/components/CategoryNav";
 import FeaturedProductsGrid from "@/components/FeaturedProductsGrid";
