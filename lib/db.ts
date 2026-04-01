@@ -5,12 +5,33 @@ declare global {
   var prisma: PrismaClient | undefined;
 }
 
-export const db =
-  global.prisma ??
+const databaseUrl = process.env.DATABASE_URL;
+
+const createPrismaClient = () =>
   new PrismaClient({
     log: process.env.NODE_ENV === "development" ? ["query", "error", "warn"] : ["error"],
   });
 
-if (process.env.NODE_ENV !== "production") {
-  global.prisma = db;
-}
+const missingDatabaseUrlError = new Error(
+  "DATABASE_URL is not set. Database access is disabled until the environment variable is configured."
+);
+
+export const db: PrismaClient = (() => {
+  if (!databaseUrl) {
+    return new Proxy({} as PrismaClient, {
+      get() {
+        throw missingDatabaseUrlError;
+      },
+    });
+  }
+
+  if (global.prisma) {
+    return global.prisma;
+  }
+
+  const client = createPrismaClient();
+  if (process.env.NODE_ENV !== "production") {
+    global.prisma = client;
+  }
+  return client;
+})();
