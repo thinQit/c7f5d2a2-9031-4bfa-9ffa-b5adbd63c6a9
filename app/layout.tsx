@@ -22,8 +22,8 @@ export default function RootLayout({
   children: React.ReactNode
 }) {
   return (
-    <html lang="en">
-      <body className={`${pressStart2P.className} ${pressStart2P.variable} font-sans bg-background text-foreground`}>
+    <html lang="en" className={`${pressStart2P.className} ${pressStart2P.variable}`}>
+      <body className="font-sans bg-background text-foreground">
         <Navbar
           logo="Spotlight Landing"
           navItems={[
