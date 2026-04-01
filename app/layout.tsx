@@ -1,72 +1,84 @@
-import "./globals.css"
-import type { Metadata } from "next"
-import { Press_Start_2P } from "next/font/google"
-import Navbar from "@/components/Navbar"
-import Footer from "@/components/Footer"
+import type { Metadata } from "next";
+import { DM_Sans, Inter } from "next/font/google";
+import "./globals.css";
+import NavbarSticky from "@/components/NavbarSticky";
+import FooterMultiColumn from "@/components/FooterMultiColumn";
 
-const pressStart2P = Press_Start_2P({
+const dmSans = DM_Sans({
   subsets: ["latin"],
-  variable: "--font-sans",
-  weight: ["400"],
-})
+  variable: "--font-heading",
+  weight: ["400", "500", "700"],
+});
+
+const inter = Inter({
+  subsets: ["latin"],
+  variable: "--font-body",
+  weight: ["300", "400", "600"],
+});
 
 export const metadata: Metadata = {
-  title: "Spotlight Landing — Conversion-first Next.js landing page",
+  title: "Italo Pizza | Modern Italian Pizza, Pasta & Delivery",
   description:
-    "A clean, conversion-driven landing page blueprint with HeroSpotlight, social proof, features, testimonials, pricing, FAQs, and a final CTA—built with Next.js, Tailwind, and shadcn/ui.",
-}
+    "Order authentic Italian pizza and pasta from Italo Pizza. Fresh ingredients, fast delivery, easy online ordering. Visit us at 214 Via Roma Ave, Brooklyn.",
+};
 
 export default function RootLayout({
   children,
-}: {
-  children: React.ReactNode
-}) {
+}: Readonly<{
+  children: React.ReactNode;
+}>) {
   return (
-    <html lang="en" className={`${pressStart2P.className} ${pressStart2P.variable}`}>
-      <body className="font-sans bg-background text-foreground">
-        <Navbar
-          logo="Spotlight Landing"
+    <html lang="en">
+      <body className={`${dmSans.variable} ${inter.variable} font-sans bg-background text-foreground`}>
+        <NavbarSticky
+          logo="Italo Pizza"
           navItems={[
             { label: "Home", href: "/" },
-            { label: "Features", href: "/features" },
-            { label: "Pricing", href: "/pricing" },
-            { label: "About", href: "/about" },
+            { label: "Menu", href: "/menu" },
+            { label: "About Us", href: "/about" },
+            { label: "Gallery", href: "/gallery" },
             { label: "Contact", href: "/contact" },
+            { label: "Wireframe", href: "/wireframe" },
           ]}
-          ctaLabel="Get the template"
-          ctaHref="/pricing"
+          ctaLabel="Order Now"
+          ctaHref="/order"
         />
         {children}
-        <Footer
-          brand="Spotlight Landing"
-          description="A clean, conversion-driven landing page structure for modern launches."
+        <FooterMultiColumn
+          brand="Italo Pizza"
+          description="Modern Italian comfort food—crafted fresh, delivered fast."
           columns={[
             {
-              title: "Product",
+              title: "Explore",
               links: [
-                { label: "Features", href: "/features" },
-                { label: "Pricing", href: "/pricing" },
-                { label: "FAQ", href: "/pricing#faq" },
+                { label: "Home", href: "/" },
+                { label: "Menu", href: "/menu" },
+                { label: "About Us", href: "/about" },
+                { label: "Gallery", href: "/gallery" },
               ],
             },
             {
-              title: "Company",
+              title: "Support",
               links: [
-                { label: "About", href: "/about" },
                 { label: "Contact", href: "/contact" },
+                { label: "Delivery Areas", href: "/contact#delivery" },
+                { label: "Catering", href: "/contact#catering" },
+                { label: "Privacy", href: "/privacy" },
               ],
             },
             {
-              title: "Legal",
+              title: "Order",
               links: [
-                { label: "Privacy Policy", href: "/privacy" },
-                { label: "Terms", href: "/terms" },
+                { label: "Start Order", href: "/order" },
+                { label: "Best Sellers", href: "/order?collection=best-sellers" },
+                { label: "Family Bundles", href: "/menu?filter=bundles" },
+                { label: "Create Account", href: "/auth/sign-up" },
               ],
             },
           ]}
-          copyright="© 2026 Spotlight Landing Co. All rights reserved."
+          copyright="© 2026 Italo Pizza. All rights reserved."
         />
       </body>
     </html>
-  )
+  );
 }

@@ -1,10 +1,12 @@
-"use client";
+'use client';
 
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Textarea } from "@/components/ui/textarea";
-import { Label } from "@/components/ui/label";
-import { Card, CardContent } from "@/components/ui/card";
+import React from 'react';
+import { Mail, MapPin, Phone, Sparkles, Globe, Shield } from 'lucide-react';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { Textarea } from '@/components/ui/textarea';
+import { Label } from '@/components/ui/label';
+import { Card, CardContent } from '@/components/ui/card';
 
 interface ContactInfo {
   icon: string;
@@ -18,22 +20,24 @@ interface ContactFormProps {
   contactInfo?: ContactInfo[];
 }
 
+const iconMap: Record<string, React.ElementType> = { Mail, MapPin, Phone, Sparkles, Globe, Shield };
+
 export default function ContactForm({
-  headline = "Let’s talk about your goals",
-  subheadline = "Share a few details and our team will get back to you within one business day.",
+  headline = 'Need help with your order?',
+  subheadline = 'Our support team is here for product questions, delivery updates, and returns.',
   contactInfo = [],
 }: Partial<ContactFormProps>) {
   return (
-    <section className="py-20 md:py-24 bg-muted/50">
-      <div className="container mx-auto max-w-7xl px-4">
-        <div className="animate-fade-in-up mx-auto max-w-2xl text-center">
+    <section className="py-20 md:py-28 bg-muted/50">
+      <div className="container mx-auto max-w-7xl px-4 animate-fade-in-up">
+        <div className="mx-auto max-w-2xl text-center">
           <h2 className="text-3xl font-bold tracking-tight text-foreground md:text-4xl">{headline}</h2>
           {subheadline && <p className="mt-4 text-lg text-muted-foreground">{subheadline}</p>}
         </div>
         <div className="mt-12 grid gap-8 md:grid-cols-2">
-          <Card className="rounded-xl border border-border bg-card card-hover">
+          <Card className="card-hover border border-border bg-background">
             <CardContent className="p-6">
-              <form className="space-y-6">
+              <form className="space-y-6" onSubmit={(e) => e.preventDefault()}>
                 <div className="grid gap-4 sm:grid-cols-2">
                   <div className="space-y-2">
                     <Label htmlFor="name">Name</Label>
@@ -59,11 +63,12 @@ export default function ContactForm({
             </CardContent>
           </Card>
           {contactInfo && contactInfo.length > 0 && (
-            <div className="flex flex-col justify-center space-y-8 animate-fade-in-up">
+            <div className="flex flex-col justify-center space-y-8">
               {contactInfo.map(function (info, i) {
+                const Icon = iconMap[info.icon] || Mail;
                 return (
                   <div key={i} className="flex items-start gap-4">
-                    <span className="text-2xl text-primary">{info.icon}</span>
+                    <span className="text-primary">{React.createElement(Icon, { className: 'h-6 w-6' })}</span>
                     <div>
                       <p className="font-semibold text-foreground">{info.label}</p>
                       <p className="text-muted-foreground">{info.value}</p>

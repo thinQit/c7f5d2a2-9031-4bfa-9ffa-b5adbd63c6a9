@@ -16,7 +16,7 @@ interface GalleryMasonryProps {
 }
 
 export default function GalleryMasonry({
-  headline = 'Shop by collection',
+  headline = 'Featured product gallery',
   subheadline = '',
   images = [],
 }: Partial<GalleryMasonryProps>) {
@@ -24,8 +24,8 @@ export default function GalleryMasonry({
 
   return (
     <section className="py-20 md:py-28">
-      <div className="container mx-auto max-w-7xl px-4">
-        <div className="animate-fade-in-up mx-auto max-w-2xl text-center">
+      <div className="container mx-auto max-w-7xl px-4 animate-fade-in-up">
+        <div className="mx-auto max-w-2xl text-center">
           <h2 className="text-3xl font-bold tracking-tight text-foreground md:text-4xl">{headline}</h2>
           {subheadline && <p className="mt-4 text-lg text-muted-foreground">{subheadline}</p>}
         </div>
@@ -34,7 +34,7 @@ export default function GalleryMasonry({
             return (
               <div
                 key={i}
-                className="card-hover group relative aspect-square cursor-pointer overflow-hidden rounded-xl border border-border bg-card"
+                className="group relative aspect-square cursor-pointer overflow-hidden rounded-xl card-hover"
                 onClick={function () {
                   setSelectedImage(img);
                 }}
@@ -42,10 +42,9 @@ export default function GalleryMasonry({
                 <Image
                   src={img.url}
                   alt={img.alt}
-                  width={600}
-                  height={600}
+                  fill
                   unoptimized
-                  className="h-full w-full object-cover transition-transform duration-500 hover:scale-105"
+                  className="object-cover transition-transform duration-500 hover:scale-105"
                 />
                 <div className="absolute inset-0 bg-foreground/0 transition-all group-hover:bg-foreground/30" />
                 {img.caption && (
@@ -58,12 +57,7 @@ export default function GalleryMasonry({
           })}
         </div>
         {selectedImage && (
-          <div
-            className="fixed inset-0 z-50 flex items-center justify-center bg-foreground/80 p-4"
-            onClick={function () {
-              setSelectedImage(null);
-            }}
-          >
+          <div className="fixed inset-0 z-50 flex items-center justify-center bg-foreground/80 p-4" onClick={() => setSelectedImage(null)}>
             <Image
               src={selectedImage.url}
               alt={selectedImage.alt}

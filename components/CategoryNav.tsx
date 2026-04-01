@@ -1,39 +1,53 @@
 "use client";
 
-import CategoryCard from '@/components/CategoryCard'
+import Link from 'next/link'
+import { Pizza, Soup, UtensilsCrossed, IceCreamBowl, CupSoda } from 'lucide-react'
+import { Card } from '@/components/ui/card'
+import { cn } from '@/lib/utils'
+
+interface CategoryItem {
+  title: string
+  href: string
+  icon: string
+}
 
 interface CategoryNavProps {
-  categories?: { title: string; description: string; href: string; imageSrc: string }[]
+  items?: CategoryItem[]
+  className?: string
+}
+
+const iconMap = {
+  Pizza,
+  Soup,
+  UtensilsCrossed,
+  IceCreamBowl,
+  CupSoda,
 }
 
 export default function CategoryNav({
-  categories = [
-    {
-      title: 'New Arrivals',
-      description: 'Fresh picks just landed this week.',
-      href: '/collections/new-arrivals',
-      imageSrc: 'https://res.cloudinary.com/dwc294mzm/image/upload/c_fill,w_1200,h_800,g_auto/v1771577126/site-images/ecommerce/16675636.jpg',
-    },
-    {
-      title: 'Work & Office',
-      description: 'Functional products for productive days.',
-      href: '/collections/work-office',
-      imageSrc: 'https://res.cloudinary.com/dwc294mzm/image/upload/c_fill,w_1200,h_800,g_auto/v1771577164/site-images/ecommerce/11952301.jpg',
-    },
-    {
-      title: 'Weekend Style',
-      description: 'Relaxed essentials for off-duty looks.',
-      href: '/collections/weekend-style',
-      imageSrc: 'https://res.cloudinary.com/dwc294mzm/image/upload/c_fill,w_1200,h_800,g_auto/v1771577110/site-images/ecommerce/17485350.jpg',
-    },
+  items = [
+    { title: 'Pizzas', href: '/menu#pizzas', icon: 'Pizza' },
+    { title: 'Pasta', href: '/menu#pasta', icon: 'Soup' },
+    { title: 'Starters', href: '/menu#starters', icon: 'UtensilsCrossed' },
+    { title: 'Desserts', href: '/menu#desserts', icon: 'IceCreamBowl' },
+    { title: 'Drinks', href: '/menu#drinks', icon: 'CupSoda' },
   ],
+  className = '',
 }: Partial<CategoryNavProps>) {
   return (
-    <section className="py-12 md:py-16">
-      <div className="mx-auto grid max-w-7xl gap-4 px-4 md:grid-cols-3 md:px-6">
-        {categories.map((category) => (
-          <CategoryCard key={category.title} {...category} />
-        ))}
+    <section className={cn('mx-auto max-w-7xl px-4 py-10 md:px-6', className)}>
+      <div className="grid grid-cols-2 gap-4 md:grid-cols-3 lg:grid-cols-5">
+        {items.map((item) => {
+          const Icon = iconMap[item.icon as keyof typeof iconMap] || Pizza
+          return (
+            <Link key={item.title} href={item.href}>
+              <Card className="rounded-xl border bg-white p-4 text-center transition-all hover:-translate-y-0.5 hover:shadow-lg">
+                <Icon className="mx-auto mb-2 h-5 w-5 text-[#4f46e5]" />
+                <p className="text-sm font-semibold text-[#1A1A2E]">{item.title}</p>
+              </Card>
+            </Link>
+          )
+        })}
       </div>
     </section>
   )

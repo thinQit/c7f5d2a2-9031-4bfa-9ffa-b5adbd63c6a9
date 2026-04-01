@@ -12,34 +12,27 @@ interface CTAVortexProps {
 }
 
 export default function CTAVortex({
-  headline = "Ready to accelerate growth?",
-  description = "Join teams that use our platform to improve conversion, streamline workflows, and scale faster.",
-  ctaLabel = "Get Started",
-  ctaHref = "#",
-  secondaryCtaLabel = "Talk to Sales",
-  secondaryCtaHref = "#",
+  headline = 'Ready to upgrade your cart?',
+  description = 'Unlock exclusive deals, fast delivery, and member-only offers when you shop with NovaCart today.',
+  ctaLabel = 'Start Shopping',
+  ctaHref = '#',
+  secondaryCtaLabel = 'View New Arrivals',
+  secondaryCtaHref = '#',
 }: Partial<CTAVortexProps>) {
   return (
-    <section className="w-full mx-auto rounded-md h-[30rem] overflow-hidden py-20 md:py-24">
-      <Vortex backgroundColor="black" className="flex items-center flex-col justify-center px-2 md:px-10 py-4 w-full h-full">
-        <div className="animate-fade-in-up">
-          <h2 className="text-background text-2xl md:text-6xl font-bold text-center">{headline}</h2>
-          {description && <p className="text-background/70 text-sm md:text-xl max-w-xl mt-6 text-center mx-auto">{description}</p>}
-          <div className="flex flex-col sm:flex-row items-center justify-center gap-4 mt-8">
-            <Button size="lg" className="px-8 py-6 text-lg bg-background text-foreground hover:bg-background/90 transition-all duration-200 hover:scale-105" asChild>
-              <a href={ctaHref}>{ctaLabel}</a>
+    <section className="w-full mx-auto rounded-md h-[30rem] overflow-hidden">
+      <Vortex backgroundColor="transparent" baseHue={20} className="flex items-center flex-col justify-center px-2 md:px-10 py-4 w-full h-full">
+        <h2 className="text-foreground text-2xl md:text-6xl font-bold text-center">{headline}</h2>
+        {description && <p className="text-muted-foreground text-sm md:text-xl max-w-xl mt-6 text-center">{description}</p>}
+        <div className="flex flex-col sm:flex-row items-center gap-4 mt-8">
+          <Button size="lg" className="px-8 py-6 text-lg transition-all duration-200 hover:scale-105" asChild>
+            <a href={ctaHref}>{ctaLabel}</a>
+          </Button>
+          {secondaryCtaLabel && secondaryCtaHref && (
+            <Button variant="outline" size="lg" className="px-8 py-6 text-lg transition-all duration-200 hover:scale-105" asChild>
+              <a href={secondaryCtaHref}>{secondaryCtaLabel}</a>
             </Button>
-            {secondaryCtaLabel && secondaryCtaHref && (
-              <Button
-                variant="outline"
-                size="lg"
-                className="px-8 py-6 text-lg border-background/30 text-background hover:bg-background/10 transition-all duration-200 hover:scale-105"
-                asChild
-              >
-                <a href={secondaryCtaHref}>{secondaryCtaLabel}</a>
-              </Button>
-            )}
-          </div>
+          )}
         </div>
       </Vortex>
     </section>

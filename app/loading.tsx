@@ -1,7 +1,7 @@
 export default function Loading() {
   return (
-    <main className="min-h-screen bg-background text-foreground flex items-center justify-center">
-      <div className="animate-pulse text-lg font-medium">Loading Spotlight Landing...</div>
-    </main>
-  )
+    <div className="min-h-screen flex items-center justify-center bg-background text-foreground">
+      <div className="animate-pulse text-lg font-medium">Preparing fresh slices...</div>
+    </div>
+  );
 }

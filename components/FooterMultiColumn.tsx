@@ -1,7 +1,6 @@
 "use client";
 
 import Link from 'next/link';
-import { Separator } from '@/components/ui/separator';
 
 interface FooterColumn {
   title: string;
@@ -16,20 +15,18 @@ interface FooterMultiColumnProps {
 }
 
 export default function FooterMultiColumn({
-  brand = 'ShopSphere',
-  description = 'ShopSphere delivers curated essentials, secure checkout, and fast delivery for a seamless shopping experience.',
+  brand = 'NovaCart',
+  description = 'Smart shopping for modern homes. Discover curated picks, secure checkout, and fast delivery.',
   columns = [],
-  copyright = '',
+  copyright,
 }: Partial<FooterMultiColumnProps>) {
   return (
     <footer className="bg-foreground text-background">
-      <div className="container mx-auto max-w-7xl px-4 py-12 md:py-16">
-        <div className="animate-fade-in-up grid gap-8 md:grid-cols-2 lg:grid-cols-4">
+      <div className="container mx-auto max-w-7xl px-4 py-12 md:py-16 animate-fade-in-up">
+        <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-4">
           <div className="lg:col-span-1">
             <h3 className="text-lg font-bold">{brand}</h3>
             <p className="mt-3 text-sm text-background/70">{description}</p>
-            <p className="mt-4 text-sm text-background/70">support@shopsphere.com</p>
-            <p className="text-sm text-background/70">+1 (800) 555-0199</p>
           </div>
           {columns.map(function (col) {
             return (
@@ -39,7 +36,7 @@ export default function FooterMultiColumn({
                   {col.links.map(function (link) {
                     return (
                       <li key={link.href}>
-                        <Link href={link.href} className="text-sm text-background/70 transition-all duration-200 hover:scale-105 hover:text-background">
+                        <Link href={link.href} className="text-sm text-background/70 transition-colors hover:text-background">
                           {link.label}
                         </Link>
                       </li>
@@ -50,7 +47,7 @@ export default function FooterMultiColumn({
             );
           })}
         </div>
-        <Separator className="my-8 bg-background/20" />
+        <div className="my-8 h-px w-full bg-background/20" />
         <p className="text-center text-sm text-background/50">
           {copyright || '\u00a9 ' + new Date().getFullYear() + ' ' + brand + '. All rights reserved.'}
         </p>

@@ -1,72 +1,46 @@
 import { NextRequest, NextResponse } from "next/server";
-import { Prisma } from "@prisma/client";
 import { db } from "@/lib/db";
-import { productsQuerySchema } from "@/lib/validators";
+import { productQuerySchema } from "@/lib/validators";
+import { ProductCategory } from "@prisma/client";
+
+const categoryMap: Record<string, ProductCategory> = {
+  "signature-pizza": "SIGNATURE_PIZZA",
+  "build-your-own": "BUILD_YOUR_OWN",
+  pasta: "PASTA",
+  starters: "STARTERS",
+  desserts: "DESSERTS",
+  drinks: "DRINKS",
+  bundles: "BUNDLES",
+};
 
 export async function GET(req: NextRequest) {
   try {
-    const parsed = productsQuerySchema.safeParse(
-      Object.fromEntries(req.nextUrl.searchParams.entries()),
+    const parsed = productQuerySchema.safeParse(
+      Object.fromEntries(req.nextUrl.searchParams.entries())
     );
 
     if (!parsed.success) {
       return NextResponse.json(
-        { error: "Invalid query parameters", details: parsed.error.flatten() },
-        { status: 400 },
+        { error: "Invalid query params", details: parsed.error.flatten() },
+        { status: 400 }
       );
     }
 
-    const { search, category, minPrice, maxPrice, minRating, inStock, sort, page, limit } = parsed.data;
+    const { category, tag, limit, page } = parsed.data;
     const skip = (page - 1) * limit;
 
-    const where: Prisma.ProductWhereInput = {
-      AND: [
-        search
-          ? {
-              OR: [
-                { name: { contains: search, mode: "insensitive" } },
-                { sku: { contains: search, mode: "insensitive" } },
-                { category: { contains: search, mode: "insensitive" } },
-              ],
-            }
-          : {},
-        category ? { category: { equals: category, mode: "insensitive" } } : {},
-        minPrice !== undefined || maxPrice !== undefined
-          ? {
-              priceCents: {
-                gte: minPrice !== undefined ? minPrice * 100 : undefined,
-                lte: maxPrice !== undefined ? maxPrice * 100 : undefined,
-              },
-            }
-          : {},
-        minRating !== undefined ? { ratingAvg: { gte: minRating } } : {},
-        inStock !== undefined ? { inStock } : {},
-      ],
+    const where = {
+      isActive: true,
+      ...(category && categoryMap[category] ? { category: categoryMap[category] } : {}),
+      ...(tag ? { tags: { has: tag } } : {}),
     };
-
-    const orderBy: Prisma.ProductOrderByWithRelationInput[] =
-      sort === "best"
-        ? [{ isBestSeller: "desc" as const }, { reviewCount: "desc" as const }]
-        : sort === "new"
-        ? [{ createdAt: "desc" as const }]
-        : sort === "price_asc"
-        ? [{ priceCents: "asc" as const }]
-        : sort === "price_desc"
-        ? [{ priceCents: "desc" as const }]
-        : sort === "top_rated"
-        ? [{ ratingAvg: "desc" as const }, { reviewCount: "desc" as const }]
-        : [{ isBestSeller: "desc" as const }, { createdAt: "desc" as const }];
 
     const [items, total] = await Promise.all([
       db.product.findMany({
         where,
-        orderBy,
+        orderBy: { createdAt: "desc" as const },
         skip,
         take: limit,
-        include: {
-          images: { orderBy: { position: "asc" as const }, take: 1 },
-          highlights: { orderBy: { position: "asc" as const }, take: 3 },
-        },
       }),
       db.product.count({ where }),
     ]);
@@ -77,7 +51,7 @@ export async function GET(req: NextRequest) {
         total,
         page,
         limit,
-        totalPages: Math.ceil(total / limit),
+        pageCount: Math.ceil(total / limit),
       },
     });
   } catch (error) {

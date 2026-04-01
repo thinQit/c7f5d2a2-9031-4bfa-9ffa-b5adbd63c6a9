@@ -1,39 +1,35 @@
 import { z } from "zod";
 
-export const checkoutCreateSessionSchema = z.object({
-  cartId: z.string().min(1),
-  successUrl: z.string().url(),
-  cancelUrl: z.string().url(),
+export const productQuerySchema = z.object({
+  category: z.string().optional(),
+  tag: z.string().optional(),
+  limit: z.coerce.number().int().min(1).max(100).default(24),
+  page: z.coerce.number().int().min(1).default(1),
 });
 
-export const checkoutInputSchema = z.object({
-  sessionId: z.string().min(1),
-  email: z.string().email(),
-  successUrl: z.string().url(),
-  cancelUrl: z.string().url(),
+export const productSearchQuerySchema = z.object({
+  q: z.string().min(1).max(100),
+  category: z.string().optional(),
+  limit: z.coerce.number().int().min(1).max(50).default(20),
 });
 
-export const checkoutSessionSchema = z.object({
-  items: z.array(z.any()),
-  currency: z.string().min(1),
-  successUrl: z.string().url(),
-  cancelUrl: z.string().url(),
+export const checkoutItemSchema = z.object({
+  productId: z.string().cuid(),
+  quantity: z.number().int().min(1).max(20),
 });
 
-export const contactSubmissionSchema = z.object({
-  name: z.string().min(1),
-  email: z.string().email(),
-  orderNumber: z.union([z.string().min(1), z.literal("")]).optional(),
-  topic: z.enum(["Order status", "Returns", "Product question", "Bulk order", "Other"]),
-  message: z.string().min(1),
+export const createCheckoutSessionSchema = z.object({
+  items: z.array(checkoutItemSchema).min(1),
+  fulfillmentType: z.enum(["DELIVERY", "PICKUP"]),
+  customerNote: z.string().max(500).optional(),
 });
 
-export const newsletterSubscribeSchema = z.object({
-  email: z.string().email(),
-  sourcePage: z.union([z.string().min(1), z.literal("")]).optional(),
+export const createOrderSchema = z.object({
+  stripeCheckoutSessionId: z.string().min(1),
 });
 
-export const trackOrderSchema = z.object({
-  orderNumber: z.string().min(1),
-  email: z.string().email(),
+export const stripeWebhookOrderMetadataSchema = z.object({
+  userId: z.string().cuid(),
+  fulfillmentType: z.enum(["DELIVERY", "PICKUP"]),
+  customerNote: z.string().optional(),
 });

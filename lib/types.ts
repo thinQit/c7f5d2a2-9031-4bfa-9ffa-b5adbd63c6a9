@@ -3,42 +3,68 @@ export interface NavItem {
   href: string;
 }
 
-export interface Cta {
+export interface CtaLink {
   label: string;
   href: string;
 }
 
-export interface MediaImage {
-  src: string;
-  alt: string;
-  priority?: boolean;
+export interface SectionBase {
+  id: string;
+  type: string;
+  headline: string;
+  subheadline?: string;
+  primaryCta?: CtaLink;
+  secondaryCta?: CtaLink;
 }
 
 export interface Product {
-  sku: string;
+  id: string;
   name: string;
+  category: string;
   price: number;
-  compareAtPrice?: number;
-  rating?: number;
-  reviewCount?: number;
+  currency: "USD";
+  description: string;
   badges?: string[];
-  image: MediaImage;
-  href: string;
-  highlights?: string[];
-}
-
-export interface Category {
-  name: string;
-  href: string;
-  description?: string;
-  image: MediaImage;
+  image?: {
+    src: string;
+    alt: string;
+  };
 }
 
 export interface Testimonial {
   name: string;
-  location?: string;
+  title?: string;
   rating: number;
   quote: string;
-  product?: string;
-  date?: string;
+}
+
+export interface GalleryImage {
+  src: string;
+  alt: string;
+}
+
+export interface ContactInfo {
+  address: string;
+  phone: string;
+  email: string;
+}
+
+export interface ApiResponse<T> {
+  success: boolean;
+  data: T;
+  message?: string;
+}
+
+export interface OrderItem {
+  productId: string;
+  quantity: number;
+  unitPrice: number;
+}
+
+export interface Order {
+  id: string;
+  items: OrderItem[];
+  total: number;
+  status: "pending" | "paid" | "fulfilled" | "cancelled";
+  createdAt: string;
 }
