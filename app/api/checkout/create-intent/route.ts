@@ -1,19 +1,18 @@
 export const dynamic = 'force-dynamic';
 import { NextRequest, NextResponse } from "next/server";
-import type Stripe from "stripe";
+
 import { cookies } from "next/headers";
 import { db } from "@/lib/db";
 import { checkoutIntentSchema } from "@/lib/validators";
 
-const stripeSecretKey = process.env.STRIPE_SECRET_KEY;
-
-if (!stripeSecretKey) {
-  console.warn("Missing STRIPE_SECRET_KEY environment variable.");
+let _stripe: any = null;
+function getStripe() {
+  if (!_stripe) {
+    const Stripe = require("stripe").default;
+    _stripe = new Stripe(process.env.STRIPE_SECRET_KEY || "");
+  }
+  return _stripe;
 }
-
-const stripe = new Stripe(stripeSecretKey || "", {
-  apiVersion: "2025-02-24.acacia",
-});
 
 const CART_COOKIE_NAME = "lumencart_session_id";
 

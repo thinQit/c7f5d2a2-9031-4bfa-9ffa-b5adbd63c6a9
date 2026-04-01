@@ -1,13 +1,11 @@
 export const dynamic = 'force-dynamic';
 import { NextResponse } from "next/server";
-import type Stripe from "stripe";
+
 import { db } from "@/lib/db";
 import { getAuthSession } from "@/lib/auth";
 import { createCheckoutSessionSchema } from "@/lib/validators";
 
-const stripe = new Stripe(process.env.STRIPE_SECRET_KEY ?? "", {
-  apiVersion: "2024-06-20",
-});
+
 
 export async function POST(req: Request) {
   try {
