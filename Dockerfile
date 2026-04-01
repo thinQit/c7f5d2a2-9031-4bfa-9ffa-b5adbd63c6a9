@@ -4,6 +4,7 @@ COPY package*.json ./
 RUN npm install --legacy-peer-deps
 COPY . .
 RUN mkdir -p public
+ENV DATABASE_URL="postgresql://build:build@localhost:5432/build"
 RUN npm run build
 
 FROM node:20-alpine AS runner
