@@ -8,8 +8,8 @@ export default function WireframePage() {
     <main className="pt-16">
       <div className="animate-fade-in-up">
         <HeroSpotlight
-          title="Wireframe Preview"
-          subtitle="A quick layout overview of the storefront-style structure before final imagery and polish."
+          headline="Welcome to Italo Pizza"
+          subheadline="A quick layout overview of the storefront-style structure before final imagery and polish."
           primaryCta={{ label: "Back to Home", href: "/" }}
           secondaryCta={{ label: "View Menu", href: "/menu" }}
         />
