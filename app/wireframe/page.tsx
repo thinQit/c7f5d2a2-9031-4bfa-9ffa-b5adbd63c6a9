@@ -6,7 +6,7 @@ import WireframeBlocks from "@/components/WireframeBlocks";
 export default function WireframePage() {
   return (
     <main className="pt-16">
-      <div className="animate-fade-in-up">
+      <div className="animate-fade-in-up text-foreground [&_h1]:!text-foreground [&_h2]:!text-foreground [&_p]:!text-muted-foreground">
         <HeroSpotlight
           headline="Welcome to Italo Pizza"
           subheadline="A quick layout overview of the storefront-style structure before final imagery and polish."
