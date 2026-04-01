@@ -1,5 +1,6 @@
+export const dynamic = 'force-dynamic';
 import { NextRequest, NextResponse } from "next/server";
-import Stripe from "stripe";
+import type Stripe from "stripe";
 import { cookies } from "next/headers";
 import { db } from "@/lib/db";
 import { checkoutIntentSchema } from "@/lib/validators";
@@ -54,7 +55,7 @@ export async function POST(req: NextRequest) {
     const shipping = subtotal >= 6000 ? 0 : 595;
     const amount = subtotal + shipping;
 
-    const intent = await stripe.paymentIntents.create({
+    const intent = await getStripe().paymentIntents.create({
       amount,
       currency: parsed.data.currency.toLowerCase(),
       automatic_payment_methods: { enabled: true },

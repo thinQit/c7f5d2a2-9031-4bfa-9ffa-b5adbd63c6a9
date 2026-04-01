@@ -1,5 +1,6 @@
+export const dynamic = 'force-dynamic';
 import { NextResponse } from "next/server";
-import Stripe from "stripe";
+import type Stripe from "stripe";
 import { db } from "@/lib/db";
 import { stripeWebhookOrderMetadataSchema } from "@/lib/validators";
 
@@ -17,7 +18,7 @@ export async function POST(req: Request) {
     }
 
     const payload = await req.text();
-    const event = stripe.webhooks.constructEvent(payload, signature, webhookSecret);
+    const event = getStripe().webhooks.constructEvent(payload, signature, webhookSecret);
 
     if (event.type === "checkout.session.completed") {
       const checkoutSession = event.data.object as Stripe.Checkout.Session;
@@ -35,7 +36,7 @@ export async function POST(req: Request) {
         return NextResponse.json({ received: true });
       }
 
-      const lineItems = await stripe.checkout.sessions.listLineItems(checkoutSession.id, {
+      const lineItems = await getStripe().checkout.sessions.listLineItems(checkoutSession.id, {
         expand: ["data.price.product"],
       });
 
