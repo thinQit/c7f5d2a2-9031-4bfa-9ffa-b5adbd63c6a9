@@ -4,6 +4,7 @@ generator client {
 
 datasource db {
   provider = "postgresql"
+  url      = env("DATABASE_URL")
 }
 
 enum ProductCategory {
@@ -97,4 +98,31 @@ model Product {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  orderItems OrderItem[
+  orderItems OrderItem[]
+}
+
+model Order {
+  id              String           @id @default(cuid())
+  userId          String
+  status          OrderStatus      @default(PENDING)
+  fulfillmentType FulfillmentType
+  totalCents      Int
+  currency        String           @default("USD")
+
+  user  User        @relation(fields: [userId], references: [id], onDelete: Cascade)
+  items OrderItem[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model OrderItem {
+  id             String @id @default(cuid())
+  orderId        String
+  productId      String
+  quantity       Int
+  unitPriceCents Int
+
+  order   Order   @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  product Product @relation(fields: [productId], references: [id])
+}
