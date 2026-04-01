@@ -1,19 +1,13 @@
 import "./globals.css"
 import type { Metadata } from "next"
-import { Inter, Plus_Jakarta_Sans } from "next/font/google"
+import { Press_Start_2P } from "next/font/google"
 import Navbar from "@/components/Navbar"
 import Footer from "@/components/Footer"
 
-const inter = Inter({
+const pressStart2P = Press_Start_2P({
   subsets: ["latin"],
-  variable: "--font-body",
-  weight: ["300", "400", "500"],
-})
-
-const plusJakartaSans = Plus_Jakarta_Sans({
-  subsets: ["latin"],
-  variable: "--font-heading",
-  weight: ["400", "500", "600", "700"],
+  variable: "--font-sans",
+  weight: ["400"],
 })
 
 export const metadata: Metadata = {
@@ -29,7 +23,7 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <body className={`${inter.variable} ${plusJakartaSans.variable} font-sans bg-background text-foreground`}>
+      <body className={`${pressStart2P.variable} font-sans bg-background text-foreground`}>
         <Navbar
           logo="Spotlight Landing"
           navItems={[
