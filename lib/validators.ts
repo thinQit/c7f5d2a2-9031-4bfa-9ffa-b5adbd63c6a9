@@ -1,58 +1,51 @@
 import { z } from "zod";
 
-export const productsQuerySchema = z.object({
-  category: z.string().min(1).optional(),
-  minPrice: z.coerce.number().nonnegative().optional(),
-  maxPrice: z.coerce.number().nonnegative().optional(),
-  rating: z.coerce.number().min(0).max(5).optional(),
-  inStock: z
-    .string()
-    .optional()
-    .transform((v) => (v === undefined ? undefined : v === "true")),
-  page: z.coerce.number().int().min(1).default(1),
-  limit: z.coerce.number().int().min(1).max(50).default(12),
-  sort: z
-    .enum(["featured", "top-rated", "price-asc", "price-desc", "newest"])
-    .default("featured"),
+export const checkoutIntentSchema = z.object({
+  currency: z.string().min(1),
 });
 
-export const searchQuerySchema = z.object({
-  q: z.string().min(1, "Query is required"),
-  limit: z.coerce.number().int().min(1).max(20).default(10),
-});
-
-export const cartItemSchema = z.object({
-  productId: z.string().cuid(),
-  quantity: z.number().int().min(1).max(99).optional(),
-  variantId: z.string().cuid().optional(),
-});
-
-export const cartActionSchema = z.object({
-  sessionId: z.string().min(8),
-  action: z.enum(["add", "update", "remove"]),
-  item: cartItemSchema,
-});
-
-export const checkoutItemSchema = z.object({
-  productId: z.string().cuid(),
-  quantity: z.number().int().min(1).max(99),
-});
-
-export const createCheckoutSchema = z.object({
-  cartSessionId: z.string().min(8),
+export const checkoutInputSchema = z.object({
+  sessionId: z.string().min(1),
   email: z.string().email(),
   successUrl: z.string().url(),
   cancelUrl: z.string().url(),
 });
 
-export const newsletterSubscribeSchema = z.object({
+export const checkoutSessionSchema = z.object({
+  items: z
+    .array(
+      z.object({
+        id: z.string().optional(),
+        name: z.string().optional(),
+        priceCents: z.number().optional(),
+        quantity: z.number().int().positive().optional(),
+      })
+    )
+    .min(1),
+  currency: z.string().min(1),
+  successUrl: z.string().url(),
+  cancelUrl: z.string().url(),
+});
+
+export const newsletterSchema = z.object({
+  email: z.string().email(),
+  sourcePage: z.string().optional(),
+});
+
+export const createOrderSchema = z.object({
+  stripeCheckoutSessionId: z.string().min(1),
+});
+
+export const trackOrderSchema = z.object({
+  orderNumber: z.string().min(1),
   email: z.string().email(),
 });
 
-export const contactSchema = z.object({
-  name: z.string().min(2).max(120),
-  email: z.string().email(),
-  orderNumber: z.string().max(50).optional(),
-  topic: z.enum(["Shipping", "Returns", "Product question", "Order change", "Wholesale"]).optional(),
-  message: z.string().min(10).max(5000),
+export const productSearchQuerySchema = z.object({
+  q: z.string().optional().default(""),
+  category: z.string().optional(),
+  limit: z.preprocess(
+    (value) => (typeof value === "string" ? parseInt(value, 10) : value),
+    z.number().int().positive().max(50).default(20)
+  ),
 });
