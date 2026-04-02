@@ -7,12 +7,21 @@ import TrustBadges from "@/components/TrustBadges";
 import TestimonialsGrid from "@/components/TestimonialsGrid";
 import NewsletterForm from "@/components/NewsletterForm";
 import StatsCounter from "@/components/StatsCounter";
+import Aurora from "@/components/backgrounds/Aurora";
 
 export default function HomePage() {
   return (
     <main className="pt-0">
-      <section className="bg-background">
-        <div className="max-w-7xl mx-auto px-4 py-16 md:py-24 grid gap-12 lg:grid-cols-[1.1fr_0.9fr] items-center">
+      <section className="relative overflow-hidden bg-background">
+        <div className="absolute inset-0 z-0 pointer-events-none">
+          <Aurora
+            colorStops={["#E63946", "#F4A261", "#2A9D8F"]}
+            amplitude={1.2}
+            blend={0.55}
+            speed={0.7}
+          />
+        </div>
+        <div className="relative z-10 max-w-7xl mx-auto px-4 py-16 md:py-24 grid gap-12 lg:grid-cols-[1.1fr_0.9fr] items-center">
           <div className="animate-fade-in-up">
             <HeroSpotlight
               headline="Welcome to Italo Pizza"
