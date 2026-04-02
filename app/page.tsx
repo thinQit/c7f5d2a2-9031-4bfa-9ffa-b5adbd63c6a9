@@ -10,7 +10,7 @@ import StatsCounter from "@/components/StatsCounter";
 
 export default function HomePage() {
   return (
-    <main className="pt-8">
+    <main className="pt-2">
       <section className="bg-background">
         <div className="max-w-7xl mx-auto px-4 py-16 md:py-24 grid gap-12 lg:grid-cols-[1.1fr_0.9fr] items-center">
           <div className="animate-fade-in-up">
