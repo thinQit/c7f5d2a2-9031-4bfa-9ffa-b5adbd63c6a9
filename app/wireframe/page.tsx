@@ -9,7 +9,7 @@ export default function WireframePage() {
       <div className="animate-fade-in-up text-foreground [&_h1]:!text-foreground [&_h2]:!text-foreground [&_p]:!text-muted-foreground">
         <HeroSpotlight
           headline="Welcome to Italo Pizza"
-          subheadline="A quick layout overview of the storefront-style structure before final imagery and polish."
+          subheadline={"A quick layout overview of the storefront-style structure before final imagery and polish" + "."}
           primaryCta={{ label: "Back to Home", href: "/" }}
           secondaryCta={{ label: "View Menu", href: "/menu" }}
         />
