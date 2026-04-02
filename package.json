@@ -7,7 +7,7 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "postinstall": "prisma generate"
+    "postinstall": "prisma generate --schema=./prisma/schema.prisma"
   },
   "dependencies": {
     "next": "14.2.29",
@@ -50,5 +50,8 @@
     "postcss": "8.4.49",
     "autoprefixer": "10.4.20",
     "prisma": "^5.13.0"
+  },
+  "prisma": {
+    "schema": "prisma/schema.prisma"
   }
 }
