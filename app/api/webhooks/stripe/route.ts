@@ -3,19 +3,21 @@ import { NextResponse } from "next/server";
 import Stripe from "stripe";
 import { db } from "@/lib/db";
 
-const stripeSecretKey = process.env.STRIPE_SECRET_KEY;
-const webhookSecret = process.env.STRIPE_WEBHOOK_SECRET;
-
-if (!stripeSecretKey || !webhookSecret) {
-  throw new Error("Missing Stripe webhook environment variables");
+function getStripeConfig() {
+  const stripeSecretKey = process.env.STRIPE_SECRET_KEY;
+  const webhookSecret = process.env.STRIPE_WEBHOOK_SECRET;
+  if (!stripeSecretKey || !webhookSecret) {
+    throw new Error("Missing Stripe webhook environment variables");
+  }
+  return {
+    stripe: new Stripe(stripeSecretKey, { apiVersion: "2024-06-20" }),
+    webhookSecret,
+  };
 }
-
-const stripe = new Stripe(stripeSecretKey, {
-  apiVersion: "2024-06-20",
-});
 
 export async function POST(req: Request) {
   try {
+    const { stripe, webhookSecret } = getStripeConfig();
     const body = await req.text();
     const signature = headers().get("stripe-signature");
 
