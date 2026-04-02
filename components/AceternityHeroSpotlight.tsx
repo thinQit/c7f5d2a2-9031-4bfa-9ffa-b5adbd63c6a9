@@ -17,15 +17,17 @@ export default function AceternityHeroSpotlight({
   imageSrc = 'https://res.cloudinary.com/dwc294mzm/image/upload/c_fill,w_1200,h_800,g_auto/v1771577700/site-images/hero-backgrounds/13551578.jpg',
 }: Partial<AceternityHeroSpotlightProps>) {
   return (
-    <section className="relative overflow-hidden rounded-2xl border bg-[#1A1A2E] px-6 py-16 text-white md:px-10">
+    <section className="relative overflow-hidden rounded-2xl border border-border bg-card px-6 py-16 text-foreground md:px-10">
       <Spotlight className="-top-40 left-0 md:left-40" fill="#38bdf8" />
       <div className="relative z-10 grid items-center gap-8 md:grid-cols-2">
         <div>
-          <span className="inline-block rounded-full bg-[#E63946] px-3 py-1 text-xs font-semibold">Limited Time Offer</span>
+          <span className="inline-block rounded-full bg-accent px-3 py-1 text-xs font-semibold text-accent-foreground">
+            Limited Time Offer
+          </span>
           <h1 className="mt-4 text-3xl font-bold md:text-5xl">{headline}</h1>
-          <p className="mt-4 max-w-lg text-sm text-white/80 md:text-base">{subheadline}</p>
+          <p className="mt-4 max-w-lg text-sm text-foreground/80 md:text-base">{subheadline}</p>
           <div className="mt-6 flex gap-3">
-            <Button asChild className="bg-[#E63946] text-white hover:bg-[#E63946]/90">
+            <Button asChild className="bg-primary text-primary-foreground hover:bg-primary/90">
               <Link href="#">Shop Now</Link>
             </Button>
             <Button asChild variant="secondary">
@@ -33,8 +35,15 @@ export default function AceternityHeroSpotlight({
             </Button>
           </div>
         </div>
-        <div className="overflow-hidden rounded-xl border border-white/20">
-          <Image src={imageSrc} alt="Hero product highlight" width={1000} height={700} unoptimized className="h-[360px] w-full object-cover" />
+        <div className="overflow-hidden rounded-xl border border-border">
+          <Image
+            src={imageSrc}
+            alt="Hero product highlight"
+            width={1000}
+            height={700}
+            unoptimized
+            className="h-[360px] w-full object-cover"
+          />
         </div>
       </div>
     </section>

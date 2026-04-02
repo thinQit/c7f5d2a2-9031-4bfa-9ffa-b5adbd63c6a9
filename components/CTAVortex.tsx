@@ -21,9 +21,9 @@ export default function CTAVortex({
 }: Partial<CTAVortexProps>) {
   return (
     <section className="mx-auto h-[30rem] w-full overflow-hidden rounded-md">
-      <Vortex backgroundColor="black" className="flex h-full w-full flex-col items-center justify-center px-2 py-4 md:px-10">
-        <h2 className="text-center text-2xl font-bold text-background md:text-6xl">{headline}</h2>
-        {description && <p className="mt-6 max-w-xl text-center text-sm text-background/70 md:text-xl">{description}</p>}
+      <Vortex backgroundColor="#0b0f1a" className="flex h-full w-full flex-col items-center justify-center px-2 py-4 md:px-10">
+        <h2 className="text-center text-2xl font-bold text-foreground md:text-6xl">{headline}</h2>
+        {description && <p className="mt-6 max-w-xl text-center text-sm text-foreground/70 md:text-xl">{description}</p>}
         <div className="mt-8 flex flex-col items-center gap-4 sm:flex-row">
           <Button size="lg" className="bg-primary px-8 py-6 text-lg text-primary-foreground transition-all duration-200 hover:scale-105 hover:bg-primary/90" asChild>
             <a href={ctaHref}>{ctaLabel}</a>
@@ -32,7 +32,7 @@ export default function CTAVortex({
             <Button
               variant="outline"
               size="lg"
-              className="border-background/30 px-8 py-6 text-lg text-background transition-all duration-200 hover:scale-105 hover:bg-background/10"
+              className="border-border px-8 py-6 text-lg text-foreground transition-all duration-200 hover:scale-105 hover:bg-muted"
               asChild
             >
               <a href={secondaryCtaHref}>{secondaryCtaLabel}</a>
