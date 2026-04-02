@@ -22,7 +22,7 @@ export default function HeroSpotlight({
   return (
     <section className="relative min-h-[600px] md:min-h-[700px] flex flex-col items-center justify-center overflow-hidden rounded-md bg-background antialiased">
       <Spotlight className="-top-40 left-0 md:left-60 md:-top-20" fill="var(--primary)" />
-      <div className="relative z-10 mx-auto w-full max-w-4xl p-4 pt-20 md:pt-0 text-center animate-fade-in-up">
+      <div className="relative z-10 mx-auto w-full max-w-4xl p-4 pt-8 sm:pt-10 md:pt-0 text-center animate-fade-in-up">
         <TypewriterEffect words={words} className="text-4xl font-bold sm:text-5xl md:text-6xl lg:text-7xl text-foreground" cursorClassName="bg-primary" />
         <p className="mx-auto mt-6 max-w-2xl text-base text-muted-foreground md:text-lg">{subheadline}</p>
         <div className="mt-10 flex flex-col items-center justify-center gap-4 sm:flex-row">
