@@ -1,96 +1,114 @@
-// Italo Pizza homepage
-import Image from "next/image";
-import HeroSpotlight from "@/components/HeroSpotlight";
-import CategoryNav from "@/components/CategoryNav";
-import FeaturedProductsGrid from "@/components/FeaturedProductsGrid";
-import TrustBadges from "@/components/TrustBadges";
-import TestimonialsGrid from "@/components/TestimonialsGrid";
-import NewsletterForm from "@/components/NewsletterForm";
-import StatsCounter from "@/components/StatsCounter";
-import Aurora from "@/components/backgrounds/Aurora";
+export const dynamic = 'force-dynamic';
+
+import { Button } from '@/components/ui/button'
+import { Card } from '@/components/ui/card'
+import AceternityHeroSpotlight from '@/components/AceternityHeroSpotlight'
+import CategoryPills from '@/components/CategoryPills'
+import ProductGrid from '@/components/ProductGrid'
+import TrustBadgeRow from '@/components/TrustBadgeRow'
+import TestimonialsGrid from '@/components/TestimonialsGrid'
+import NewsletterForm from '@/components/NewsletterForm'
+import FeaturesGrid from '@/components/FeaturesGrid'
+import SectionReveal from '@/components/SectionReveal'
+import GalleryMasonry from '@/components/GalleryMasonry'
+import CTAVortex from '@/components/CTAVortex'
 
 export default function HomePage() {
   return (
-    <main className="pt-0">
-      <section className="relative overflow-hidden bg-background">
-        <div className="absolute inset-0 z-0 pointer-events-none">
-          <Aurora
-            colorStops={["#E63946", "#F4A261", "#2A9D8F"]}
-            amplitude={1.2}
-            blend={0.55}
-            speed={0.7}
-          />
+    <div className="bg-background text-foreground">
+      <section className="relative min-h-[80vh] animate-fade-in-up">
+        <AceternityHeroSpotlight />
+        <div
+          className="absolute inset-0 bg-cover bg-center"
+          style={{
+            backgroundImage:
+              'url(https://res.cloudinary.com/dwc294mzm/image/upload/c_fill,w_1200,h_800,g_auto/v1771577158/site-images/ecommerce/10330120.jpg)',
+          }}
+        />
+        <div className="absolute inset-0 bg-black/40" />
+        <div className="relative z-10 mx-auto flex min-h-[80vh] max-w-7xl flex-col justify-center px-6 py-20 md:py-28">
+          <p className="mb-4 inline-block w-fit rounded-full bg-primary/90 px-4 py-2 text-sm text-primary-foreground">
+            Spring Refresh • Save 15% with REFRESH15
+          </p>
+          <h1 className="max-w-3xl text-5xl font-bold leading-tight text-white md:text-7xl">
+            Upgrade your everyday with design-forward essentials.
+          </h1>
+          <p className="mt-6 max-w-2xl text-base text-white/90 md:text-lg">
+            Curated gear for work, travel, and home—fast shipping, easy returns, and checkout you can trust.
+          </p>
+          <div className="mt-8 flex flex-wrap gap-4">
+            <Button className="transition-all duration-200 hover:scale-105">Shop best sellers</Button>
+            <Button variant="secondary" className="transition-all duration-200 hover:scale-105">
+              Browse collections
+            </Button>
+          </div>
         </div>
-        <div className="relative z-10 max-w-7xl mx-auto px-4 py-16 md:py-24 grid gap-12 lg:grid-cols-[1.1fr_0.9fr] items-center">
-          <div className="animate-fade-in-up">
-            <HeroSpotlight
-              headline="Welcome to Italo Pizza"
-              subheadline="Hand-stretched dough, San Marzano-style tomato sauce, and mozzarella that melts the way it should. Order pickup or delivery in minutes."
-              primaryCta={{ label: "View Menu", href: "/menu" }}
-              secondaryCta={{ label: "Order Now", href: "/order" }}
+      </section>
+
+      <SectionReveal>
+        <section className="py-20 md:py-28 animate-fade-in-up">
+          <div className="mx-auto max-w-7xl px-6">
+            <CategoryPills />
+          </div>
+        </section>
+      </SectionReveal>
+
+      <SectionReveal>
+        <section className="bg-muted py-20 md:py-28 animate-fade-in-up">
+          <div className="mx-auto max-w-7xl px-6">
+            <ProductGrid />
+          </div>
+        </section>
+      </SectionReveal>
+
+      <SectionReveal>
+        <section className="py-20 md:py-28 animate-fade-in-up">
+          <div className="mx-auto max-w-7xl px-6">
+            <TrustBadgeRow />
+          </div>
+        </section>
+      </SectionReveal>
+
+      <SectionReveal>
+        <section className="bg-muted py-20 md:py-28 animate-fade-in-up">
+          <div className="mx-auto max-w-7xl px-6">
+            <TestimonialsGrid />
+          </div>
+        </section>
+      </SectionReveal>
+
+      <SectionReveal>
+        <section className="py-20 md:py-28 animate-fade-in-up">
+          <div className="mx-auto max-w-7xl px-6">
+            <GalleryMasonry
+              headline="Shop by collection"
+              subheadline="Start with what you need—then discover what you’ll love."
+              images={[
+                { url: 'https://res.cloudinary.com/dwc294mzm/image/upload/c_fill,w_1200,h_800,g_auto/v1771577136/site-images/ecommerce/16675632.jpg', alt: 'Everyday carry collection' },
+                { url: 'https://res.cloudinary.com/dwc294mzm/image/upload/c_fill,w_1200,h_800,g_auto/v1771577162/site-images/ecommerce/18548434.jpg', alt: 'Hydration essentials' },
+                { url: 'https://res.cloudinary.com/dwc294mzm/image/upload/c_fill,w_1200,h_800,g_auto/v1771577110/site-images/ecommerce/17485351.jpg', alt: 'Workspace setup' },
+                { url: 'https://res.cloudinary.com/dwc294mzm/image/upload/c_fill,w_1200,h_800,g_auto/v1771577107/site-images/ecommerce/29502359.jpg', alt: 'Travel accessories' },
+                { url: 'https://res.cloudinary.com/dwc294mzm/image/upload/c_fill,w_1200,h_800,g_auto/v1771577106/site-images/ecommerce/17485353.jpg', alt: 'Wellness products' },
+                { url: 'https://res.cloudinary.com/dwc294mzm/image/upload/c_fill,w_1200,h_800,g_auto/v1771577152/site-images/ecommerce/11952304.jpg', alt: 'Gift bundles' },
+              ]}
             />
           </div>
-          <div className="relative animate-fade-in-up">
-            <div className="absolute -inset-6 rounded-3xl bg-primary/10 blur-3xl" />
-            <div className="relative overflow-hidden rounded-3xl border border-border bg-card shadow-lg">
-              <Image
-                src="https://res.cloudinary.com/dwc294mzm/image/upload/v1771577162/site-images/ecommerce/35560482.jpg"
-                alt="Freshly baked pizza with bubbling cheese"
-                width={720}
-                height={840}
-                className="h-full w-full object-cover"
-                unoptimized
-              />
-            </div>
-            <p className="mt-4 text-sm text-muted-foreground">
-              Crafted daily with premium ingredients for a crisp crust and bold flavor.
-            </p>
+        </section>
+      </SectionReveal>
+
+      <SectionReveal>
+        <section className="bg-muted py-20 md:py-28 animate-fade-in-up">
+          <div className="mx-auto max-w-7xl px-6">
+            <NewsletterForm />
           </div>
-        </div>
-      </section>
+        </section>
+      </SectionReveal>
 
-      <section className="py-20 md:py-28 bg-background animate-fade-in-up">
-        <div className="max-w-7xl mx-auto px-4">
-          <StatsCounter
-            stats={[
-              { value: "25–45 min", label: "Delivery" },
-              { value: "~15 min", label: "Pickup Ready" },
-              { value: "4.8/5", label: "Customer Rating" },
-            ]}
-            bgColor="bg-muted"
-          />
-        </div>
-      </section>
-
-      <section className="py-20 md:py-28 bg-muted animate-fade-in-up">
-        <div className="max-w-7xl mx-auto px-4">
-          <CategoryNav />
-        </div>
-      </section>
-
-      <section className="py-20 md:py-28 bg-background animate-fade-in-up">
-        <div className="max-w-7xl mx-auto px-4">
-          <FeaturedProductsGrid />
-        </div>
-      </section>
-
-      <section className="py-20 md:py-28 bg-muted animate-fade-in-up">
-        <div className="max-w-7xl mx-auto px-4">
-          <TrustBadges />
-        </div>
-      </section>
-
-      <section className="py-20 md:py-28 bg-background animate-fade-in-up">
-        <div className="max-w-7xl mx-auto px-4">
-          <TestimonialsGrid />
-        </div>
-      </section>
-
-      <section className="py-20 md:py-28 bg-muted animate-fade-in-up">
-        <div className="max-w-7xl mx-auto px-4">
-          <NewsletterForm />
-        </div>
-      </section>
-    </main>
-  );
+      <div className="hidden">
+        <Card />
+        <FeaturesGrid headline="" features={[]} />
+        <CTAVortex title="" ctaLabel="" ctaHref="" />
+      </div>
+    </div>
+  )
 }

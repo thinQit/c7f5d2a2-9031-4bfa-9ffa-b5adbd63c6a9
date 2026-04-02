@@ -1,110 +1,50 @@
-"use client";
+'use client'
 
+import { useState } from 'react'
+import { Button } from '@/components/ui/button'
 import ProductCard from '@/components/ProductCard'
 
+interface Product {
+  title: string
+  imageSrc: string
+  price: number
+  compareAt: number
+  rating: number
+  reviewCount: number
+  badge: string
+}
+
 interface ProductGridProps {
-  headline?: string
-  subheadline?: string
-  primaryCta?: { label: string; href: string }
-  secondaryCta?: { label: string; href: string }
-  products?: Array<any>
+  products?: Product[]
+  loading?: boolean
 }
 
 export default function ProductGrid({
-  headline = 'Featured Products',
-  subheadline = 'Trending and top-rated picks, handpicked for quality and quick ship.',
-  primaryCta = { label: 'Shop all', href: '/shop' },
-  secondaryCta = { label: 'Giftable', href: '/shop?tag=giftable' },
   products = [
-    {
-      name: 'Stainless Insulated Bottle (24oz)',
-      imageSrc:
-        'https://res.cloudinary.com/dwc294mzm/image/upload/c_fill,w_1200,h_800,g_auto/v1771577103/site-images/ecommerce/29502370.jpg',
-      price: '$34.00',
-      compareAt: '$42.00',
-      rating: 4.9,
-      badge: 'Best Seller',
-      href: '/product/stainless-insulated-bottle-24oz',
-    },
-    {
-      name: 'Braided USB‑C Cable (2m)',
-      imageSrc:
-        'https://res.cloudinary.com/dwc294mzm/image/upload/c_fill,w_1200,h_800,g_auto/v1771577167/site-images/ecommerce/29502369.jpg',
-      price: '$18.00',
-      compareAt: '$24.00',
-      rating: 4.8,
-      badge: 'Fast Charge',
-      href: '/product/braided-usb-c-cable-2m',
-    },
-    {
-      name: 'Weekender Duffel (35L)',
-      imageSrc:
-        'https://res.cloudinary.com/dwc294mzm/image/upload/c_fill,w_1200,h_800,g_auto/v1771577145/site-images/ecommerce/34577.jpg',
-      price: '$129.00',
-      compareAt: '$159.00',
-      rating: 4.7,
-      badge: 'Travel Ready',
-      href: '/product/weekender-duffel-35l',
-    },
-    {
-      name: 'Wireless Earbuds (ANC)',
-      imageSrc:
-        'https://res.cloudinary.com/dwc294mzm/image/upload/c_fill,w_1200,h_800,g_auto/v1771577110/site-images/ecommerce/17485350.jpg',
-      price: '$99.00',
-      compareAt: '$129.00',
-      rating: 4.6,
-      badge: 'Noise Canceling',
-      href: '/product/wireless-earbuds-anc',
-    },
-    {
-      name: 'Tech Organizer Pouch',
-      imageSrc:
-        'https://res.cloudinary.com/dwc294mzm/image/upload/c_fill,w_1200,h_800,g_auto/v1771577159/site-images/ecommerce/10330108.jpg',
-      price: '$29.00',
-      compareAt: '$36.00',
-      rating: 4.8,
-      badge: 'Editor’s Pick',
-      href: '/product/tech-organizer-pouch',
-    },
-    {
-      name: 'Dimmable Desk Lamp',
-      imageSrc:
-        'https://res.cloudinary.com/dwc294mzm/image/upload/c_fill,w_1200,h_800,g_auto/v1771577132/site-images/ecommerce/16675631.jpg',
-      price: '$59.00',
-      compareAt: '$79.00',
-      rating: 4.7,
-      badge: 'New',
-      href: '/product/dimmable-desk-lamp',
-    },
+    { title: 'Urban Sneaker', imageSrc: 'https://res.cloudinary.com/dwc294mzm/image/upload/c_fill,w_1200,h_800,g_auto/v1771577136/site-images/ecommerce/16675632.jpg', price: 120, compareAt: 150, rating: 4.7, reviewCount: 210, badge: 'New' },
+    { title: 'Canvas Tote', imageSrc: 'https://res.cloudinary.com/dwc294mzm/image/upload/c_fill,w_1200,h_800,g_auto/v1771577162/site-images/ecommerce/18548434.jpg', price: 49, compareAt: 65, rating: 4.6, reviewCount: 88, badge: 'Popular' },
+    { title: 'Minimal Watch', imageSrc: 'https://res.cloudinary.com/dwc294mzm/image/upload/c_fill,w_1200,h_800,g_auto/v1771577110/site-images/ecommerce/17485351.jpg', price: 159, compareAt: 199, rating: 4.9, reviewCount: 342, badge: 'Top Rated' },
   ],
+  loading = false,
 }: Partial<ProductGridProps>) {
+  const [visibleCount, setVisibleCount] = useState(6)
+  const visibleProducts = products.slice(0, visibleCount)
+
   return (
-    <section>
-      <div className="mb-8 text-center">
-        <h2 className="text-3xl md:text-4xl font-bold">{headline}</h2>
-        <p className="text-muted-foreground mt-2">{subheadline}</p>
+    <section className="space-y-6">
+      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
+        {loading
+          ? Array.from({ length: 6 }).map((_, idx) => <div key={idx} className="h-[420px] animate-pulse rounded-xl bg-muted" />)
+          : visibleProducts.map((product) => <ProductCard key={product.title} {...product} />)}
       </div>
-      <div className="grid gap-4 md:gap-6 grid-cols-2 md:grid-cols-3">
-        {products.map((p, i) => (
-          <ProductCard key={i} {...p} />
-        ))}
-      </div>
-      <div className="mt-8 flex flex-col md:flex-row justify-center gap-4">
-        <a
-          href={primaryCta?.href}
-          className="rounded-lg px-6 py-3 bg-primary text-primary-foreground font-medium transition hover:bg-primary/90 text-center"
-        >
-          {primaryCta?.label}
-        </a>
-        {secondaryCta && (
-          <a
-            href={secondaryCta.href}
-            className="rounded-lg px-6 py-3 border border-border bg-background font-medium transition hover:bg-muted text-center"
-          >
-            {secondaryCta.label}
-          </a>
-        )}
-      </div>
+
+      {!loading && visibleCount < products.length && (
+        <div className="flex justify-center">
+          <Button onClick={() => setVisibleCount((prev) => prev + 3)} className="bg-[#1A1A2E] text-white hover:bg-[#1A1A2E]/90">
+            Load More
+          </Button>
+        </div>
+      )}
     </section>
   )
 }

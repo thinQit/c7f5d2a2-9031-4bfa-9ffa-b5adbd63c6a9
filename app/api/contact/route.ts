@@ -1,44 +1,42 @@
-export const dynamic = 'force-dynamic';
-import { NextResponse } from "next/server";
-import { ContactTopic } from "@prisma/client";
+import { NextRequest, NextResponse } from "next/server";
 import { db } from "@/lib/db";
-import { contactSubmissionSchema } from "@/lib/validators";
+import { contactSchema } from "@/lib/validators";
 
-const topicMap: Record<string, ContactTopic> = {
-  "Order status": "ORDER_STATUS",
-  Returns: "RETURNS",
-  "Product question": "PRODUCT_QUESTION",
-  "Bulk order": "BULK_ORDER",
-  Other: "OTHER",
+const topicMap: Record<string, "Shipping" | "Returns" | "ProductQuestion" | "OrderChange" | "Wholesale" | "Other"> = {
+  Shipping: "Shipping",
+  Returns: "Returns",
+  "Product question": "ProductQuestion",
+  "Order change": "OrderChange",
+  Wholesale: "Wholesale",
 };
 
-export async function POST(req: Request) {
+export async function POST(req: NextRequest) {
   try {
-    const json = await req.json();
-    const parsed = contactSubmissionSchema.safeParse(json);
+    const body = await req.json();
+    const parsed = contactSchema.safeParse(body);
 
     if (!parsed.success) {
       return NextResponse.json(
         { error: "Invalid contact payload", details: parsed.error.flatten() },
-        { status: 400 }
+        { status: 400 },
       );
     }
 
     const { name, email, orderNumber, topic, message } = parsed.data;
 
-    const submission = await db.contactSubmission.create({
+    const contact = await db.contactMessage.create({
       data: {
         name,
         email,
-        orderNumber: orderNumber || null,
-        topic: topicMap[topic],
+        orderNumber,
+        topic: topic ? topicMap[topic] : "Other",
         message,
       },
     });
 
-    return NextResponse.json({ data: submission }, { status: 201 });
+    return NextResponse.json({ success: true, id: contact.id });
   } catch (error) {
     console.error("POST /api/contact error:", error);
-    return NextResponse.json({ error: "Failed to submit contact form" }, { status: 500 });
+    return NextResponse.json({ error: "Failed to send message" }, { status: 500 });
   }
 }

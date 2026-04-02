@@ -1,47 +1,62 @@
-export const dynamic = 'force-dynamic';
 import { NextRequest, NextResponse } from "next/server";
+import { Prisma } from "@prisma/client";
 import { db } from "@/lib/db";
-import { productQuerySchema } from "@/lib/validators";
-import { ProductCategory } from "@prisma/client";
-
-const categoryMap: Record<string, ProductCategory> = {
-  "signature-pizza": "SIGNATURE_PIZZA",
-  "build-your-own": "BUILD_YOUR_OWN",
-  pasta: "PASTA",
-  starters: "STARTERS",
-  desserts: "DESSERTS",
-  drinks: "DRINKS",
-  bundles: "BUNDLES",
-};
+import { productsQuerySchema } from "@/lib/validators";
 
 export async function GET(req: NextRequest) {
   try {
-    const parsed = productQuerySchema.safeParse(
-      Object.fromEntries(req.nextUrl.searchParams.entries())
+    const parsed = productsQuerySchema.safeParse(
+      Object.fromEntries(req.nextUrl.searchParams.entries()),
     );
 
     if (!parsed.success) {
       return NextResponse.json(
         { error: "Invalid query params", details: parsed.error.flatten() },
-        { status: 400 }
+        { status: 400 },
       );
     }
 
-    const { category, tag, limit, page } = parsed.data;
-    const skip = (page - 1) * limit;
+    const { category, minPrice, maxPrice, rating, inStock, page, limit, sort } = parsed.data;
 
-    const where = {
-      isActive: true,
-      ...(category && categoryMap[category] ? { category: categoryMap[category] } : {}),
-      ...(tag ? { tags: { has: tag } } : {}),
+    const where: Prisma.ProductWhereInput = {
+      ...(category ? { category } : {}),
+      ...(typeof inStock === "boolean" ? { inStock } : {}),
+      ...(typeof rating === "number" ? { rating: { gte: rating } } : {}),
+      ...((typeof minPrice === "number" || typeof maxPrice === "number")
+        ? {
+            price: {
+              ...(typeof minPrice === "number" ? { gte: minPrice } : {}),
+              ...(typeof maxPrice === "number" ? { lte: maxPrice } : {}),
+            },
+          }
+        : {}),
     };
+
+    const orderBy =
+      sort === "top-rated"
+        ? [{ rating: "desc" as const }, { reviewCount: "desc" as const }]
+        : sort === "price-asc"
+          ? [{ price: "asc" as const }]
+          : sort === "price-desc"
+            ? [{ price: "desc" as const }]
+            : sort === "newest"
+              ? [{ createdAt: "desc" as const }]
+              : [{ reviewCount: "desc" as const }, { createdAt: "desc" as const }];
+
+    const skip = (page - 1) * limit;
 
     const [items, total] = await Promise.all([
       db.product.findMany({
         where,
-        orderBy: { createdAt: "desc" as const },
+        orderBy,
         skip,
         take: limit,
+        include: {
+          images: {
+            orderBy: { position: "asc" as const },
+            take: 1,
+          },
+        },
       }),
       db.product.count({ where }),
     ]);
@@ -49,10 +64,10 @@ export async function GET(req: NextRequest) {
     return NextResponse.json({
       items,
       pagination: {
-        total,
         page,
         limit,
-        pageCount: Math.ceil(total / limit),
+        total,
+        totalPages: Math.ceil(total / limit),
       },
     });
   } catch (error) {

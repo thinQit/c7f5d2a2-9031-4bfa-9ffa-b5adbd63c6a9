@@ -1,5 +1,5 @@
-"use client";
-import { AnimatedTestimonials } from "@/components/ui/animated-testimonials";
+'use client';
+import { AnimatedTestimonials } from '@/components/ui/animated-testimonials';
 
 interface TestimonialItem {
   quote: string;
@@ -16,8 +16,8 @@ interface TestimonialsAnimatedProps {
 }
 
 export default function TestimonialsAnimated({
-  headline = 'Loved by thousands of happy shoppers',
-  subheadline = 'Real stories from customers who trust NovaCart for quality, speed, and value.',
+  headline = 'Loved by shoppers everywhere',
+  subheadline = 'Real feedback from customers who trust NovaCart for quality products and reliable delivery.',
   testimonials = [],
   autoplay = true,
 }: Partial<TestimonialsAnimatedProps>) {

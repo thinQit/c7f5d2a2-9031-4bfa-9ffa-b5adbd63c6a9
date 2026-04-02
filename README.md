@@ -1,11 +1,17 @@
-# Italo Pizza
+# LumenCart Storefront
 
-Modern storefront-style website scaffold for **Italo Pizza** built with:
+Modern essentials, shipped fast—built for confident checkout.
+
+## Stack
 
 - Next.js 14 (App Router)
 - TypeScript
 - Tailwind CSS
-- shadcn/ui-ready configuration
+- shadcn/ui primitives
+- PostgreSQL-ready environment config
 
 ## Getting Started
 
+1. **Install dependencies:**
+
+   

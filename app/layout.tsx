@@ -1,84 +1,78 @@
-import type { Metadata } from "next";
-import { DM_Sans, Inter } from "next/font/google";
-import "./globals.css";
-import NavbarSticky from "@/components/NavbarSticky";
-import FooterMultiColumn from "@/components/FooterMultiColumn";
+import './globals.css'
+import { DM_Sans, Inter } from 'next/font/google'
+import NavbarSticky from '@/components/NavbarSticky'
+import FooterMultiColumn from '@/components/FooterMultiColumn'
 
 const dmSans = DM_Sans({
-  subsets: ["latin"],
-  variable: "--font-heading",
-  weight: ["400", "500", "700"],
-});
+  subsets: ['latin'],
+  variable: '--font-heading',
+  weight: ['400', '500', '700'],
+})
 
 const inter = Inter({
-  subsets: ["latin"],
-  variable: "--font-body",
-  weight: ["300", "400", "600"],
-});
-
-export const metadata: Metadata = {
-  title: "Italo Pizza",
-  description:
-    "Order authentic Italian pizza and pasta from Italo Pizza. Fresh ingredients, fast delivery, easy online ordering. Visit us at 214 Via Roma Ave, Brooklyn.",
-};
+  subsets: ['latin'],
+  variable: '--font-body',
+  weight: ['300', '400', '600'],
+})
 
 export default function RootLayout({
   children,
-}: Readonly<{
-  children: React.ReactNode;
-}>) {
+}: {
+  children: React.ReactNode
+}) {
   return (
-    <html lang="en" className="dark">
+    <html lang="en">
       <body className={`${dmSans.variable} ${inter.variable} font-sans bg-background text-foreground`}>
         <NavbarSticky
-          logo="Italo Pizza"
+          logo="LumenCart"
           navItems={[
-            { label: "Home", href: "/" },
-            { label: "Menu", href: "/menu" },
-            { label: "About Us", href: "/about" },
-            { label: "Gallery", href: "/gallery" },
-            { label: "Contact", href: "/contact" },
-            { label: "Wireframe", href: "/wireframe" },
+            { label: 'Home', href: '/' },
+            { label: 'Shop', href: '/shop' },
+            { label: 'Collections', href: '/collections' },
+            { label: 'Search', href: '/search' },
+            { label: 'About', href: '/about' },
+            { label: 'Contact', href: '/contact' },
+            { label: 'Wireframe', href: '/wireframe' },
           ]}
-          ctaLabel="Order Now"
-          ctaHref="/order"
+          ctaLabel="Shop now"
+          ctaHref="/shop"
         />
-        {children}
+        <main>{children}</main>
         <FooterMultiColumn
-          brand="Italo Pizza"
-          description="Modern Italian comfort food—crafted fresh, delivered fast."
+          brand="LumenCart"
+          description="Curated essentials for modern routines."
           columns={[
             {
-              title: "Explore",
+              title: 'Shop',
               links: [
-                { label: "Home", href: "/" },
-                { label: "Menu", href: "/menu" },
-                { label: "About Us", href: "/about" },
-                { label: "Gallery", href: "/gallery" },
+                { label: 'All products', href: '/shop' },
+                { label: 'Collections', href: '/collections' },
+                { label: 'Bundles', href: '/collections/bundles' },
+                { label: 'Gift cards', href: '/gift-cards' },
               ],
             },
             {
-              title: "Support",
+              title: 'Help',
               links: [
-                { label: "Contact", href: "/contact" },
-                { label: "Delivery Areas", href: "/contact#delivery" },
-                { label: "Catering", href: "/contact#catering" },
-                { label: "Privacy", href: "/privacy" },
+                { label: 'Shipping & returns', href: '/shipping-returns' },
+                { label: 'Order tracking', href: '/track-order' },
+                { label: 'FAQ', href: '/faq' },
+                { label: 'Contact support', href: '/contact' },
               ],
             },
             {
-              title: "Order",
+              title: 'Company',
               links: [
-                { label: "Start Order", href: "/order" },
-                { label: "Best Sellers", href: "/order?collection=best-sellers" },
-                { label: "Family Bundles", href: "/menu?filter=bundles" },
-                { label: "Create Account", href: "/auth/sign-up" },
+                { label: 'About', href: '/about' },
+                { label: 'Reviews', href: '/reviews' },
+                { label: 'Privacy policy', href: '/privacy' },
+                { label: 'Terms', href: '/terms' },
               ],
             },
           ]}
-          copyright="© 2026 Italo Pizza. All rights reserved."
+          copyright="© 2026 LumenCart Co. All rights reserved."
         />
       </body>
     </html>
-  );
+  )
 }

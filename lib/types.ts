@@ -8,63 +8,37 @@ export interface CtaLink {
   href: string;
 }
 
-export interface SectionBase {
-  id: string;
-  type: string;
-  headline: string;
-  subheadline?: string;
-  primaryCta?: CtaLink;
-  secondaryCta?: CtaLink;
-}
-
 export interface Product {
-  id: string;
+  sku: string;
   name: string;
-  category: string;
   price: number;
-  currency: "USD";
-  description: string;
-  badges?: string[];
-  image?: {
-    src: string;
-    alt: string;
-  };
+  compareAtPrice?: number;
+  rating?: number;
+  reviewCount?: number;
+  badge?: string;
+  shortDescription?: string;
+  href: string;
+  imageAlt: string;
 }
 
 export interface Testimonial {
   name: string;
-  title?: string;
+  location: string;
   rating: number;
+  title: string;
   quote: string;
+  product?: string;
 }
 
-export interface GalleryImage {
-  src: string;
-  alt: string;
-}
-
-export interface ContactInfo {
-  address: string;
-  phone: string;
-  email: string;
+export interface Category {
+  name: string;
+  description: string;
+  href: string;
+  imageAlt: string;
 }
 
 export interface ApiResponse<T> {
-  success: boolean;
   data: T;
   message?: string;
-}
-
-export interface OrderItem {
-  productId: string;
-  quantity: number;
-  unitPrice: number;
-}
-
-export interface Order {
-  id: string;
-  items: OrderItem[];
-  total: number;
-  status: "pending" | "paid" | "fulfilled" | "cancelled";
-  createdAt: string;
+  success: boolean;
 }

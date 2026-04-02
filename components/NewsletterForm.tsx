@@ -3,39 +3,38 @@
 import { useState } from 'react'
 import { Input } from '@/components/ui/input'
 import { Button } from '@/components/ui/button'
-import { cn } from '@/lib/utils'
 
 interface NewsletterFormProps {
   title?: string
-  incentiveCode?: string
-  className?: string
+  incentive?: string
 }
 
 export default function NewsletterForm({
-  title = 'Get 15% Off Your First Online Order',
-  incentiveCode = 'CIAO15',
-  className = '',
+  title = 'Get 10% off your first order',
+  incentive = 'Join our newsletter for drops, deals, and styling tips.',
 }: Partial<NewsletterFormProps>) {
   const [email, setEmail] = useState('')
+  const [success, setSuccess] = useState(false)
 
   return (
-    <section className={cn('bg-[#F8F9FA] py-16', className)}>
-      <div className="mx-auto max-w-3xl rounded-2xl border bg-white px-6 py-8 text-center shadow-sm md:px-10">
-        <h3 className="mb-2 text-2xl font-bold text-[#1A1A2E]">{title}</h3>
-        <p className="mb-4 text-sm text-muted-foreground">
-          Subscribe for weekly specials. Use code <span className="font-semibold text-[#10b981]">{incentiveCode}</span> at checkout.
-        </p>
-        <form className="mx-auto flex max-w-xl flex-col gap-3 sm:flex-row">
-          <Input
-            type="email"
-            placeholder="Enter your email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            className="h-11"
-          />
-          <Button type="submit" className="h-11 bg-[#4f46e5] hover:bg-[#4338ca]">Subscribe</Button>
+    <div className="rounded-2xl border bg-white p-6 text-center md:p-8">
+      <h3 className="text-2xl font-bold text-[#1A1A2E]">{title}</h3>
+      <p className="mt-2 text-sm text-muted-foreground">{incentive}</p>
+      {success ? (
+        <p className="mt-4 font-medium text-green-600">Thanks! You’re subscribed.</p>
+      ) : (
+        <form
+          onSubmit={(e) => {
+            e.preventDefault()
+            setSuccess(true)
+          }}
+          className="mx-auto mt-5 flex max-w-md flex-col gap-3 sm:flex-row"
+        >
+          <Input type="email" required value={email} onChange={(e) => setEmail(e.target.value)} placeholder="Email address" />
+          <Button className="bg-[#E63946] text-white hover:bg-[#E63946]/90">Subscribe</Button>
         </form>
-      </div>
-    </section>
+      )}
+      <p className="mt-3 text-xs text-muted-foreground">We respect your privacy. Unsubscribe at any time.</p>
+    </div>
   )
 }

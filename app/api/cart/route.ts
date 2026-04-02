@@ -1,19 +1,11 @@
-export const dynamic = 'force-dynamic';
-import { cookies } from "next/headers";
 import { NextRequest, NextResponse } from "next/server";
 import { db } from "@/lib/db";
-import { cartBodySchema } from "@/lib/validators";
-
-const CART_COOKIE_NAME = "lumencart_session_id";
-
-function getSessionId() {
-  return crypto.randomUUID();
-}
+import { cartActionSchema } from "@/lib/validators";
 
 export async function POST(req: NextRequest) {
   try {
     const body = await req.json();
-    const parsed = cartBodySchema.safeParse(body);
+    const parsed = cartActionSchema.safeParse(body);
 
     if (!parsed.success) {
       return NextResponse.json(
@@ -22,71 +14,70 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    const cookieStore = await cookies();
-    let sessionId = cookieStore.get(CART_COOKIE_NAME)?.value;
-
-    if (!sessionId) {
-      sessionId = getSessionId();
-      cookieStore.set(CART_COOKIE_NAME, sessionId, {
-        httpOnly: true,
-        sameSite: "lax",
-        secure: process.env.NODE_ENV === "production",
-        path: "/",
-        maxAge: 60 * 60 * 24 * 30,
-      });
-    }
+    const { sessionId, action, item } = parsed.data;
 
     const cart = await db.cart.upsert({
       where: { sessionId },
-      update: {},
       create: { sessionId },
+      update: {},
     });
 
-    const { action, productId, quantity } = parsed.data;
+    const existing = await db.cartItem.findFirst({
+      where: {
+        cartId: cart.id,
+        productId: item.productId,
+        variantId: item.variantId ?? null,
+      },
+    });
 
-    if (action === "clear") {
-      await db.cartItem.deleteMany({ where: { cartId: cart.id } });
-    } else {
-      if (!productId) {
-        return NextResponse.json({ error: "productId is required" }, { status: 400 });
-      }
-
-      if (action === "add") {
-        const qtyToAdd = quantity ?? 1;
-        await db.cartItem.upsert({
-          where: { cartId_productId: { cartId: cart.id, productId } },
-          update: { quantity: { increment: qtyToAdd } },
-          create: { cartId: cart.id, productId, quantity: qtyToAdd },
+    if (action === "add") {
+      if (existing) {
+        await db.cartItem.update({
+          where: { id: existing.id },
+          data: { quantity: existing.quantity + (item.quantity ?? 1) },
+        });
+      } else {
+        await db.cartItem.create({
+          data: {
+            cartId: cart.id,
+            productId: item.productId,
+            variantId: item.variantId,
+            quantity: item.quantity ?? 1,
+          },
         });
       }
+    }
 
-      if (action === "update") {
-        if (!quantity) {
-          return NextResponse.json({ error: "quantity is required for update" }, { status: 400 });
-        }
-        await db.cartItem.updateMany({
-          where: { cartId: cart.id, productId },
-          data: { quantity },
-        });
+    if (action === "update") {
+      if (!existing) {
+        return NextResponse.json({ error: "Cart item not found for update" }, { status: 404 });
       }
 
-      if (action === "remove") {
-        await db.cartItem.deleteMany({ where: { cartId: cart.id, productId } });
+      await db.cartItem.update({
+        where: { id: existing.id },
+        data: { quantity: item.quantity ?? 1 },
+      });
+    }
+
+    if (action === "remove") {
+      if (!existing) {
+        return NextResponse.json({ error: "Cart item not found for removal" }, { status: 404 });
       }
+
+      await db.cartItem.delete({ where: { id: existing.id } });
     }
 
     const updatedCart = await db.cart.findUnique({
       where: { id: cart.id },
       include: {
         items: {
+          include: { product: true },
           orderBy: { createdAt: "asc" as const },
-          include: { product: { include: { images: { take: 1, orderBy: { position: "asc" as const } } } },
-          },
         },
       },
     });
 
-    return NextResponse.json(updatedCart);
+    return NextResponse.json({ cart: updatedCart });
   } catch (error) {
     console.error("POST /api/cart error:", error);
     return NextResponse.json({ error: "Failed to update cart" }, { status: 500 });

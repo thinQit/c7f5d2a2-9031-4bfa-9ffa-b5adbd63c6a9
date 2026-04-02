@@ -1,36 +1,59 @@
 export const dynamic = 'force-dynamic';
 
-import HeroSpotlight from "@/components/HeroSpotlight";
-import WireframeBlocks from "@/components/WireframeBlocks";
-import Aurora from "@/components/backgrounds/Aurora";
+import { Card } from '@/components/ui/card'
+import SectionReveal from '@/components/SectionReveal'
 
 export default function WireframePage() {
+  const maps = [
+    {
+      name: 'Home',
+      blocks: ['HeroSpotlight', 'CategoryNav', 'FeaturedProducts', 'TrustBadges', 'TestimonialsGrid', 'Newsletter'],
+    },
+    {
+      name: 'Shop',
+      blocks: ['Hero', 'ProductGrid', 'CTA Band'],
+    },
+    {
+      name: 'Product Detail',
+      blocks: ['ProductHero', 'Details', 'Reviews', 'CTA Band'],
+    },
+    {
+      name: 'Cart',
+      blocks: ['Hero', 'CartItems', 'Free Shipping CTA'],
+    },
+    {
+      name: 'Checkout',
+      blocks: ['Hero', 'CheckoutForm'],
+    },
+  ]
+
   return (
-    <main className="pt-0">
-      <section className="relative overflow-hidden bg-background">
-        <div className="absolute inset-0 z-0 pointer-events-none">
-          <Aurora
-            colorStops={["#E63946", "#F4A261", "#2A9D8F"]}
-            amplitude={1.1}
-            blend={0.5}
-            speed={0.8}
-          />
-        </div>
-        <div className="relative z-10 animate-fade-in-up text-foreground [&_h1]:!text-foreground [&_h2]:!text-foreground [&_p]:!text-muted-foreground">
-          <HeroSpotlight
-            headline="Welcome to Italo Pizza"
-            subheadline={"A quick layout overview of the storefront-style structure before final imagery and polish" + "."}
-            primaryCta={{ label: "Back to Home", href: "/" }}
-            secondaryCta={{ label: "View Menu", href: "/menu" }}
-          />
+    <div className="bg-background text-foreground">
+      <section className="py-20 md:py-28 animate-fade-in-up">
+        <div className="mx-auto max-w-7xl px-6">
+          <h1 className="text-3xl font-bold md:text-4xl">Wireframe preview</h1>
+          <p className="mt-3 text-muted-foreground">
+            A conversion-first layout map for key pages: Home, Shop, PDP, Cart, and Checkout.
+          </p>
         </div>
       </section>
 
-      <section className="py-20 md:py-28 bg-muted animate-fade-in-up">
-        <div className="max-w-7xl mx-auto px-4">
-          <WireframeBlocks />
-        </div>
-      </section>
-    </main>
-  );
+      <SectionReveal>
+        <section className="bg-muted py-20 md:py-28 animate-fade-in-up">
+          <div className="mx-auto grid max-w-7xl gap-6 px-6 md:grid-cols-2">
+            {maps.map((page) => (
+              <Card key={page.name} className="card-hover rounded-xl border border-border bg-card p-6">
+                <h2 className="text-xl font-semibold">{page.name}</h2>
+                <ul className="mt-4 space-y-2 text-sm text-muted-foreground">
+                  {page.blocks.map((block) => (
+                    <li key={block}>• {block}</li>
+                  ))}
+                </ul>
+              </Card>
+            ))}
+          </div>
+        </section>
+      </SectionReveal>
+    </div>
+  )
 }

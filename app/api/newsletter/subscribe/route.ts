@@ -1,29 +1,28 @@
-export const dynamic = 'force-dynamic';
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 import { db } from "@/lib/db";
 import { newsletterSubscribeSchema } from "@/lib/validators";
 
-export async function POST(req: Request) {
+export async function POST(req: NextRequest) {
   try {
-    const json = await req.json();
-    const parsed = newsletterSubscribeSchema.safeParse(json);
+    const body = await req.json();
+    const parsed = newsletterSubscribeSchema.safeParse(body);
 
     if (!parsed.success) {
       return NextResponse.json(
         { error: "Invalid subscription payload", details: parsed.error.flatten() },
-        { status: 400 }
+        { status: 400 },
       );
     }
 
-    const { email, sourcePage } = parsed.data;
+    const { email } = parsed.data;
 
     const subscriber = await db.newsletterSubscriber.upsert({
       where: { email },
-      update: { sourcePage },
-      create: { email, sourcePage },
+      update: { unsubscribedAt: null },
+      create: { email },
     });
 
-    return NextResponse.json({ data: subscriber }, { status: 201 });
+    return NextResponse.json({ success: true, subscriberId: subscriber.id });
   } catch (error) {
     console.error("POST /api/newsletter/subscribe error:", error);
     return NextResponse.json({ error: "Failed to subscribe" }, { status: 500 });

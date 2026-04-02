@@ -16,8 +16,8 @@ interface GalleryMasonryProps {
 }
 
 export default function GalleryMasonry({
-  headline = 'Featured product gallery',
-  subheadline = '',
+  headline = 'Trending picks this season',
+  subheadline = 'Explore customer-favorite products curated for style, comfort, and everyday value.',
   images = [],
 }: Partial<GalleryMasonryProps>) {
   const [selectedImage, setSelectedImage] = useState<GalleryImage | null>(null);
@@ -34,7 +34,7 @@ export default function GalleryMasonry({
             return (
               <div
                 key={i}
-                className="group relative aspect-square cursor-pointer overflow-hidden rounded-xl card-hover"
+                className="card-hover group relative aspect-square cursor-pointer overflow-hidden rounded-xl border border-border"
                 onClick={function () {
                   setSelectedImage(img);
                 }}
@@ -42,9 +42,10 @@ export default function GalleryMasonry({
                 <Image
                   src={img.url}
                   alt={img.alt}
-                  fill
+                  width={800}
+                  height={800}
                   unoptimized
-                  className="object-cover transition-transform duration-500 hover:scale-105"
+                  className="h-full w-full object-cover transition-transform duration-500 hover:scale-105"
                 />
                 <div className="absolute inset-0 bg-foreground/0 transition-all group-hover:bg-foreground/30" />
                 {img.caption && (
@@ -57,12 +58,17 @@ export default function GalleryMasonry({
           })}
         </div>
         {selectedImage && (
-          <div className="fixed inset-0 z-50 flex items-center justify-center bg-foreground/80 p-4" onClick={() => setSelectedImage(null)}>
+          <div
+            className="fixed inset-0 z-50 flex items-center justify-center bg-foreground/80 p-4"
+            onClick={function () {
+              setSelectedImage(null);
+            }}
+          >
             <Image
               src={selectedImage.url}
               alt={selectedImage.alt}
-              width={1200}
-              height={800}
+              width={1400}
+              height={900}
               unoptimized
               className="max-h-[85vh] max-w-[90vw] rounded-lg object-contain"
             />

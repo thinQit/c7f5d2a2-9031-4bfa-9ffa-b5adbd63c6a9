@@ -1,92 +1,75 @@
 export const dynamic = 'force-dynamic';
 
-import HeroSpotlight from "@/components/HeroSpotlight";
-import FeaturesGrid from "@/components/FeaturesGrid";
-import TestimonialsAnimated from "@/components/TestimonialsAnimated";
-import CtaBand from "@/components/CtaBand";
+import FeaturesGrid from '@/components/FeaturesGrid'
+import GalleryMasonry from '@/components/GalleryMasonry'
+import CTAVortex from '@/components/CTAVortex'
+import SectionReveal from '@/components/SectionReveal'
 
 export default function AboutPage() {
   return (
-    <main className="pt-16">
-      <div className="animate-fade-in-up">
-        <HeroSpotlight
-          headline="A Modern Slice of Italy"
-          subheadline="Italo Pizza blends traditional Italian recipes with a clean, modern kitchen—so every order tastes like it came straight from the oven."
-          primaryCta={{ label: "Meet the Team", href: "/about#team" }}
-          secondaryCta={{ label: "See Our Ingredients", href: "/about#ingredients" }}
+    <div className="bg-background text-foreground">
+      <section className="relative min-h-[80vh] animate-fade-in-up">
+        <div
+          className="absolute inset-0 bg-cover bg-center"
+          style={{
+            backgroundImage:
+              'url(https://res.cloudinary.com/dwc294mzm/image/upload/c_fill,w_1200,h_800,g_auto/v1771577111/site-images/ecommerce/3767397.jpg)',
+          }}
         />
-      </div>
-
-      <section className="py-20 md:py-28 bg-muted animate-fade-in-up" id="ingredients">
-        <div className="max-w-7xl mx-auto px-4">
-          <FeaturesGrid
-            badge="Our Craft"
-            headline="Ingredients You Can Taste"
-            subheadline="Simple, high-quality components—handled with care."
-            features={[
-              {
-                icon: "Clock",
-                title: "48-hour dough",
-                description: "Slow fermentation for airy crust and deep flavor.",
-              },
-              {
-                icon: "Droplets",
-                title: "Fresh mozzarella",
-                description: "Creamy melt and clean finish on every slice.",
-              },
-              {
-                icon: "Tomato",
-                title: "San Marzano-style sauce",
-                description: "Bright tomato base with basil and garlic.",
-              },
-              {
-                icon: "Sprout",
-                title: "Seasonal produce",
-                description: "Local greens, mushrooms, and herbs when they’re at their best.",
-              },
-            ]}
-          />
+        <div className="absolute inset-0 bg-black/40" />
+        <div className="relative z-10 mx-auto flex min-h-[80vh] max-w-7xl flex-col justify-center px-6 py-20 md:py-28">
+          <h1 className="text-5xl font-bold text-white md:text-7xl">A small team obsessed with the little things</h1>
+          <p className="mt-4 max-w-2xl text-white/90">
+            We curate essentials that look good, last long, and arrive fast—so your routines feel effortless.
+          </p>
         </div>
       </section>
 
-      <section className="py-20 md:py-28 bg-background animate-fade-in-up" id="team">
-        <div className="max-w-7xl mx-auto px-4">
-          <TestimonialsAnimated
-            title="Meet the People Behind the Pies"
-            subtitle="A small team obsessed with consistency and hospitality."
-            autoplay
-            testimonials={[
-              {
-                quote:
-                  "Trained in Naples-style dough technique and fermentation. Keeps the crust crisp, airy, and consistent.",
-                name: "Luca Romano",
-                designation: "Co-Founder • Head of Dough",
-                src: "https://res.cloudinary.com/dwc294mzm/image/upload/c_fill,w_1200,h_800,g_auto/v1771577327/site-images/team-people/12899112.jpg",
-              },
-              {
-                quote:
-                  "Leads the line with a focus on timing, quality, and clean flavors—especially sauces and pasta finishes.",
-                name: "Giulia Romano",
-                designation: "Co-Founder • Kitchen Director",
-                src: "https://res.cloudinary.com/dwc294mzm/image/upload/c_fill,w_1200,h_800,g_auto/v1771577370/site-images/team-people/10375912.jpg",
-              },
-              {
-                quote:
-                  "Specializes in starters and desserts—arancini, tiramisu, and seasonal specials.",
-                name: "Enzo Bianchi",
-                designation: "Chef de Partie",
-                src: "https://res.cloudinary.com/dwc294mzm/image/upload/c_fill,w_1200,h_800,g_auto/v1771577370/site-images/team-people/1181405.jpg",
-              },
-            ]}
-          />
-        </div>
-      </section>
+      <SectionReveal>
+        <section className="py-20 md:py-28 animate-fade-in-up">
+          <div className="mx-auto max-w-7xl px-6">
+            <FeaturesGrid
+              headline="Built for product discovery—and a frictionless checkout"
+              subheadline="LumenCart started in Austin with a simple idea: fewer products, better picks."
+              features={[
+                { icon: 'Sparkles', title: 'Curated quality', description: 'Curated quality over endless choice.' },
+                { icon: 'ShieldCheck', title: 'Transparency', description: 'Transparent pricing and clear policies.' },
+                { icon: 'Truck', title: 'Fast fulfillment', description: '2–3 day US shipping with responsive support.' },
+              ]}
+            />
+          </div>
+        </section>
+      </SectionReveal>
 
-      <section className="py-20 md:py-28 bg-muted animate-fade-in-up">
-        <div className="max-w-7xl mx-auto px-4">
-          <CtaBand />
-        </div>
-      </section>
-    </main>
-  );
+      <SectionReveal>
+        <section className="bg-muted py-20 md:py-28 animate-fade-in-up">
+          <div className="mx-auto max-w-7xl px-6">
+            <GalleryMasonry
+              headline="Meet the team"
+              images={[
+                { url: 'https://res.cloudinary.com/dwc294mzm/image/upload/c_fill,w_1200,h_800,g_auto/v1771577335/site-images/team-people/1181734.jpg', alt: 'Avery Chen' },
+                { url: 'https://res.cloudinary.com/dwc294mzm/image/upload/c_fill,w_1200,h_800,g_auto/v1771577325/site-images/team-people/10347164.jpg', alt: 'Samira Patel' },
+                { url: 'https://res.cloudinary.com/dwc294mzm/image/upload/c_fill,w_1200,h_800,g_auto/v1771577370/site-images/team-people/1181405.jpg', alt: 'Diego Morales' },
+              ]}
+            />
+          </div>
+        </section>
+      </SectionReveal>
+
+      <SectionReveal>
+        <section className="py-20 md:py-28 animate-fade-in-up">
+          <div className="mx-auto max-w-7xl px-6">
+            <CTAVortex
+              title="Try us risk-free"
+              subtitle="30-day returns, secure payments, and support that actually responds."
+              ctaLabel="Shop now"
+              ctaHref="/shop"
+              secondaryCtaLabel="Shipping & returns"
+              secondaryCtaHref="/shipping-returns"
+            />
+          </div>
+        </section>
+      </SectionReveal>
+    </div>
+  )
 }

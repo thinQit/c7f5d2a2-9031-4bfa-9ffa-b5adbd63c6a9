@@ -1,67 +1,45 @@
 "use client";
 
 import Link from 'next/link'
-import { Facebook, Instagram, MapPin, Phone, Clock, Mail } from 'lucide-react'
-import { cn } from '@/lib/utils'
 
 interface FooterProps {
-  className?: string
-  brandName?: string
-  address?: string
-  phone?: string
-  email?: string
-  hours?: string[]
+  brand?: string
 }
 
-export default function Footer({
-  className = '',
-  brandName = 'Italo Pizza',
-  address = '245 Via Roma Street, Downtown, New York, NY 10012',
-  phone = '+1 (212) 555-0199',
-  email = 'ciao@italopizza.com',
-  hours = ['Mon - Thu: 11:00 AM - 10:00 PM', 'Fri - Sat: 11:00 AM - 11:30 PM', 'Sun: 12:00 PM - 9:30 PM'],
-}: Partial<FooterProps>) {
+export default function Footer({ brand = 'NovaStore' }: Partial<FooterProps>) {
   return (
-    <footer className={cn('border-t bg-[#F8F9FA]', className)}>
-      <div className="mx-auto grid max-w-7xl gap-10 px-4 py-14 md:grid-cols-2 lg:grid-cols-4 md:px-6">
+    <footer className="border-t bg-[#F8F9FA]">
+      <div className="mx-auto grid max-w-7xl gap-8 px-4 py-12 md:grid-cols-4 md:px-6">
         <div>
-          <h3 className="mb-3 text-lg font-bold text-[#1A1A2E]">{brandName}</h3>
-          <p className="text-sm text-muted-foreground">Authentic Italian flavors, handcrafted daily with fresh ingredients.</p>
+          <h3 className="text-lg font-bold text-[#1A1A2E]">{brand}</h3>
+          <p className="mt-2 text-sm text-muted-foreground">Modern essentials for everyday life.</p>
+          <p className="mt-3 text-sm text-muted-foreground">102 Market Street, San Francisco, CA</p>
+          <p className="text-sm text-muted-foreground">Support hours: Mon–Fri, 9am–6pm</p>
         </div>
-
         <div>
-          <h4 className="mb-3 font-semibold text-[#1A1A2E]">Visit Us</h4>
-          <ul className="space-y-2 text-sm text-muted-foreground">
-            <li className="flex gap-2"><MapPin className="mt-0.5 h-4 w-4" /> {address}</li>
-            <li className="flex gap-2"><Phone className="mt-0.5 h-4 w-4" /> {phone}</li>
-            <li className="flex gap-2"><Mail className="mt-0.5 h-4 w-4" /> {email}</li>
-          </ul>
-        </div>
-
-        <div>
-          <h4 className="mb-3 font-semibold text-[#1A1A2E]">Opening Hours</h4>
-          <ul className="space-y-2 text-sm text-muted-foreground">
-            {hours.map((line) => (
-              <li key={line} className="flex gap-2"><Clock className="mt-0.5 h-4 w-4" /> {line}</li>
-            ))}
-          </ul>
-        </div>
-
-        <div>
-          <h4 className="mb-3 font-semibold text-[#1A1A2E]">Follow Us</h4>
-          <div className="mb-4 flex items-center gap-3">
-            <Link href="#" className="rounded-lg border p-2 hover:bg-white"><Instagram className="h-4 w-4" /></Link>
-            <Link href="#" className="rounded-lg border p-2 hover:bg-white"><Facebook className="h-4 w-4" /></Link>
-          </div>
-          <div className="flex flex-col gap-2 text-sm">
-            <Link href="#" className="text-muted-foreground hover:text-[#4f46e5]">Privacy Policy</Link>
-            <Link href="#" className="text-muted-foreground hover:text-[#4f46e5]">Terms of Service</Link>
-            <Link href="#" className="text-muted-foreground hover:text-[#4f46e5]">Delivery Policy</Link>
+          <h4 className="font-semibold text-[#1A1A2E]">Shop</h4>
+          <div className="mt-3 space-y-2 text-sm">
+            <Link href="#" className="block text-muted-foreground hover:text-[#E63946]">New Arrivals</Link>
+            <Link href="#" className="block text-muted-foreground hover:text-[#E63946]">Best Sellers</Link>
+            <Link href="#" className="block text-muted-foreground hover:text-[#E63946]">Sale</Link>
           </div>
         </div>
-      </div>
-      <div className="border-t py-4 text-center text-xs text-muted-foreground">
-        © {new Date().getFullYear()} {brandName}. All rights reserved.
+        <div>
+          <h4 className="font-semibold text-[#1A1A2E]">Support</h4>
+          <div className="mt-3 space-y-2 text-sm">
+            <Link href="#" className="block text-muted-foreground hover:text-[#E63946]">Help Center</Link>
+            <Link href="#" className="block text-muted-foreground hover:text-[#E63946]">Shipping & Returns</Link>
+            <Link href="#" className="block text-muted-foreground hover:text-[#E63946]">Track Order</Link>
+          </div>
+        </div>
+        <div>
+          <h4 className="font-semibold text-[#1A1A2E]">Legal</h4>
+          <div className="mt-3 space-y-2 text-sm">
+            <Link href="#" className="block text-muted-foreground hover:text-[#E63946]">Privacy Policy</Link>
+            <Link href="#" className="block text-muted-foreground hover:text-[#E63946]">Terms of Service</Link>
+            <Link href="#" className="block text-muted-foreground hover:text-[#E63946]">Cookie Policy</Link>
+          </div>
+        </div>
       </div>
     </footer>
   )

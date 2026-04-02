@@ -20,7 +20,7 @@ export default function StatsCounter({
         <div className={'grid gap-8 text-center ' + ('grid-cols-2 md:grid-cols-' + Math.min(stats.length || 2, 4))}>
           {stats.map(function (stat, i) {
             return (
-              <div key={i}>
+              <div key={i} className="card-hover rounded-xl border border-primary-foreground/20 bg-primary/10 p-6">
                 <p className="text-4xl font-bold md:text-5xl">{stat.value}</p>
                 <p className="mt-2 text-sm uppercase tracking-wider opacity-80">{stat.label}</p>
               </div>

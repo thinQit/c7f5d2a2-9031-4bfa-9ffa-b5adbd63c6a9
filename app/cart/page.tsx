@@ -1,44 +1,41 @@
 export const dynamic = 'force-dynamic';
 
-import HeroSpotlight from "@/components/HeroSpotlight";
-import MiniCartDrawer from "@/components/MiniCartDrawer";
-import CTAVortex from "@/components/CTAVortex";
+import CartLineItem from '@/components/CartLineItem'
+import OrderSummary from '@/components/OrderSummary'
+import CTAVortex from '@/components/CTAVortex'
+import SectionReveal from '@/components/SectionReveal'
 
 export default function CartPage() {
   return (
-    <main className="bg-background">
-      <section
-        className="animate-fade-in-up min-h-[80vh] bg-cover bg-center bg-no-repeat relative flex items-center"
-        style={{
-          backgroundImage:
-            "url('https://res.cloudinary.com/dwc294mzm/image/upload/c_fill,w_1200,h_800,g_auto/v1771577145/site-images/ecommerce/34577.jpg')",
-        }}
-      >
-        <div className="absolute inset-0 bg-black/40" />
-        <div className="relative z-10 w-full">
-          <HeroSpotlight
-            title="Your cart"
-            subtitle="Review items, apply a code, and check out securely."
-            primaryCta={{ label: "Checkout", href: "/checkout" }}
-            secondaryCta={{ label: "Continue shopping", href: "/shop" }}
-          />
+    <div className="bg-background text-foreground">
+      <section className="py-20 md:py-28 animate-fade-in-up">
+        <div className="mx-auto max-w-7xl px-6">
+          <h1 className="text-3xl font-bold md:text-4xl">Your cart</h1>
+          <p className="mt-3 text-muted-foreground">Review items, apply a code, and head to secure checkout.</p>
+          <div className="mt-10 grid gap-8 lg:grid-cols-3">
+            <div className="space-y-4 lg:col-span-2">
+              <CartLineItem />
+              <CartLineItem />
+            </div>
+            <OrderSummary />
+          </div>
         </div>
       </section>
 
-      <div className="animate-fade-in-up py-20 md:py-28 bg-muted">
-        <MiniCartDrawer />
-      </div>
-
-      <div className="animate-fade-in-up py-20 md:py-28 bg-background">
-        <CTAVortex
-          title="Ready to complete your order?"
-          subtitle="Promo code REFRESH15 applies to qualifying orders over $75."
-          ctaLabel="Proceed to checkout"
-          ctaHref="/checkout"
-          secondaryCtaLabel="Shipping & returns"
-          secondaryCtaHref="/shipping-returns"
-        />
-      </div>
-    </main>
-  );
+      <SectionReveal>
+        <section className="bg-muted py-20 md:py-28 animate-fade-in-up">
+          <div className="mx-auto max-w-7xl px-6">
+            <CTAVortex
+              title="You’re $13 away from free shipping"
+              subtitle="Add a small essential and we’ll cover shipping."
+              ctaLabel="Shop under $25"
+              ctaHref="/shop?maxPrice=25"
+              secondaryCtaLabel="Checkout now"
+              secondaryCtaHref="/checkout"
+            />
+          </div>
+        </section>
+      </SectionReveal>
+    </div>
+  )
 }

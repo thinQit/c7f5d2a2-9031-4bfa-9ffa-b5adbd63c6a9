@@ -1,6 +1,6 @@
-"use client";
-import { Vortex } from "@/components/ui/backgrounds/vortex";
-import { Button } from "@/components/ui/button";
+'use client';
+import { Vortex } from '@/components/ui/backgrounds/vortex';
+import { Button } from '@/components/ui/button';
 
 interface CTAVortexProps {
   headline: string;
@@ -13,23 +13,28 @@ interface CTAVortexProps {
 
 export default function CTAVortex({
   headline = 'Ready to upgrade your cart?',
-  description = 'Unlock exclusive deals, fast delivery, and member-only offers when you shop with NovaCart today.',
+  description = 'Unlock limited-time offers, free shipping milestones, and members-only bundles at NovaCart.',
   ctaLabel = 'Start Shopping',
-  ctaHref = '#',
-  secondaryCtaLabel = 'View New Arrivals',
-  secondaryCtaHref = '#',
+  ctaHref = '#featured-products',
+  secondaryCtaLabel = 'View Deals',
+  secondaryCtaHref = '#deals',
 }: Partial<CTAVortexProps>) {
   return (
-    <section className="w-full mx-auto rounded-md h-[30rem] overflow-hidden">
-      <Vortex backgroundColor="transparent" baseHue={354} className="flex items-center flex-col justify-center px-2 md:px-10 py-4 w-full h-full">
-        <h2 className="text-foreground text-2xl md:text-6xl font-bold text-center">{headline}</h2>
-        {description && <p className="text-muted-foreground text-sm md:text-xl max-w-xl mt-6 text-center">{description}</p>}
-        <div className="flex flex-col sm:flex-row items-center gap-4 mt-8">
-          <Button size="lg" className="px-8 py-6 text-lg transition-all duration-200 hover:scale-105" asChild>
+    <section className="mx-auto h-[30rem] w-full overflow-hidden rounded-md">
+      <Vortex backgroundColor="black" className="flex h-full w-full flex-col items-center justify-center px-2 py-4 md:px-10">
+        <h2 className="text-center text-2xl font-bold text-background md:text-6xl">{headline}</h2>
+        {description && <p className="mt-6 max-w-xl text-center text-sm text-background/70 md:text-xl">{description}</p>}
+        <div className="mt-8 flex flex-col items-center gap-4 sm:flex-row">
+          <Button size="lg" className="bg-primary px-8 py-6 text-lg text-primary-foreground transition-all duration-200 hover:scale-105 hover:bg-primary/90" asChild>
             <a href={ctaHref}>{ctaLabel}</a>
           </Button>
           {secondaryCtaLabel && secondaryCtaHref && (
-            <Button variant="outline" size="lg" className="px-8 py-6 text-lg transition-all duration-200 hover:scale-105" asChild>
+            <Button
+              variant="outline"
+              size="lg"
+              className="border-background/30 px-8 py-6 text-lg text-background transition-all duration-200 hover:scale-105 hover:bg-background/10"
+              asChild
+            >
               <a href={secondaryCtaHref}>{secondaryCtaLabel}</a>
             </Button>
           )}
