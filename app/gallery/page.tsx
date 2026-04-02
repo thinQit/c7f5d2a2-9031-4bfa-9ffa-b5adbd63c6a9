@@ -6,7 +6,7 @@ import CtaBand from "@/components/CtaBand";
 
 export default function GalleryPage() {
   return (
-    <main className="pt-16">
+    <main className="bg-background text-foreground pt-16">
       <div className="animate-fade-in-up">
         <HeroSpotlight
           headline="A Closer Look"
