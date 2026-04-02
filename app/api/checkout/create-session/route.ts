@@ -3,18 +3,15 @@ import Stripe from "stripe";
 import { db } from "@/lib/db";
 import { createCheckoutSchema } from "@/lib/validators";
 
-const stripeSecretKey = process.env.STRIPE_SECRET_KEY;
-
-if (!stripeSecretKey) {
-  throw new Error("Missing STRIPE_SECRET_KEY environment variable");
+function getStripe() {
+  const key = process.env.STRIPE_SECRET_KEY;
+  if (!key) throw new Error("Missing STRIPE_SECRET_KEY environment variable");
+  return new Stripe(key, { apiVersion: "2024-06-20" });
 }
-
-const stripe = new Stripe(stripeSecretKey, {
-  apiVersion: "2024-06-20",
-});
 
 export async function POST(req: NextRequest) {
   try {
+    const stripe = getStripe();
     const body = await req.json();
     const parsed = createCheckoutSchema.safeParse(body);
 
