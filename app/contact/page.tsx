@@ -30,7 +30,7 @@ export default function ContactPage() {
               headline="Send a message"
               subheadline="Include your order number (if you have one) so we can help faster."
               features={[
-                { icon: 'Mail', title: 'Email', description: 'support@lumencart.co' },
+                { icon: 'Mail', title: 'Email', description: 'support@sankalp.co' },
                 { icon: 'Phone', title: 'Phone', description: '+1 (512) 555-0198' },
                 { icon: 'Clock', title: 'Hours', description: 'Daily 9am–6pm CT • Avg reply under 2 hours' },
               ]}

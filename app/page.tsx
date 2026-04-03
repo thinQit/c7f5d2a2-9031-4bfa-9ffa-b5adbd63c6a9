@@ -118,7 +118,7 @@ export default function HomePage() {
                     <p className="text-sm uppercase tracking-wider text-muted-foreground">{row.label}</p>
                     <div className="mt-3 grid gap-3 md:grid-cols-2">
                       <div className="rounded-lg bg-muted p-4">
-                        <p className="text-xs font-semibold text-muted-foreground">LumenCart</p>
+                        <p className="text-xs font-semibold text-muted-foreground">Sankalp</p>
                         <p className="mt-2 text-sm text-foreground">{row.ours}</p>
                       </div>
                       <div className="rounded-lg bg-background p-4">

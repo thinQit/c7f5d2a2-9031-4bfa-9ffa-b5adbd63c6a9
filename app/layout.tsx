@@ -14,7 +14,7 @@ const inter = Inter({
 });
 
 export const metadata = {
-  title: "LumenCart",
+  title: "Sankalp",
   description: "A conversion-first storefront experience with curated collections, trust signals, and checkout-ready content flow.",
 };
 
@@ -27,7 +27,7 @@ export default function RootLayout({
     <html lang="en" className={`${dmSans.variable} ${inter.variable} dark`}>
       <body className="bg-background text-foreground font-[var(--font-inter)]">
         <NavbarSticky
-          logo="LumenCart"
+          logo="Sankalp"
           navItems={[
             { label: "Home", href: "/" },
             { label: "Collections", href: "/#collections" },
@@ -40,7 +40,7 @@ export default function RootLayout({
         />
         {children}
         <FooterMultiColumn
-          brand="LumenCart"
+          brand="Sankalp"
           description="A modern storefront built for confident discovery, fast delivery, and streamlined checkout decisions."
           columns={[
             {
@@ -68,7 +68,7 @@ export default function RootLayout({
               ],
             },
           ]}
-          copyright="© 2026 LumenCart. All rights reserved."
+          copyright="© 2026 Sankalp. All rights reserved."
         />
       </body>
     </html>

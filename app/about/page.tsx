@@ -30,7 +30,7 @@ export default function AboutPage() {
           <div className="mx-auto max-w-7xl px-6">
             <FeaturesGrid
               headline="Built for product discovery—and a frictionless checkout"
-              subheadline="LumenCart started in Austin with a simple idea: fewer products, better picks."
+              subheadline="Sankalp started in Austin with a simple idea: fewer products, better picks."
               features={[
                 { icon: 'Sparkles', title: 'Curated quality', description: 'Curated quality over endless choice.' },
                 { icon: 'ShieldCheck', title: 'Transparency', description: 'Transparent pricing and clear policies.' },
