@@ -1,44 +1,25 @@
 export interface NavItem {
   label: string;
   href: string;
+  external?: boolean;
 }
 
-export interface CtaLink {
+export interface SeoMeta {
+  title: string;
+  description: string;
+}
+
+export interface Cta {
   label: string;
   href: string;
 }
 
-export interface Product {
-  sku: string;
+export interface ProductCard {
+  id: string;
   name: string;
-  price: number;
-  compareAtPrice?: number;
-  rating?: number;
-  reviewCount?: number;
+  description?: string;
+  price?: string;
+  image?: string;
+  href?: string;
   badge?: string;
-  shortDescription?: string;
-  href: string;
-  imageAlt: string;
-}
-
-export interface Testimonial {
-  name: string;
-  location: string;
-  rating: number;
-  title: string;
-  quote: string;
-  product?: string;
-}
-
-export interface Category {
-  name: string;
-  description: string;
-  href: string;
-  imageAlt: string;
-}
-
-export interface ApiResponse<T> {
-  data: T;
-  message?: string;
-  success: boolean;
 }

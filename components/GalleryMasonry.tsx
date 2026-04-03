@@ -16,8 +16,8 @@ interface GalleryMasonryProps {
 }
 
 export default function GalleryMasonry({
-  headline = 'Trending picks this season',
-  subheadline = 'Explore customer-favorite products curated for style, comfort, and everyday value.',
+  headline = 'Shop by Style',
+  subheadline = 'Explore our best-selling collections and latest arrivals.',
   images = [],
 }: Partial<GalleryMasonryProps>) {
   const [selectedImage, setSelectedImage] = useState<GalleryImage | null>(null);
@@ -34,7 +34,7 @@ export default function GalleryMasonry({
             return (
               <div
                 key={i}
-                className="card-hover group relative aspect-square cursor-pointer overflow-hidden rounded-xl border border-border"
+                className="group card-hover relative aspect-square cursor-pointer overflow-hidden rounded-xl"
                 onClick={function () {
                   setSelectedImage(img);
                 }}
@@ -67,8 +67,8 @@ export default function GalleryMasonry({
             <Image
               src={selectedImage.url}
               alt={selectedImage.alt}
-              width={1400}
-              height={900}
+              width={1200}
+              height={800}
               unoptimized
               className="max-h-[85vh] max-w-[90vw] rounded-lg object-contain"
             />

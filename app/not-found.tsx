@@ -1,14 +1,16 @@
-import { Button } from '@/components/ui/button'
-import Link from 'next/link'
+import Link from "next/link";
+import { Button } from "@/components/ui/button";
 
 export default function NotFound() {
   return (
-    <div className="flex min-h-[60vh] flex-col items-center justify-center bg-background px-6 text-center text-foreground">
-      <h1 className="text-4xl font-bold">404</h1>
-      <p className="mt-3 text-muted-foreground">We couldn’t find that page.</p>
-      <Link href="/">
-        <Button className="mt-6 transition-all duration-200 hover:scale-105">Back to home</Button>
-      </Link>
+    <div className="min-h-screen w-full bg-background text-foreground flex items-center justify-center px-4">
+      <div className="text-center space-y-4">
+        <h2 className="text-2xl md:text-3xl font-bold">Page not found</h2>
+        <p className="text-muted-foreground">The page you&apos;re looking for does not exist.</p>
+        <Button asChild className="transition-all duration-200 hover:scale-105">
+          <Link href="/">Return Home</Link>
+        </Button>
+      </div>
     </div>
-  )
+  );
 }

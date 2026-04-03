@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import Link from 'next/link';
+import { Menu, X } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 
 interface NavItem {
@@ -17,10 +18,10 @@ interface NavbarStickyProps {
 }
 
 export default function NavbarSticky({
-  logo = 'NovaCart',
+  logo = 'AmberCart',
   navItems = [],
-  ctaLabel = 'Shop Now',
-  ctaHref = '#featured-products',
+  ctaLabel = '',
+  ctaHref = '#',
 }: Partial<NavbarStickyProps>) {
   const [mobileOpen, setMobileOpen] = useState(false);
 
@@ -36,7 +37,7 @@ export default function NavbarSticky({
               <Link
                 key={item.href}
                 href={item.href}
-                className="text-sm font-medium text-muted-foreground transition-all duration-200 hover:scale-105 hover:text-foreground"
+                className="text-sm font-medium text-muted-foreground transition-colors hover:text-primary"
               >
                 {item.label}
               </Link>
@@ -55,13 +56,7 @@ export default function NavbarSticky({
           }}
           aria-label="Toggle menu"
         >
-          <svg className="h-6 w-6 text-foreground" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            {mobileOpen ? (
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-            ) : (
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
-            )}
-          </svg>
+          {mobileOpen ? <X className="h-6 w-6 text-foreground" /> : <Menu className="h-6 w-6 text-foreground" />}
         </button>
       </div>
       {mobileOpen && (
@@ -72,7 +67,7 @@ export default function NavbarSticky({
                 <Link
                   key={item.href}
                   href={item.href}
-                  className="text-sm font-medium text-muted-foreground transition-all duration-200 hover:scale-105 hover:text-foreground"
+                  className="text-sm font-medium text-muted-foreground transition-colors hover:text-primary"
                   onClick={function () {
                     setMobileOpen(false);
                   }}

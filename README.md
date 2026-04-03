@@ -1,17 +1,13 @@
-# LumenCart Storefront
+# Update Cancelled
 
-Modern essentials, shipped fast—built for confident checkout.
+No changes applied.
 
-## Stack
+## Tech Stack
 
 - Next.js 14 (App Router)
 - TypeScript
 - Tailwind CSS
-- shadcn/ui primitives
-- PostgreSQL-ready environment config
+- shadcn/ui
 
 ## Getting Started
 
-1. **Install dependencies:**
-
-   

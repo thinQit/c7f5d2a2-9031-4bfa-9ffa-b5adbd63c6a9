@@ -1,78 +1,75 @@
-import './globals.css'
-import { DM_Sans, Inter } from 'next/font/google'
-import NavbarSticky from '@/components/NavbarSticky'
-import FooterMultiColumn from '@/components/FooterMultiColumn'
+import "./globals.css";
+import { DM_Sans, Inter } from "next/font/google";
+import NavbarSticky from "@/components/NavbarSticky";
+import FooterMultiColumn from "@/components/FooterMultiColumn";
 
 const dmSans = DM_Sans({
-  subsets: ['latin'],
-  variable: '--font-heading',
-  weight: ['400', '500', '700'],
-})
+  subsets: ["latin"],
+  variable: "--font-dm-sans",
+});
 
 const inter = Inter({
-  subsets: ['latin'],
-  variable: '--font-body',
-  weight: ['300', '400', '600'],
-})
+  subsets: ["latin"],
+  variable: "--font-inter",
+});
+
+export const metadata = {
+  title: "Cancelled",
+  description: "Update cancelled per directive; no website changes generated.",
+};
 
 export default function RootLayout({
   children,
-}: {
-  children: React.ReactNode
-}) {
+}: Readonly<{
+  children: React.ReactNode;
+}>) {
   return (
-    <html lang="en" className="dark">
-      <body className={`${dmSans.variable} ${inter.variable} font-sans bg-background text-foreground`}>
+    <html lang="en" className={`${dmSans.variable} ${inter.variable} dark`}>
+      <body className="bg-background text-foreground font-[var(--font-inter)]">
         <NavbarSticky
-          logo="LumenCart"
+          logo="No Update Store"
           navItems={[
-            { label: 'Home', href: '/' },
-            { label: 'Shop', href: '/shop' },
-            { label: 'Collections', href: '/collections' },
-            { label: 'Search', href: '/search' },
-            { label: 'About', href: '/about' },
-            { label: 'Contact', href: '/contact' },
-            { label: 'Wireframe', href: '/wireframe' },
+            { label: "Home", href: "/" },
+            { label: "Categories", href: "/#categories" },
+            { label: "Featured", href: "/#featured" },
+            { label: "Reviews", href: "/#reviews" },
           ]}
-          ctaLabel="Shop now"
-          ctaHref="/shop"
+          ctaLabel="Shop Now"
+          ctaHref="/#cta"
         />
-        <main>{children}</main>
+        {children}
         <FooterMultiColumn
-          brand="LumenCart"
-          description="Curated essentials for modern routines."
+          brand="No Update Store"
+          description="A modern, conversion-focused storefront experience with curated products, trusted delivery, and seamless checkout intent."
           columns={[
             {
-              title: 'Shop',
+              title: "Shop",
               links: [
-                { label: 'All products', href: '/shop' },
-                { label: 'Collections', href: '/collections' },
-                { label: 'Bundles', href: '/collections/bundles' },
-                { label: 'Gift cards', href: '/gift-cards' },
+                { label: "New Arrivals", href: "/#categories" },
+                { label: "Best Sellers", href: "/#featured" },
+                { label: "Gift Picks", href: "/#gallery" },
               ],
             },
             {
-              title: 'Help',
+              title: "Support",
               links: [
-                { label: 'Shipping & returns', href: '/shipping-returns' },
-                { label: 'Order tracking', href: '/track-order' },
-                { label: 'FAQ', href: '/faq' },
-                { label: 'Contact support', href: '/contact' },
+                { label: "Shipping", href: "/#trust" },
+                { label: "Returns", href: "/#trust" },
+                { label: "Help Center", href: "/#cta" },
               ],
             },
             {
-              title: 'Company',
+              title: "Company",
               links: [
-                { label: 'About', href: '/about' },
-                { label: 'Reviews', href: '/reviews' },
-                { label: 'Privacy policy', href: '/privacy' },
-                { label: 'Terms', href: '/terms' },
+                { label: "About", href: "/#features" },
+                { label: "Testimonials", href: "/#reviews" },
+                { label: "Contact", href: "/#cta" },
               ],
             },
           ]}
-          copyright="© 2026 LumenCart Co. All rights reserved."
+          copyright="© 2026 No Update Store. All rights reserved."
         />
       </body>
     </html>
-  )
+  );
 }
