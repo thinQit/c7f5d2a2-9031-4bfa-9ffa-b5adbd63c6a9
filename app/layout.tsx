@@ -14,8 +14,8 @@ const inter = Inter({
 });
 
 export const metadata = {
-  title: "Cancelled",
-  description: "Update cancelled per directive; no website changes generated.",
+  title: "LumenCart",
+  description: "A conversion-first storefront experience with curated collections, trust signals, and checkout-ready content flow.",
 };
 
 export default function RootLayout({
@@ -27,47 +27,48 @@ export default function RootLayout({
     <html lang="en" className={`${dmSans.variable} ${inter.variable} dark`}>
       <body className="bg-background text-foreground font-[var(--font-inter)]">
         <NavbarSticky
-          logo="No Update Store"
+          logo="LumenCart"
           navItems={[
             { label: "Home", href: "/" },
-            { label: "Categories", href: "/#categories" },
-            { label: "Featured", href: "/#featured" },
+            { label: "Collections", href: "/#collections" },
+            { label: "Proof", href: "/#proof" },
+            { label: "Trust", href: "/#trust" },
             { label: "Reviews", href: "/#reviews" },
           ]}
-          ctaLabel="Shop Now"
+          ctaLabel="Start Shopping"
           ctaHref="/#cta"
         />
         {children}
         <FooterMultiColumn
-          brand="No Update Store"
-          description="A modern, conversion-focused storefront experience with curated products, trusted delivery, and seamless checkout intent."
+          brand="LumenCart"
+          description="A modern storefront built for confident discovery, fast delivery, and streamlined checkout decisions."
           columns={[
             {
               title: "Shop",
               links: [
-                { label: "New Arrivals", href: "/#categories" },
-                { label: "Best Sellers", href: "/#featured" },
-                { label: "Gift Picks", href: "/#gallery" },
+                { label: "New Collections", href: "/#collections" },
+                { label: "Proof & Comparison", href: "/#proof" },
+                { label: "Featured Moments", href: "/#gallery" },
               ],
             },
             {
               title: "Support",
               links: [
-                { label: "Shipping", href: "/#trust" },
-                { label: "Returns", href: "/#trust" },
-                { label: "Help Center", href: "/#cta" },
+                { label: "Shipping & Returns", href: "/#trust" },
+                { label: "Order Help", href: "/#cta" },
+                { label: "Contact", href: "/#cta" },
               ],
             },
             {
               title: "Company",
               links: [
-                { label: "About", href: "/#features" },
+                { label: "Our Promise", href: "/#proof" },
                 { label: "Testimonials", href: "/#reviews" },
-                { label: "Contact", href: "/#cta" },
+                { label: "Security", href: "/#trust" },
               ],
             },
           ]}
-          copyright="© 2026 No Update Store. All rights reserved."
+          copyright="© 2026 LumenCart. All rights reserved."
         />
       </body>
     </html>
