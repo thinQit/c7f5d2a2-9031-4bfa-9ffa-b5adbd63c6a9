@@ -63,8 +63,8 @@ export default function HomePage() {
         <div className="absolute inset-0 bg-foreground/60" />
         <div className="relative z-10">
           <HeroSpotlight
-            headline="Shop With Clarity, Checkout With Confidence"
-            subheadline="A modern product-led storefront that guides customers from discovery to purchase with clear pricing, fast shipping, and trusted checkout steps."
+            headline="Sankalp makes shopping clear and checkout confident"
+            subheadline="Sankalp is a modern product-led storefront that guides customers from discovery to purchase with clear pricing, fast shipping, and trusted checkout steps."
             primaryCta={{ label: "Browse Collections", href: "#collections" }}
             secondaryCta={{ label: "See Proof", href: "#proof" }}
           />
