@@ -15,8 +15,8 @@ interface FooterMultiColumnProps {
 }
 
 export default function FooterMultiColumn({
-  brand = 'AmberCart',
-  description = 'Smart shopping for modern households. Quality products, fast delivery, and secure checkout.',
+  brand = 'Sankalp',
+  description = 'Sankalp brings smart shopping for modern households with quality products, fast delivery, and secure checkout.',
   columns = [],
   copyright = '',
 }: Partial<FooterMultiColumnProps>) {

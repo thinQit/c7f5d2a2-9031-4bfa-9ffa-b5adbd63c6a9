@@ -14,7 +14,7 @@ interface CTASparklesProps {
 
 export default function CTASparkles({
   headline = "Ready to unlock member-only deals?",
-  description = "Join BrightCart for early access to drops, exclusive discounts, and personalized recommendations.",
+  description = "Join Sankalp for early access to drops, exclusive discounts, and personalized recommendations.",
   ctaLabel = "Join Free",
   ctaHref = "#",
   secondaryCtaLabel = "Browse Deals",

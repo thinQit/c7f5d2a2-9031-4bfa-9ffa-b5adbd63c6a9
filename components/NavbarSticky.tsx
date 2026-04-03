@@ -18,7 +18,7 @@ interface NavbarStickyProps {
 }
 
 export default function NavbarSticky({
-  logo = 'AmberCart',
+  logo = 'Sankalp',
   navItems = [],
   ctaLabel = '',
   ctaHref = '#',
